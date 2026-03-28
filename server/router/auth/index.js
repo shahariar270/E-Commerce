@@ -154,4 +154,4 @@ router.get('/profile', verifyToken, async (req, res) => {
     }
 });
 
-module.exports = auth_router;
+module.exports = router;
