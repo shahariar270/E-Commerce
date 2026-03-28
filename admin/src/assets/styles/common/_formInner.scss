@@ -1,0 +1,32 @@
+.st-form-inner {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    &--container {
+        background-color: var(--st-background);
+        height: auto;
+        width: 100%;
+        max-width: 800px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        justify-content: center;
+        padding: 24px;
+    }
+}
+.st-summary-data {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+@media screen and (max-width: 1024px) {
+    .st-form-inner--container {
+        max-width: 600px;
+    }
+}
+@media screen and (max-width: 600px) {
+    .st-form-inner--container {
+        max-width: 400px;
+    }
+}

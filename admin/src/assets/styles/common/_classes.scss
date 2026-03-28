@@ -1,0 +1,127 @@
+.st-flex {
+    display: flex;
+}
+.st-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.st-gap-2 {
+    gap: 8px;
+}
+
+.st-link {
+    text-decoration: none;
+}
+
+.st-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    text-align: center;
+}
+
+.st-subtitle {
+    font-size: 14px;
+    color: #6b7280;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.st-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    &-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+
+        label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #374151;
+        }
+    }
+}
+
+.st-input {
+    height: 42px;
+    padding: 0 12px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    font-size: 14px;
+    transition:
+        border 0.2s,
+        box-shadow 0.2s;
+
+    &:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+}
+
+// For password inputs that need the toggle button
+.st-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    .st-input {
+        width: 100%;
+        padding-right: 40px;
+    }
+}
+
+.st-dashboard-main {
+    padding: 12px;
+}
+
+.st-select {
+    width: 100%;
+
+    &__control {
+        background-color: var(--st-background);
+        border: 1px solid var(--st-border);
+        border-radius: 4px;
+        min-height: 38px;
+
+        &:hover {
+            border-color: var(--st-secondary-hover);
+        }
+
+        &--is-focused {
+            border-color: var(--st-primary);
+            box-shadow: 0 0 0 1px var(--st-primary);
+        }
+    }
+
+    &__menu {
+        background-color: var(--st-text-white);
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        margin-top: 4px;
+    }
+
+    &__option {
+        padding: 8px 12px;
+        cursor: pointer;
+        color: var(--st-text-primary);
+
+        &:hover {
+            background-color: var(--st-secondary);
+        }
+
+        &--is-selected {
+            background-color: var(--st-primary);
+            color: var(--st-text-white);
+
+            &:hover {
+                background-color: var(--st-primary-hover);
+            }
+        }
+    }
+}
