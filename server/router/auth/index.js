@@ -34,7 +34,6 @@ router.post('/register', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     try {
-        console.log(req);
         const { email, password } = req.body;
 
 
@@ -63,10 +62,10 @@ router.post('/login', async (req, res) => {
             { expiresIn: "1h" }
         );
 
-        return res.status(201).json({
+        return res.status(200).json({
             token,
             message: "Login successfully",
-            success: false,
+            success: true,
         });
 
     } catch (error) {
