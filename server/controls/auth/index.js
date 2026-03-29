@@ -13,6 +13,7 @@ module.exports = {
         try {
             const validate = registerSchema.safeParse(req.body);
             if (!validate.success) {
+                console.log(validate.error);
                 return res.status(400).json({ message: validate.error.errors[0].message, success: false });
             }
 
