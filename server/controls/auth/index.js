@@ -1,11 +1,21 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../../model/auth');
+const {
+    registerSchema,
+    loginSchema,
+    updateProfileSchema
+} = require('../../validation_schema/auth');
 const jwt_token = process.env.JWT_TOKEN;
 
 module.exports = {
     register_controller: async (req, res) => {
         try {
+            const validate = registerSchema.safeParse(req.body);
+            if (!validate.success) {
+                return res.status(400).json({ message: validate.error.errors[0].message, success: false });
+            }
+
             const { user_name, email, password, first_name, last_name } = req.body;
 
             const existUser = await User.findOne({ email });
@@ -29,8 +39,12 @@ module.exports = {
     },
     login_controller: async (req, res) => {
         try {
-            const { email, password } = req.body;
+            const validate = loginSchema.safeParse(req.body);
+            if (!validate.success) {
+                return res.status(400).json({ message: validate.error.errors[0].message, success: false });
+            }
 
+            const { email, password } = req.body;
 
             const user = await User.findOne({
                 email: email.toLowerCase()
@@ -72,6 +86,11 @@ module.exports = {
     },
     update_profile_controller: async (req, res) => {
         try {
+            const validate = updateProfileSchema.safeParse(req.body);
+            if (!validate.success) {
+                return res.status(400).json({ message: validate.error.errors[0].message, success: false });
+            }
+
             const { current_pass, new_pass, first_name, last_name } = req.body;
             const userId = req.user.id;
 
