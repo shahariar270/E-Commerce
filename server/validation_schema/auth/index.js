@@ -14,14 +14,10 @@ const loginSchema = z.object({
 });
 
 const updateProfileSchema = z.object({
-    current_pass: z.string().min(6),
-    new_pass: z.string().min(6),
-    first_name: z.string().min(2).max(100),
-    last_name: z.string().min(2).max(100)
+    current_pass: z.string().min(6).optional(), 
+    new_pass: z.string().min(6).optional(), 
+    first_name: z.string().min(2).max(100).optional(),
+    last_name: z.string().min(2).max(100).optional()
 });
 
-module.exports = {
-    registerSchema,
-    loginSchema,
-    updateProfileSchema
-};
+module.exports = { registerSchema, loginSchema, updateProfileSchema };

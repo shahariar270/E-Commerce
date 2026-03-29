@@ -13,8 +13,7 @@ module.exports = {
         try {
             const validate = registerSchema.safeParse(req.body);
             if (!validate.success) {
-                console.log(validate.error);
-                return res.status(400).json({ message: validate.error.errors[0].message, success: false });
+                return res.status(400).json({ message: validate.error[0], success: false });
             }
 
             const { user_name, email, password, first_name, last_name } = req.body;
