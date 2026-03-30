@@ -13,7 +13,10 @@ module.exports = {
         try {
             const validate = registerSchema.safeParse(req.body);
             if (!validate.success) {
-                return res.status(400).json({ message: validate.error[0], success: false });
+                return res.status(400).json({
+                    message: validate.error.issues[0].message,
+                    success: false
+                });
             }
 
             const { user_name, email, password, first_name, last_name } = req.body;
@@ -138,7 +141,6 @@ module.exports = {
             });
 
         } catch (error) {
-            console.error(error);
             return res.status(500).json({
                 message: "Internal server error",
                 success: false,
