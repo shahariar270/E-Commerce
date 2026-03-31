@@ -1,20 +1,34 @@
+import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form } from "formik";
 import Input from "../../components/Input";
 import Button from "../../components/Buttons";
+import { loginUser, clearError } from "../../store/slices/authSlice";
+import { useNavigate } from "react-router-dom";
 import "./style.scss";
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { loading, error } = useSelector((state) => state.auth);
+
   const initialValues = {
     email: "",
     password: "",
   };
 
-  const handleSubmit = (values, { setSubmitting }) => {
-    console.log("Login values:", values);
-    // Add your login API call here
-    setTimeout(() => {
-      setSubmitting(false);
-    }, 1000);
+  const handleSubmit = (values, { setSubmitting, resetForm }) => {
+    dispatch(clearError());
+    dispatch(loginUser({ email: values.email, password: values.password }))
+      .unwrap()
+      .then(() => {
+        navigate('/dashboard');
+      })
+      .catch(() => {
+        // Error is handled by Redux
+      })
+      .finally(() => {
+        setSubmitting(false);
+      });
   };
 
   return (
@@ -38,6 +52,19 @@ const Login = () => {
         >
           {({ isSubmitting }) => (
             <Form className="st-login-form">
+              {error && (
+                <div className="st-login-error" style={{ 
+                  color: '#dc3545', 
+                  marginBottom: '16px', 
+                  padding: '10px', 
+                  backgroundColor: '#f8d7da',
+                  borderRadius: '4px',
+                  border: '1px solid #f5c6cb'
+                }}>
+                  {error}
+                </div>
+              )}
+
               <Input
                 label="Email Address"
                 name="email"
@@ -63,11 +90,11 @@ const Login = () => {
               </div>
 
               <Button
-                label={isSubmitting ? "Signing in..." : "Sign In"}
+                label={isSubmitting || loading ? "Signing in..." : "Sign In"}
                 type="submit"
                 variant="primary"
                 size="lg"
-                disabled={isSubmitting}
+                disabled={isSubmitting || loading}
                 style={{ width: "100%", marginTop: "8px" }}
               />
             </Form>
@@ -77,7 +104,7 @@ const Login = () => {
         <div className="st-login-footer">
           <p>
             Don't have an account?{" "}
-            <a href="#" className="st-signup-link">
+            <a href="/register" className="st-signup-link">
               Sign up
             </a>
           </p>
