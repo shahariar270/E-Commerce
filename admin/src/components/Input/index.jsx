@@ -8,7 +8,7 @@ const Input = ({
     type,
     placeholder,
     as = 'input',
-    onChange = ()=> {},
+    // onChange = ()=> {},
     disabled = false,
     value,
 }) => {
@@ -31,7 +31,7 @@ const Input = ({
                     name={name}
                     type={inputType}
                     value={value}
-                    onChange={handleChange}
+                    // onChange={handleChange}
                     className={as === 'input' ? 'st-input' : 'st-text-area'}
                     placeholder={placeholder}
                     disabled={disabled}

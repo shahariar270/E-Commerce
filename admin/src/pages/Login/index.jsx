@@ -18,6 +18,7 @@ const Login = () => {
 
   const handleSubmit = (values, { setSubmitting, resetForm }) => {
     dispatch(clearError());
+    console.log({values});
     dispatch(loginUser({ email: values.email, password: values.password }))
       .unwrap()
       .then(() => {
