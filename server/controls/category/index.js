@@ -108,4 +108,4 @@ class category_controller {
     }
 }
 
-module.exports = category_controller;
+module.exports = new category_controller;
