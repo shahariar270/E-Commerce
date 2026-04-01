@@ -4,7 +4,8 @@ const Category = require('../../model/category/index');
 class category_controller {
     async create_category(req, res) {
         try {
-            const { name, slug, user_id, is_active } = req.body;
+            const { name, slug, is_active } = req.body;
+            const user_id = req.user.id;
             const new_category = Category.create({ name, slug, user_id, is_active });
 
             if (!name || !slug) {
@@ -102,6 +103,31 @@ class category_controller {
             return res.status(500).json({
                 success: false,
                 message: 'Error deleting category',
+                data: error.message
+            });
+        };
+    }
+
+    async get_category_by_id(req, res) {
+        try {
+            const { id } = req.params;
+            const category = await Category.findById(id);
+            if (!category) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Category not found',
+                });
+            }
+            return res.status(200).json({
+                success: true,
+                message: 'Category retrieved successfully',
+                data: category,
+            });
+        }
+        catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: 'Error retrieving category',
                 data: error.message
             });
         };

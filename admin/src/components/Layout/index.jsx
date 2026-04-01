@@ -43,6 +43,12 @@ const ProfileIcon = () => (
   </svg>
 );
 
+const CategoryIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+  </svg>
+);
+
 const LogoutIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
@@ -74,6 +80,7 @@ export const Layout = ({ children }) => {
     { to: "/dashboard", icon: <DashboardIcon />, label: "Dashboard" },
     { to: "/products", icon: <ProductsIcon />, label: "Products" },
     { to: "/orders", icon: <OrdersIcon />, label: "Orders" },
+    { to: "/categories", icon: <CategoryIcon />, label: "Categories" },
     { to: "/settings", icon: <SettingsIcon />, label: "Settings" },
     { to: "/profile", icon: <ProfileIcon />, label: "Profile" },
   ];

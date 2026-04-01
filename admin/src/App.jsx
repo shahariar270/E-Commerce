@@ -7,6 +7,7 @@ import Products from "./pages/Products";
 import Orders from "./pages/Orders";
 import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
+import Categories from "./pages/Categories";
 
 function ProtectedRoute({ children }) {
   // Check for authentication token
@@ -84,6 +85,16 @@ function App() {
             <ProtectedRoute>
               <Layout>
                 <Profile />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/categories"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Categories />
               </Layout>
             </ProtectedRoute>
           }
