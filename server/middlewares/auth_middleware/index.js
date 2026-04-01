@@ -1,9 +1,11 @@
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
+// require('dotenv').config();
+require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
+
 
 class auth_middleware {
     constructor() {
-        this.secret = process.env.JWT_TOKEN;
+        this.secret = process.env.JWT_TOKEN || 'default_secret_key';
 
         this.verify_token = this.verify_token.bind(this);
         this.verify_role = this.verify_role.bind(this);

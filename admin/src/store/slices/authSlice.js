@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { authRoute } from '@utils/helper';
+import { authRoute, setCookie } from '@utils/helper';
 
 console.log(authRoute);
 
@@ -14,15 +14,14 @@ export const loginUser = createAsyncThunk(
         },
         body: JSON.stringify({ email, password }),
       });
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
         return rejectWithValue(data.message || 'Login failed');
       }
-      
-      // Store token in localStorage
       localStorage.setItem('token', data.token);
+      setCookie('token', data.token);
       return data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -41,13 +40,13 @@ export const registerUser = createAsyncThunk(
         },
         body: JSON.stringify(userData),
       });
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
         return rejectWithValue(data.message || 'Registration failed');
       }
-      
+
       return data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -60,11 +59,11 @@ export const getProfile = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('token');
-      
+
       if (!token) {
         return rejectWithValue('No token found');
       }
-      
+
       const response = await fetch(`${authRoute}/profile`, {
         method: 'GET',
         headers: {
@@ -72,13 +71,13 @@ export const getProfile = createAsyncThunk(
           'Content-Type': 'application/json',
         },
       });
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
         return rejectWithValue(data.message || 'Failed to fetch profile');
       }
-      
+
       return data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -91,11 +90,11 @@ export const updateProfile = createAsyncThunk(
   async (profileData, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('token');
-      
+
       if (!token) {
         return rejectWithValue('No token found');
       }
-      
+
       const response = await fetch(`${authRoute}/update_profile`, {
         method: 'POST',
         headers: {
@@ -104,13 +103,13 @@ export const updateProfile = createAsyncThunk(
         },
         body: JSON.stringify(profileData),
       });
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
         return rejectWithValue(data.message || 'Failed to update profile');
       }
-      
+
       return data;
     } catch (error) {
       return rejectWithValue(error.message);

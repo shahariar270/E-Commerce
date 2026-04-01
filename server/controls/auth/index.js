@@ -1,3 +1,4 @@
+require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../../model/auth');
@@ -6,7 +7,7 @@ const {
     loginSchema,
     updateProfileSchema
 } = require('../../validation_schema/auth');
-const jwt_token = process.env.JWT_TOKEN;
+const jwt_token = process.env.JWT_TOKEN || 'default_secret_key';
 
 module.exports = {
     register_controller: async (req, res) => {
@@ -70,7 +71,7 @@ module.exports = {
                 });
             }
             const token = jwt.sign(
-                { id: user._id, user_name: user.user_name },
+                { id: user._id, user_name: user.user_name, user_role: user.user_role },
                 jwt_token,
                 { expiresIn: "1h" }
             );
