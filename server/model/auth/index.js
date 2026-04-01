@@ -33,6 +33,12 @@ const userSchema = new mongoose.Schema(
             default: '',
             trim: true,
         },
+        user_role: {
+            type: String,
+            default: 'buyer',
+            enum: ['buyer', 'seller', 'admin'],
+            trim: true,
+        },
     },
     { timestamps: true }
 );

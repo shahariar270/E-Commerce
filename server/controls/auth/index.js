@@ -19,7 +19,7 @@ module.exports = {
                 });
             }
 
-            const { user_name, email, password, first_name, last_name } = req.body;
+            const { user_name, email, password, first_name, last_name, user_role } = req.body;
 
             const existUser = await User.findOne({ email });
             if (existUser)
@@ -33,6 +33,7 @@ module.exports = {
                 password: hashedPass,
                 first_name,
                 last_name,
+                user_role,
             });
 
             return res.status(201).json({ message: "User created successfully", success: true });
