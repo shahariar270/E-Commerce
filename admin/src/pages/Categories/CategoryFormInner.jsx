@@ -49,7 +49,7 @@ export const CategoryFormInner = ({ id, openModalHandler, handleCloseModal }) =>
                 initialValues={getCategoryInitialValues(currentCategory)}
                 // validationSchema={getCategoryValidationSchema()}
                 onSubmit={handleSubmit}
-                enableReinitialize   
+                enableReinitialize
             >
                 {({ values, isSubmitting }) => (
                     <Form>
@@ -112,18 +112,18 @@ export const CategoryFormInner = ({ id, openModalHandler, handleCloseModal }) =>
                                 type="submit"
                                 variant="primary"
                                 disabled={isSubmitting}
-                            >
-                                {isSubmitting
+                                label={isSubmitting
                                     ? 'Saving...'
                                     : id ? 'Update' : 'Create'}
+                            >
                             </Button>
                             <Button
                                 type="button"
                                 variant="secondary"
                                 onClick={handleCloseModal}
                                 disabled={isSubmitting}
+                                label='Cancel'
                             >
-                                Cancel
                             </Button>
                         </div>
                     </Form>

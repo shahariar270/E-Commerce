@@ -62,15 +62,15 @@ const Categories = () => {
                         variant="primary"
                         size="small"
                         onClick={() => handleOpenModal(row._id)}
+                        label='Edit'
                     >
-                        Edit
                     </Button>
                     <Button
                         variant="danger"
                         size="small"
+                        label=' Delete'
                         onClick={() => handleDelete(row._id)}
                     >
-                        Delete
                     </Button>
                 </div>
             ),
@@ -87,16 +87,12 @@ const Categories = () => {
 
             <div className="page-header">
                 <h1>Categories</h1>
-                <Button variant="primary" onClick={() => handleOpenModal()}>
-                    Add New Category
+                <Button variant="primary" onClick={() => handleOpenModal()} label='Add New Category'>
                 </Button>
             </div>
 
-            {/* Alerts */}
             {error && <div className="alert alert--error">{error}</div>}
             {message && <div className="alert alert--success">{message}</div>}
-
-            {/* Table */}
             <Table
                 columns={columns}
                 data={filteredCategories}
