@@ -12,7 +12,7 @@ class product_controller {
             const user_id = req.user.id;
             const schema_merge = { user_id, ...data }
 
-            const new_product = Product.create(schema_merge);
+            const new_product = await Product.create(schema_merge);
 
             return res.status(201).json({
                 success: true,
