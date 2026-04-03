@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import Table from "../../components/Table";
 import Button from "../../components/Buttons";
+import './styles.scss';
 
-// Mock product data
 const initialProducts = [
   {
     id: 1,
@@ -120,7 +120,6 @@ const Products = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
-  // Table columns configuration
   const columns = [
     {
       key: "image",
@@ -172,9 +171,8 @@ const Products = () => {
       title: "Status",
       render: (value) => (
         <span
-          className={`status-badge status-badge--${
-            value === "Active" ? "active" : "inactive"
-          }`}
+          className={`status-badge status-badge--${value === "Active" ? "active" : "inactive"
+            }`}
         >
           {value}
         </span>
@@ -207,7 +205,6 @@ const Products = () => {
 
   const handleEdit = (product) => {
     console.log("Edit product:", product);
-    // Add edit logic here
   };
 
   const handleDelete = (id) => {
@@ -218,7 +215,6 @@ const Products = () => {
 
   const handleAddProduct = () => {
     console.log("Add new product");
-    // Add new product logic here
   };
 
   return (
@@ -256,79 +252,6 @@ const Products = () => {
           emptyMessage="No products found"
         />
       </div>
-
-      <style>{`
-        .products-page {
-          &__header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
-            gap: 16px;
-          }
-
-          &__title {
-            h2 {
-              margin: 0;
-              font-size: 24px;
-              font-weight: 600;
-              color: var(--st-text-primary);
-            }
-
-            p {
-              margin: 4px 0 0;
-              font-size: 14px;
-              color: #666;
-            }
-          }
-        }
-
-        .status-badge {
-          display: inline-block;
-          padding: 4px 12px;
-          border-radius: 12px;
-          font-size: 12px;
-          font-weight: 500;
-
-          &--active {
-            background-color: #e8f5e9;
-            color: #2e7d32;
-          }
-
-          &--inactive {
-            background-color: #ffebee;
-            color: #c62828;
-          }
-        }
-
-        .table-actions {
-          display: flex;
-          gap: 8px;
-          justify-content: center;
-        }
-
-        .action-btn {
-          background: none;
-          border: none;
-          cursor: pointer;
-          padding: 4px 8px;
-          border-radius: 4px;
-          transition: background-color 0.2s;
-
-          &:hover {
-            background-color: #f0f0f0;
-          }
-
-          &--edit {
-            color: #1976d2;
-          }
-
-          &--delete {
-            color: #d32f2f;
-          }
-        }
-      `}</style>
     </div>
   );
 };
