@@ -12,10 +12,6 @@ const product_schema = new mongoose.Schema(
         },
         description: {
             type: String,
-            required: true,
-            unique: true,
-            lowercase: true,
-            trim: true,
         },
         user_id: {
             type: String,
@@ -27,12 +23,15 @@ const product_schema = new mongoose.Schema(
             enum: ['in_stock', 'coming_soon', 'out_stock'],
             trim: true,
         },
-        category_ids: {
-            type: [String],
-            default: [],
+        category: {
+            type: [{
+                name: String,
+                id: String,
+                slug: String,
+            }],
             validate: {
-                validator: (v) => {
-                    return v.every(st => st.length > 0);
+                validator: function (v) {
+                    return v && v.length > 0;
                 },
                 message: "Please Select a Category"
             }

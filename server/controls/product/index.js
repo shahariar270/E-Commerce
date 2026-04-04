@@ -1,3 +1,4 @@
+const Category = require("../../model/category");
 const Product = require("../../model/product");
 
 
@@ -8,11 +9,20 @@ class product_controller {
 
     async create_product(req, res) {
         try {
-            const { ...data } = req.body;
+            const { category_ids, ...data } = req.body;
             const user_id = req.user.id;
-            const schema_merge = { user_id, ...data }
 
-            const new_product = await Product.create(schema_merge);
+            const categories = await Category.find({
+                _id: { $in: category_ids }
+            }).select("_id name slug");
+
+            const schema_merge = {
+                user_id,
+                category: categories,
+                ...data
+            };
+
+            let new_product = await Product.create(schema_merge);
 
             return res.status(201).json({
                 success: true,
@@ -24,8 +34,7 @@ class product_controller {
             return res.status(500).json({
                 success: false,
                 message: error.message,
-            })
-
+            });
         }
     }
 
@@ -58,7 +67,7 @@ class product_controller {
 
     async get_single_product(req, res) {
         try {
-            const { id } = req.query;
+            const { id } = req.params;
             const single_product = await Product.findById(id);
 
             if (!id) {

@@ -96,8 +96,9 @@ module.exports = {
                 return res.status(400).json({ message: validate.error.errors[0].message, success: false });
             }
 
-            const { current_pass, new_pass, first_name, last_name } = req.body;
+            const { current_pass, new_pass, first_name, last_name, role } = req.body;
             const userId = req.user.id;
+            let updates = {}
 
             const user = await User.findById(userId);
             if (!user) {
@@ -117,29 +118,25 @@ module.exports = {
                     });
                 }
 
-                const newPassHashed = await bcrypt.hash(new_pass, 10);
-                user.password = newPassHashed;
+                updates.password = await bcrypt.hash(new_pass, 10);
             }
 
             if (first_name !== undefined) {
-                user.first_name = first_name;
+                user.first_name = updates.first_name;
             }
 
             if (last_name !== undefined) {
-                user.last_name = last_name;
+                user.last_name = updates.last_name;
             }
-
-            await user.save();
+            const updatedUser = await User.findByIdAndUpdate(
+                userId,
+                updates,
+            );
 
             return res.status(200).json({
                 message: "Profile updated successfully",
                 success: true,
-                data: {
-                    _id: user._id,
-                    user_name: user.user_name,
-                    first_name: user.first_name,
-                    last_name: user.last_name,
-                }
+                data: updatedUser
             });
 
         } catch (error) {
