@@ -6,7 +6,6 @@ class category_controller {
         try {
             const { name, slug, is_active } = req.body;
             const user_id = req.user.id;
-            const new_category = Category.create({ name, slug, user_id, is_active });
 
             if (!name || !slug) {
                 return res.status(400).json({
@@ -14,14 +13,15 @@ class category_controller {
                     message: "Name and slug are required"
                 });
             }
+            const existing = await Category.find({ slug });
 
-            const existing = await Category.findOne({ slug });
-            if (existing) {
+            if (existing.length > 0) {
                 return res.status(400).json({
                     success: false,
                     message: "Category already exists"
                 });
             }
+            const new_category = await Category.create({ name, slug, user_id, is_active });
 
             return res.status(201).json({
                 success: true,
@@ -60,7 +60,7 @@ class category_controller {
         try {
             const { id } = req.params;
             const { name, slug, is_active } = req.body;
-            const updated_category = await Category.find
+            const updated_category = await Category
                 .findByIdAndUpdate(id, { name, slug, is_active }, { new: true });
 
             if (!updated_category) {
