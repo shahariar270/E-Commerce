@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { apiRoute } from '@utils/helper';
 
-// Create category
 export const createCategory = createAsyncThunk(
     'category/createCategory',
     async (categoryData, { rejectWithValue }) => {
@@ -29,7 +28,6 @@ export const createCategory = createAsyncThunk(
     }
 );
 
-// Get all categories
 export const getCategories = createAsyncThunk(
     'category/getCategories',
     async ({ page = 1, limit = 10 }, { rejectWithValue }) => {
@@ -56,7 +54,6 @@ export const getCategories = createAsyncThunk(
     }
 );
 
-// Update category
 export const updateCategory = createAsyncThunk(
     'category/updateCategory',
     async ({ id, categoryData }, { rejectWithValue }) => {
@@ -84,7 +81,6 @@ export const updateCategory = createAsyncThunk(
     }
 );
 
-// Delete category
 export const deleteCategory = createAsyncThunk(
     'category/deleteCategory',
     async (id, { rejectWithValue }) => {
