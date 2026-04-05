@@ -16,6 +16,7 @@ const Table = ({
     pagination = true,
     defaultPageSize = 10,
     pageSizeOptions = [5, 10, 25, 50],
+    total, // Total number of items for server-side pagination
     // Filter props
     showFilters = false,
     filterableColumns = [],
@@ -154,7 +155,7 @@ const Table = ({
     }, [processedData, currentPage, pageSize, pagination]);
 
     // Calculate total pages
-    const totalPages = Math.ceil(processedData.length / pageSize);
+    const totalPages = Math.ceil((total ?? processedData.length) / pageSize);
 
     // Table classes
     const tableClasses = [
@@ -171,12 +172,12 @@ const Table = ({
         if (!pagination) return null;
 
         const startItem = (currentPage - 1) * pageSize + 1;
-        const endItem = Math.min(currentPage * pageSize, processedData.length);
+        const endItem = Math.min(currentPage * pageSize, total ?? processedData.length);
 
         return (
             <div className="table-pagination">
                 <div className="table-pagination__info">
-                    Showing {startItem} to {endItem} of {processedData.length} entries
+                    Showing {startItem} to {endItem} of {total ?? processedData.length} entries
                 </div>
                 <div className="table-pagination__controls">
                     <div className="table-pagination__rows">

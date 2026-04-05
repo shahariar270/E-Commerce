@@ -14,7 +14,12 @@ export const updateProduct = createAsyncThunk(
 export const getProducts = createAsyncThunk(
   'product/getProducts',
   async (params = {}) => {
-    return apiClient(`/products`);
+    const query = new URLSearchParams();
+    if (params.search) query.append('search', params.search);
+    if (params.page) query.append('page', params.page);
+    if (params.per_page) query.append('per_page', params.per_page);
+    const queryString = query.toString();
+    return apiClient(`/products${queryString ? `?${queryString}` : ''}`);
   }
 );
 

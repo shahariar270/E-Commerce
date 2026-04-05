@@ -9,15 +9,14 @@ import { deleteProduct, getProducts } from "@Store/slices/productSlice";
 const Products = () => {
   const dispatch = useDispatch();
   const products = useSelector(state => state.product.data);
+  const total = useSelector(state => state.product.pagination.total);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
-
-    dispatch(getProducts());
-
-  }, [])
+    dispatch(getProducts({ search: searchQuery, page: currentPage, per_page: pageSize }));
+  }, [searchQuery, currentPage, pageSize, dispatch])
 
   const handleDelete = (id) => {
     dispatch(deleteProduct(id))
@@ -61,8 +60,9 @@ const Products = () => {
             color: value === 0 ? "#b00020" : value < 20 ? "#ff9800" : "#4caf50",
             fontWeight: 500,
           }}
+          className="st-text-capitalize"
         >
-          {value}
+          {value.replace("_", " ")}
         </span>
       ),
     },
@@ -129,6 +129,7 @@ const Products = () => {
           onPageChange={setCurrentPage}
           pageSize={pageSize}
           onPageSizeChange={setPageSize}
+          total={total}
           striped={true}
           sortable={true}
           emptyMessage="No products found"
