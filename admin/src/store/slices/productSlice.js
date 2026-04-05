@@ -25,7 +25,7 @@ export const getProductById = createAsyncThunk(
 
 export const deleteProduct = createAsyncThunk(
   'product/deleteProduct',
-  async (id) => apiClient(`/products/${id}`, { method: 'DELETE' })
+  async (id) => apiClient(`/product/${id}`, { method: 'DELETE' })
 );
 
 const initialState = {
@@ -47,15 +47,15 @@ const productSlice = createSlice({
       .addCase(createProduct.pending, handlePending)
       .addCase(createProduct.fulfilled, (state, action) => {
         state.loading = false;
-        state.list.unshift(action.payload.data);
+        state.data.unshift(action.payload.data);
       })
       .addCase(createProduct.rejected, handleRejected)
 
       .addCase(updateProduct.pending, handlePending)
       .addCase(updateProduct.fulfilled, (state, action) => {
         state.loading = false;
-        const i = state.list.findIndex(p => p._id === action.payload.data._id);
-        if (i !== -1) state.list[i] = action.payload.data;
+        const i = state.data.findIndex(p => p._id === action.payload.data._id);
+        if (i !== -1) state.data[i] = action.payload.data;
       })
       .addCase(updateProduct.rejected, handleRejected)
 
@@ -72,7 +72,7 @@ const productSlice = createSlice({
       .addCase(deleteProduct.pending, handlePending)
       .addCase(deleteProduct.fulfilled, (state, action) => {
         state.loading = false;
-        state.list = state.list.filter(p => p._id !== action.payload.data?._id);
+        state.data = state.data.filter(p => p._id !== action.payload.data?._id);
       })
       .addCase(deleteProduct.rejected, handleRejected);
   },

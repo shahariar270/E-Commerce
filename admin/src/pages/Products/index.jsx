@@ -3,7 +3,7 @@ import Table from "../../components/Table";
 import Button from "../../components/Buttons";
 import './styles.scss';
 import { useDispatch, useSelector } from "react-redux";
-import { getProducts } from "@Store/slices/productSlice";
+import { deleteProduct, getProducts } from "@Store/slices/productSlice";
 
 
 const Products = () => {
@@ -18,6 +18,10 @@ const Products = () => {
     dispatch(getProducts());
 
   }, [])
+
+  const handleDelete = (id) => {
+    dispatch(deleteProduct(id))
+  };
 
   const columns = [
     {
@@ -66,18 +70,19 @@ const Products = () => {
       key: "actions",
       title: "Actions",
       width: "120px",
-      render: (_, row) => (
+      render: (row, value) => (
         <div className="table-actions">
           <button
             className="action-btn action-btn--edit"
             onClick={() => handleEdit(row)}
             title="Edit"
           >
-            ✏️
+            ✏️{console.log({ value })}
           </button>
+
           <button
             className="action-btn action-btn--delete"
-            onClick={() => handleDelete(row.id)}
+            onClick={() => handleDelete(value._id)}
             title="Delete"
           >
             🗑️
@@ -88,13 +93,6 @@ const Products = () => {
   ];
 
   const handleEdit = (product) => {
-    console.log("Edit product:", product);
-  };
-
-  const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this product?")) {
-      setProducts(products.filter((p) => p.id !== id));
-    }
   };
 
   const handleAddProduct = () => {
