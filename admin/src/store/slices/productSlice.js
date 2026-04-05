@@ -25,7 +25,7 @@ export const getProducts = createAsyncThunk(
 
 export const getProductById = createAsyncThunk(
   'product/getProductById',
-  async (id) => apiClient(`/products/${id}`)
+  async (id) => apiClient(`/product/${id}`)
 );
 
 export const deleteProduct = createAsyncThunk(
