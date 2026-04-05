@@ -7,6 +7,7 @@ import Button from "@Component/Buttons";
 import Input from "@Component/Input";
 import { Form, Formik } from "formik";
 import Select from "@Component/Select";
+import { getCategories } from "@Store/slices/categorySlice";
 
 const ProductEdit = () => {
     const [searchParams] = useSearchParams();
@@ -15,13 +16,18 @@ const ProductEdit = () => {
     const action = searchParams.get('action') || 'new';
     const id = searchParams.get('id');
     const product = useSelector(state => state.product.current);
-    const category = useSelector(state => state.category.data);
+    const category = useSelector(state => state.category.categories);
+
+    // useEffect(() => {
+    //     if (action === 'edit' && id) {
+    //         dispatch(getProductById(id));
+    //     }
+    // }, [id, action]);
 
     useEffect(() => {
-        if (action === 'edit' && id) {
-            dispatch(getProductById(id));
-        }
-    }, [id, action]);
+        console.log('render');
+        dispatch(getCategories());
+    }, []);
 
 
     const handleSubmit = async (e) => {
@@ -71,7 +77,7 @@ const ProductEdit = () => {
                         />
                         <Select
                             label={'Assign Category'}
-                            value={ category}
+                            value={category}
                         />
 
 
