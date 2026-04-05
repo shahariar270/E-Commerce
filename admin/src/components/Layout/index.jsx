@@ -86,12 +86,10 @@ export const Layout = ({ children }) => {
   ];
 
   const handleLogout = () => {
-    // Add logout logic here
     localStorage.removeItem("token");
     window.location.href = "/login";
   };
 
-  // Mock user data - in real app, get from auth context/store
   const user = {
     name: "Admin User",
     email: "admin@example.com",
@@ -100,7 +98,6 @@ export const Layout = ({ children }) => {
 
   return (
     <div className="st-layout">
-      {/* Mobile overlay */}
       <div
         className={`st-layout-overlay ${sidebarOpen ? "" : "hidden"}`}
         onClick={() => setSidebarOpen(false)}

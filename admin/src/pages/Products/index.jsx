@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Table from "../../components/Table";
 import Button from "../../components/Buttons";
 import './styles.scss';
@@ -8,6 +9,7 @@ import { deleteProduct, getProducts } from "@Store/slices/productSlice";
 
 const Products = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const products = useSelector(state => state.product.data);
   const total = useSelector(state => state.product.pagination.total);
   const [searchQuery, setSearchQuery] = useState("");
@@ -20,6 +22,13 @@ const Products = () => {
 
   const handleDelete = (id) => {
     dispatch(deleteProduct(id))
+  };
+  const handleEdit = (product) => {
+    navigate(`/product?action=edit&id=${product._id}`);
+  };
+
+  const handleAddProduct = () => {
+    navigate('/product?action=new');
   };
 
   const columns = [
@@ -74,7 +83,7 @@ const Products = () => {
         <div className="table-actions">
           <button
             className="action-btn action-btn--edit"
-            onClick={() => handleEdit(row)}
+            onClick={() => handleEdit(value)}
             title="Edit"
           >
             ✏️{console.log({ value })}
@@ -92,12 +101,8 @@ const Products = () => {
     },
   ];
 
-  const handleEdit = (product) => {
-  };
 
-  const handleAddProduct = () => {
-    console.log("Add new product");
-  };
+
 
   return (
     <div className="products-page">
