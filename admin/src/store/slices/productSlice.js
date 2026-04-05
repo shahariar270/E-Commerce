@@ -14,8 +14,7 @@ export const updateProduct = createAsyncThunk(
 export const getProducts = createAsyncThunk(
   'product/getProducts',
   async (params = {}) => {
-    const query = new URLSearchParams(params).toString();
-    return apiClient(`/products${query ? `?${query}` : ''}`);
+    return apiClient(`/products`);
   }
 );
 
@@ -30,7 +29,7 @@ export const deleteProduct = createAsyncThunk(
 );
 
 const initialState = {
-  list: [],
+  data: [],
   current: null,
   loading: false,
   error: null,
@@ -63,7 +62,7 @@ const productSlice = createSlice({
       .addCase(getProducts.pending, handlePending)
       .addCase(getProducts.fulfilled, (state, action) => {
         state.loading = false;
-        state.list = action.payload.data;
+        state.data = action.payload.data;
         state.pagination.total = action.payload.total;
       })
       .addCase(getProducts.rejected, handleRejected)
