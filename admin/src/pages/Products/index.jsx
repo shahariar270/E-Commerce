@@ -86,7 +86,7 @@ const Products = () => {
             onClick={() => handleEdit(value)}
             title="Edit"
           >
-            ✏️{console.log({ value })}
+            ✏️
           </button>
 
           <button
