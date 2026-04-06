@@ -18,15 +18,14 @@ const ProductEdit = () => {
     const product = useSelector(state => state.product.current);
     const category = useSelector(state => state.category.categories);
 
-    // useEffect(() => {
-    //     if (action === 'edit' && id) {
-    //         dispatch(getProductById(id));
-    //     }
-    // }, [id, action]);
+    useEffect(() => {
+        if (action === 'edit' && id) {
+            dispatch(getProductById(id));
+        }
+    }, [id, action]);
 
     useEffect(() => {
-        console.log('render');
-        dispatch(getCategories());
+        dispatch(getCategories({ page: 1, limit: 100 }));
     }, []);
 
 
