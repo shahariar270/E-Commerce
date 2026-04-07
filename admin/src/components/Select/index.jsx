@@ -8,6 +8,7 @@ const Select = ({
     label,
     onMenuScrollToBottom = () => { },
     onMenuScrollToTop = () => { },
+    isMulti = false
 }) => {
 
     return (
@@ -21,6 +22,7 @@ const Select = ({
                 onMenuScrollToBottom={onMenuScrollToBottom}
                 onMenuScrollToTop={onMenuScrollToTop}
                 className='st-select'
+                isMulti={isMulti}
             />
         </div>
     )

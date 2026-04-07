@@ -10,16 +10,11 @@ const Input = ({
     as = 'input',
     // onChange = ()=> {},
     disabled = false,
-    value,
 }) => {
     const [showPassword, setShowPassword] = useState(false);
 
     const isPassword = type === "password";
-    const inputType = isPassword && showPassword ? "text" : type;
-
-    const handleChange = (e) => {
-        onChange(e);
-    };
+    const inputType = isPassword && showPassword ? "text" : type
 
     return (
         <div className="st-input-compo">
@@ -30,8 +25,6 @@ const Input = ({
                     id={name}
                     name={name}
                     type={inputType}
-                    value={value}
-                    // onChange={handleChange}
                     className={as === 'input' ? 'st-input' : 'st-text-area'}
                     placeholder={placeholder}
                     disabled={disabled}

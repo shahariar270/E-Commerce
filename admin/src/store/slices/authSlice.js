@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { authRoute, setCookie } from '@utils/helper';
 
-console.log(authRoute);
 
 export const loginUser = createAsyncThunk(
   'auth/loginUser',

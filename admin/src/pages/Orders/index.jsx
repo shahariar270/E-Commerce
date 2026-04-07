@@ -204,7 +204,6 @@ const Orders = () => {
   ];
 
   const handleView = (order) => {
-    console.log("View order:", order);
     // Add view logic here
   };
 
