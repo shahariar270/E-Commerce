@@ -40,16 +40,18 @@ class product_controller {
 
     async update_product(req, res) {
         try {
-            const { id } = req.query;
+            const { id } = req.params;
             const data = req.body;
-            const updated_data = Product.findOneAndUpdate(id, data, { new: true });
+            const get_product = Product.findById(id);
 
-            if (!updated_data || !id) {
+            if (!get_product || !id) {
                 return res.status(404).json({
                     success: false,
                     message: "Product not founded",
                 })
-            }
+            };
+
+            const updated_data = Product.findByIdAndUpdate(id, data, {new: true})
 
             return res.status(200).json({
                 success: true,

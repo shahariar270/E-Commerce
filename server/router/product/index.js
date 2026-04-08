@@ -11,7 +11,7 @@ router.post(
 );
 
 router.put(
-    '/product:id',
+    '/product/:id',
     auth_middleware.verify_token,
     auth_middleware.verify_role('admin'),
     update_product
