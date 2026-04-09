@@ -71,7 +71,7 @@ const Products = () => {
           }}
           className="st-text-capitalize"
         >
-          {value.replace("_", " ")}
+          {value && value.replace("_", " ")}
         </span>
       ),
     },

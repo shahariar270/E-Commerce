@@ -110,6 +110,7 @@ const ProductEdit = () => {
                                 label={"Save Product"}
                                 variant="primary"
                                 type="submit"
+                                disabled={!dirty || isSubmitting}
                             />
                         </div>
                     </Form>
