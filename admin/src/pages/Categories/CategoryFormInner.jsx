@@ -47,67 +47,59 @@ export const CategoryFormInner = ({ id, openModalHandler, handleCloseModal }) =>
         >
             <Formik
                 initialValues={getCategoryInitialValues(currentCategory)}
-                // validationSchema={getCategoryValidationSchema()}
                 onSubmit={handleSubmit}
                 enableReinitialize
             >
-                {({ values, isSubmitting }) => (
-                    <Form>
-                        {/* Name Field */}
-                        <div className="form-group">
-                            <label htmlFor="name">Name</label>
+                {({ values, isSubmitting, setFieldValue }) => (
+                    <Form className='st-form'>
+                        <label className="st-label" >Enter Category Title</label>
+                        <div className="st-input-wrapper">
                             <Field
-                                as={Input}
-                                id="name"
                                 name="name"
-                                placeholder="Enter category name"
-                                label="Name"
-                                required
-                            />
-                            <ErrorMessage
-                                name="name"
-                                component="span"
-                                className="error-text"
+                                placeholder="Title"
+                                className='st-input'
+                                onChange={(e) => {
+                                    const val = e.target.value;
+
+                                    setFieldValue("name", val);
+                                    setFieldValue("slug", val.toLowerCase().replace(/\s+/g, "_"));
+                                }}
                             />
                         </div>
+                        <ErrorMessage
+                            name="name"
+                            component="span"
+                            className="error-text"
+                        />
 
-                        {/* Slug Field */}
-                        <div className="form-group">
-                            <label htmlFor="slug">Slug</label>
+                        <Input
+                            id="slug"
+                            name="slug"
+                            placeholder="Enter category slug"
+                            label="Slug"
+                            disabled
+                            required
+                        />
+                        <ErrorMessage
+                            name="slug"
+                            component="span"
+                            className="error-text"
+                        />
+
+                        <label>
                             <Field
-                                as={Input}
-                                id="slug"
-                                name="slug"
-                                placeholder="Enter category slug"
-                                label="Slug"
-                                required
-                            />
-                            <ErrorMessage
-                                name="slug"
-                                component="span"
-                                className="error-text"
-                            />
-                        </div>
-
-                        {/* Active Checkbox */}
-                        <div className="form-group">
-                            <label>
-                                <Field
-                                    type="checkbox"
-                                    name="is_active"
-                                    checked={values.is_active}
-                                />
-                                Active
-                            </label>
-                            <ErrorMessage
+                                type="checkbox"
                                 name="is_active"
-                                component="span"
-                                className="error-text"
+                                checked={values.is_active}
                             />
-                        </div>
-
-                        {/* Action Buttons */}
-                        <div className="modal-actions">
+                            Active
+                        </label>
+                        <ErrorMessage
+                            name="is_active"
+                            component="span"
+                            className="error-text"
+                        />
+                        <div className="st-flex st-modal-footer-button">
                             <Button
                                 type="submit"
                                 variant="primary"
@@ -126,6 +118,7 @@ export const CategoryFormInner = ({ id, openModalHandler, handleCloseModal }) =>
                             >
                             </Button>
                         </div>
+
                     </Form>
                 )}
             </Formik>

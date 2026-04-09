@@ -8,7 +8,6 @@ const Input = ({
     type,
     placeholder,
     as = 'input',
-    // onChange = ()=> {},
     disabled = false,
 }) => {
     const [showPassword, setShowPassword] = useState(false);

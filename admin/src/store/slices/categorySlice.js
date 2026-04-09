@@ -115,7 +115,7 @@ export const getCategoryById = createAsyncThunk(
             const response = await fetch(`${apiRoute}categories/${id}`, {
                 method: 'GET',
                 headers: {
-                    '   Authorization': `Bearer ${token}`,
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
             });
