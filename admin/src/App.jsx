@@ -9,13 +9,14 @@ import Orders from "./pages/Orders";
 import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
 import Categories from "./pages/Categories";
+import { PublicProduct } from "@Pages/PublicProduct";
 
 function ProtectedRoute({ children }) {
   // Check for authentication token
   const isAuthenticated = localStorage.getItem("token");
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/" replace />;
   }
 
   return children;
@@ -25,6 +26,7 @@ function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<PublicProduct />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
