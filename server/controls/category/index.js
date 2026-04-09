@@ -78,8 +78,7 @@ class category_controller {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: 'Error updating category',
-                data: error.message
+                message: error.message
             });
         };
     }

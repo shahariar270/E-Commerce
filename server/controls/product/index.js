@@ -42,7 +42,7 @@ class product_controller {
         try {
             const { id } = req.params;
             const data = req.body;
-            const get_product = Product.findById(id);
+            const get_product = await Product.findById(id);
 
             if (!get_product || !id) {
                 return res.status(404).json({
@@ -51,7 +51,7 @@ class product_controller {
                 })
             };
 
-            const updated_data = Product.findByIdAndUpdate(id, data, {new: true})
+            const updated_data = await Product.findByIdAndUpdate(id, data, { new: true })
 
             return res.status(200).json({
                 success: true,
