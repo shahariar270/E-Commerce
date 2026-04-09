@@ -97,6 +97,7 @@ class category_controller {
             return res.status(200).json({
                 success: true,
                 message: 'Category deleted successfully',
+                data: deleted_category
             });
         }
         catch (error) {
