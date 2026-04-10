@@ -10,9 +10,9 @@ import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
 import Categories from "./pages/Categories";
 import { PublicProduct } from "@Pages/PublicProduct";
+import { jwtDecode } from "jwt-decode";
 
 function ProtectedRoute({ children }) {
-  // Check for authentication token
   const isAuthenticated = localStorage.getItem("token");
 
   if (!isAuthenticated) {
@@ -23,6 +23,9 @@ function ProtectedRoute({ children }) {
 }
 
 function App() {
+  const token = localStorage.getItem("token");
+  const user = jwtDecode(token);
+
   return (
     <Router>
       <Routes>
