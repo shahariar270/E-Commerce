@@ -1,5 +1,7 @@
+import { getCookie } from './helper';
+
 const getAuthHeader = () => {
-  const token = localStorage.getItem('token');
+  const token = getCookie('token');
   return token ? { Authorization: `Bearer ${token}` } : {};
 };
 

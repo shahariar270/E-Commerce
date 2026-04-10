@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { Topbar } from "../../components/Topbar";
+import { removeCookie } from "@utils/helper";
 import logo from "../../assets/images/logo.svg";
 
 // Menu icons as SVG components
@@ -86,7 +87,7 @@ export const Layout = ({ children }) => {
   ];
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    removeCookie("token");
     window.location.href = "/login";
   };
 

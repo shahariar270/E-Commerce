@@ -1,11 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { apiRoute } from '@utils/helper';
+import { apiRoute, getCookie } from '@utils/helper';
 
 export const createCategory = createAsyncThunk(
     'category/createCategory',
     async (categoryData, { rejectWithValue, dispatch }) => {
         try {
-            const token = localStorage.getItem('token');
+            const token = getCookie('token');
             const response = await fetch(`${apiRoute}category`, {
                 method: 'POST',
                 headers: {
@@ -37,7 +37,7 @@ export const getCategories = createAsyncThunk(
     'category/getCategories',
     async ({ page = 1, limit = 10 }, { rejectWithValue }) => {
         try {
-            const token = localStorage.getItem('token');
+            const token = getCookie('token');
             const response = await fetch(`${apiRoute}categories?page=${page}&limit=${limit}`, {
                 method: 'GET',
                 headers: {
@@ -63,7 +63,7 @@ export const updateCategory = createAsyncThunk(
     'category/updateCategory',
     async ({ id, categoryData }, { rejectWithValue }) => {
         try {
-            const token = localStorage.getItem('token');
+            const token = getCookie('token');
             const response = await fetch(`${apiRoute}category/${id}`, {
                 method: 'PUT',
                 headers: {
@@ -90,7 +90,7 @@ export const deleteCategory = createAsyncThunk(
     'category/deleteCategory',
     async (id, { rejectWithValue }) => {
         try {
-            const token = localStorage.getItem('token');
+            const token = getCookie('token');
             const response = await fetch(`${apiRoute}category/${id}`, {
                 method: 'DELETE',
                 headers: {
@@ -116,7 +116,7 @@ export const getCategoryById = createAsyncThunk(
     'category/getCategoryById',
     async (id, { rejectWithValue }) => {
         try {
-            const token = localStorage.getItem('token');
+            const token = getCookie('token');
             const response = await fetch(`${apiRoute}categories/${id}`, {
                 method: 'GET',
                 headers: {

@@ -11,20 +11,33 @@ import Profile from "./pages/Profile";
 import Categories from "./pages/Categories";
 import { PublicProduct } from "@Pages/PublicProduct";
 import { jwtDecode } from "jwt-decode";
+import { getCookie } from "@utils/helper";
 
-function ProtectedRoute({ children }) {
-  const isAuthenticated = localStorage.getItem("token");
+function ProtectedRoute({ children, allowedRoles }) {
+  const token = getCookie("token");
 
-  if (!isAuthenticated) {
-    return <Navigate to="/" replace />;
+  if (!token) {
+    return <Navigate to="/login" replace />;
   }
 
-  return children;
+  try {
+    const user = jwtDecode(token);
+    const role = user.user_role;
+
+    if (!allowedRoles.includes(role)) {
+      return <Navigate to="/" replace />;
+    }
+
+    return children;
+  } catch (err) {
+    return <Navigate to="/login" replace />;
+  }
 }
 
 function App() {
-  const token = localStorage.getItem("token");
+  const token = getCookie("token");
   const user = jwtDecode(token);
+  const role = user.user_role;
 
   return (
     <Router>

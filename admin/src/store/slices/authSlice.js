@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { authRoute, setCookie } from '@utils/helper';
+import { authRoute, getCookie, removeCookie } from '@utils/helper';
 
 
 export const loginUser = createAsyncThunk(
@@ -19,7 +19,6 @@ export const loginUser = createAsyncThunk(
       if (!response.ok) {
         return rejectWithValue(data.message || 'Login failed');
       }
-      localStorage.setItem('token', data.token);
       setCookie('token', data.token);
       return data;
     } catch (error) {
@@ -57,7 +56,7 @@ export const getProfile = createAsyncThunk(
   'auth/getProfile',
   async (_, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = getCookie('token');
 
       if (!token) {
         return rejectWithValue('No token found');
@@ -88,7 +87,7 @@ export const updateProfile = createAsyncThunk(
   'auth/updateProfile',
   async (profileData, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = getCookie('token');
 
       if (!token) {
         return rejectWithValue('No token found');
@@ -119,15 +118,15 @@ export const updateProfile = createAsyncThunk(
 export const logout = createAsyncThunk(
   'auth/logout',
   async () => {
-    localStorage.removeItem('token');
+    removeCookie('token');
     return null;
   }
 );
 
 const initialState = {
   user: null,
-  token: localStorage.getItem('token') || null,
-  isAuthenticated: !!localStorage.getItem('token'),
+  token: getCookie('token') || null,
+  isAuthenticated: !!getCookie('token'),
   loading: false,
   error: null,
   message: null,
