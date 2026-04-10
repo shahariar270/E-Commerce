@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Layout from "./components/Layout";
@@ -10,34 +10,23 @@ import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
 import Categories from "./pages/Categories";
 import { PublicProduct } from "@Pages/PublicProduct";
-import { jwtDecode } from "jwt-decode";
-import { getCookie } from "@utils/helper";
+import ProtectedRoute from "./Routing/ProtectedRoute";
 
-function ProtectedRoute({ children, allowedRoles }) {
-  const token = getCookie("token");
-
-  if (!token) {
-    return <Navigate to="/login" replace />;
-  }
-
-  try {
-    const user = jwtDecode(token);
-    const role = user.user_role;
-
-    if (!allowedRoles.includes(role)) {
-      return <Navigate to="/" replace />;
-    }
-
-    return children;
-  } catch (err) {
-    return <Navigate to="/login" replace />;
-  }
-}
 
 function App() {
-  const token = getCookie("token");
-  const user = jwtDecode(token);
-  const role = user.user_role;
+  const navigate = useNavigate();
+
+  const handleLogin = (token) => {
+    localStorage.setItem("token", token);
+
+    const user = jwtDecode(token);
+
+    if (user.user_role === "admin") {
+      navigate("/admin/dashboard");
+    } else {
+      navigate("/user");
+    }
+  };
 
   return (
     <Router>
