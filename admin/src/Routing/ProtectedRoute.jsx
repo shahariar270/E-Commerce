@@ -1,5 +1,6 @@
 import { jwtDecode } from "jwt-decode";
 import { getCookie } from "@utils/helper";
+import { Navigate } from "react-router-dom";
 
 
 function ProtectedRoute({ children, allowedRoles }) {

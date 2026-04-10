@@ -14,19 +14,18 @@ import ProtectedRoute from "./Routing/ProtectedRoute";
 
 
 function App() {
-  const navigate = useNavigate();
 
-  const handleLogin = (token) => {
-    localStorage.setItem("token", token);
+  // const handleLogin = (token) => {
+  //   localStorage.setItem("token", token);
 
-    const user = jwtDecode(token);
+  //   const user = jwtDecode(token);
 
-    if (user.user_role === "admin") {
-      navigate("/admin/dashboard");
-    } else {
-      navigate("/user");
-    }
-  };
+  //   if (user.user_role === "admin") {
+  //     navigate("/admin/dashboard");
+  //   } else {
+  //     navigate("/user");
+  //   }
+  // };
 
   return (
     <Router>
