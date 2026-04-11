@@ -10,18 +10,30 @@ export const useQuery = () => {
 };
 
 export const setCookie = (name, value, maxAgeSeconds = 3600) => {
-  document.cookie = `${name}=${value}; path=/; max-age=${maxAgeSeconds}`;
+  const cookieString = `${name}=${encodeURIComponent(value)}; path=/; max-age=${maxAgeSeconds}; SameSite=Lax`;
+  document.cookie = cookieString;
 };
 
 export const getCookie = (name) => {
-  return document.cookie
-    .split("; ")
-    .find(row => row.startsWith(name + "="))
-    ?.split("=")[1];
+  const nameEQ = name + "=";
+  const cookies = document.cookie.split(';');
+  
+  for (let i = 0; i < cookies.length; i++) {
+    let cookie = cookies[i].trim();
+    if (cookie.indexOf(nameEQ) === 0) {
+      const value = cookie.substring(nameEQ.length);
+      try {
+        return decodeURIComponent(value);
+      } catch (e) {
+        return value;
+      }
+    }
+  }
+  return null;
 };
 
 export const removeCookie = (name) => {
-  document.cookie = `${name}=; path=/; max-age=0`;
+  document.cookie = `${name}=; path=/; max-age=0; SameSite=Lax`;
 };
 
 

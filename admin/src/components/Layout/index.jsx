@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { Topbar } from "../../components/Topbar";
 import { removeCookie } from "@utils/helper";
 import logo from "../../assets/images/logo.svg";
@@ -67,11 +67,10 @@ const MenuItem = ({ to, icon, label, onClick }) => (
   </li>
 );
 
-export const Layout = ({ children }) => {
+export const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
 
-  // Get page title from URL
   const getPageTitle = () => {
     const path = location.pathname.replace("/", "");
     return path.charAt(0).toUpperCase() + path.slice(1) || "Dashboard";
@@ -123,9 +122,8 @@ export const Layout = ({ children }) => {
 
       {/* Sidebar */}
       <aside
-        className={`st-layout--sidebar ${
-          sidebarOpen ? "st-layout--sidebar--open" : ""
-        }`}
+        className={`st-layout--sidebar ${sidebarOpen ? "st-layout--sidebar--open" : ""
+          }`}
       >
         <div className="st-layout--sidebar__logo">
           <h2>Admin Panel</h2>
@@ -138,10 +136,10 @@ export const Layout = ({ children }) => {
               <MenuItem key={item.to} {...item} />
             ))}
             <li className="st-layout--sidebar__menu-item">
-              <a onClick={handleLogout} style={{ cursor: "pointer" }}>
+              {/* <a onClick={handleLogout} style={{ cursor: "pointer" }}>
                 <LogoutIcon />
                 <span>Logout</span>
-              </a>
+              </a> */}
             </li>
           </ul>
         </nav>
@@ -159,7 +157,6 @@ export const Layout = ({ children }) => {
         </div>
       </aside>
 
-      {/* Main content */}
       <main className="st-layout--main">
         <Topbar
           breadcrumb={true}
@@ -167,7 +164,9 @@ export const Layout = ({ children }) => {
             <div className="st-topbar--breadcrumb">{getPageTitle()}</div>
           }
         />
-        <div className="st-layout--content">{children}</div>
+        <div className="st-layout--content">
+          <Outlet />
+        </div>
       </main>
     </div>
   );

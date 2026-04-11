@@ -25,7 +25,6 @@ const Login = () => {
       .then(() => {
         const token = getCookie('token');
         const user = jwtDecode(token);
-        console.log(user.user_role);
 
           if (user.user_role === "admin") {
             navigate("/admin/dashboard");

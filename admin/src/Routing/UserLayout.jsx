@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { removeCookie } from "@utils/helper";
 import logo from "../assets/images/logo.svg";
 import { Topbar } from "@Component/Topbar";
@@ -65,7 +65,7 @@ const MenuItem = ({ to, icon, label, onClick }) => (
   </li>
 );
 
-export const UserLayout = ({ children }) => {
+export const UserLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
 
@@ -118,9 +118,8 @@ export const UserLayout = ({ children }) => {
       </div>
 
       <aside
-        className={`st-user-layout--sidebar ${
-          sidebarOpen ? "st-user-layout--sidebar--open" : ""
-        }`}
+        className={`st-user-layout--sidebar ${sidebarOpen ? "st-user-layout--sidebar--open" : ""
+          }`}
       >
         <div className="st-user-layout--sidebar__logo">
           <h2>My Account</h2>
@@ -161,7 +160,9 @@ export const UserLayout = ({ children }) => {
             <div className="st-user-topbar--breadcrumb">{getPageTitle()}</div>
           }
         />
-        <div className="st-user-layout--content">{children}</div>
+        <div className="st-user-layout--content">
+          <Outlet />
+        </div>
       </main>
     </div>
   );

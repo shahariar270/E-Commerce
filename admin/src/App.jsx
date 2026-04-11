@@ -11,8 +11,8 @@ import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
 import Categories from "./pages/Categories";
 import { PublicProduct } from "@Pages/PublicProduct";
-import ProtectedRoute from "./Routing/ProtectedRoute";
 import UserLayout from "./Routing/UserLayout";
+import ProtectedRoute from "./Routing/ProtectedRoute";
 
 
 function App() {
@@ -20,12 +20,11 @@ function App() {
     <Router>
       <Routes>
 
-        {/* PUBLIC */}
         <Route path="/" element={<PublicProduct />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* USER ROUTES */}
+        
         <Route
           path="/user"
           element={
@@ -39,7 +38,6 @@ function App() {
           <Route path="orders" element={<Orders />} />
         </Route>
 
-        {/* ADMIN ROUTES */}
         <Route
           path="/admin"
           element={
