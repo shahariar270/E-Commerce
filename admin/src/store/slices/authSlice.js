@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { authRoute, getCookie, removeCookie } from '@utils/helper';
+import { authRoute, getCookie, removeCookie, setCookie } from '@utils/helper';
 
 
 export const loginUser = createAsyncThunk(
@@ -31,7 +31,7 @@ export const registerUser = createAsyncThunk(
   'auth/registerUser',
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${authRoute}/register`, {
+      const response = await fetch(`${authRoute}register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

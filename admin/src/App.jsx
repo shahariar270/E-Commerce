@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Layout from "./components/Layout";
@@ -11,113 +12,55 @@ import Profile from "./pages/Profile";
 import Categories from "./pages/Categories";
 import { PublicProduct } from "@Pages/PublicProduct";
 import ProtectedRoute from "./Routing/ProtectedRoute";
+import UserLayout from "./Routing/UserLayout";
 
 
 function App() {
-
-  // const handleLogin = (token) => {
-  //   localStorage.setItem("token", token);
-
-  //   const user = jwtDecode(token);
-
-  //   if (user.user_role === "admin") {
-  //     navigate("/admin/dashboard");
-  //   } else {
-  //     navigate("/user");
-  //   }
-  // };
-
   return (
     <Router>
       <Routes>
+
+        {/* PUBLIC */}
         <Route path="/" element={<PublicProduct />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
+        {/* USER ROUTES */}
         <Route
-          path="/"
+          path="/user"
           element={
-            <ProtectedRoute>
-              <Layout>
-                <Dashboard />
-              </Layout>
+            <ProtectedRoute allowedRoles={["user"]}>
+              <UserLayout/>
             </ProtectedRoute>
           }
-        />
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Dashboard />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/products"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Products />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/product"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <ProductEdit />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/orders"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Orders />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/settings"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Settings />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Profile />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/categories"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Categories />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
+        >
+          <Route index element={<PublicProduct />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="orders" element={<Orders />} />
+        </Route>
 
-        {/* Default redirect */}
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        {/* ADMIN ROUTES */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute allowedRoles={["admin"]}>
+              <Layout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Dashboard />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="products" element={<Products />} />
+          <Route path="product" element={<ProductEdit />} />
+          <Route path="orders" element={<Orders />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="categories" element={<Categories />} />
+        </Route>
+
+        {/* FALLBACK */}
         <Route path="*" element={<Navigate to="/login" replace />} />
+
       </Routes>
     </Router>
   );

@@ -1,7 +1,7 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { Topbar } from "../../components/Topbar";
 import { removeCookie } from "@utils/helper";
-import logo from "../../assets/images/logo.svg";
+import logo from "../assets/images/logo.svg";
+import { Topbar } from "@Component/Topbar";
 
 const DashboardIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

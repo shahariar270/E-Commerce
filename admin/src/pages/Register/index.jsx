@@ -5,7 +5,6 @@ import Input from "../../components/Input";
 import Button from "../../components/Buttons";
 import { registerUser, clearError } from "../../store/slices/authSlice";
 import { useNavigate } from "react-router-dom";
-// import "./style.scss";
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -69,16 +68,16 @@ const Register = () => {
 
         <Formik
           initialValues={initialValues}
-          // validationSchema={validationSchema}
+          validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
           {({ isSubmitting }) => (
             <Form className="st-login-form">
               {error && (
-                <div className="st-login-error" style={{ 
-                  color: '#dc3545', 
-                  marginBottom: '16px', 
-                  padding: '10px', 
+                <div className="st-login-error" style={{
+                  color: '#dc3545',
+                  marginBottom: '16px',
+                  padding: '10px',
                   backgroundColor: '#f8d7da',
                   borderRadius: '4px',
                   border: '1px solid #f5c6cb'
@@ -88,10 +87,10 @@ const Register = () => {
               )}
 
               {message && !error && (
-                <div className="st-login-success" style={{ 
-                  color: '#155724', 
-                  marginBottom: '16px', 
-                  padding: '10px', 
+                <div className="st-login-success" style={{
+                  color: '#155724',
+                  marginBottom: '16px',
+                  padding: '10px',
                   backgroundColor: '#d4edda',
                   borderRadius: '4px',
                   border: '1px solid #c3e6cb'

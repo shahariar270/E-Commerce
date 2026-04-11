@@ -5,6 +5,8 @@ import Button from "../../components/Buttons";
 import { loginUser, clearError } from "../../store/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import "./style.scss";
+import { jwtDecode } from 'jwt-decode';
+import { getCookie } from '@utils/helper';
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -21,7 +23,15 @@ const Login = () => {
     dispatch(loginUser({ email: values.email, password: values.password }))
       .unwrap()
       .then(() => {
-        navigate('/dashboard');
+        const token = getCookie('token');
+        const user = jwtDecode(token);
+        console.log(user.user_role);
+
+          if (user.user_role === "admin") {
+            navigate("/admin/dashboard");
+          } else {
+            navigate("/user");
+          }
       })
       .catch(() => {
         // Error is handled by Redux
@@ -53,10 +63,10 @@ const Login = () => {
           {({ isSubmitting }) => (
             <Form className="st-login-form">
               {error && (
-                <div className="st-login-error" style={{ 
-                  color: '#dc3545', 
-                  marginBottom: '16px', 
-                  padding: '10px', 
+                <div className="st-login-error" style={{
+                  color: '#dc3545',
+                  marginBottom: '16px',
+                  padding: '10px',
                   backgroundColor: '#f8d7da',
                   borderRadius: '4px',
                   border: '1px solid #f5c6cb'
