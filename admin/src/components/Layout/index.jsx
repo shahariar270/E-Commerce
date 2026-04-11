@@ -136,10 +136,10 @@ export const Layout = () => {
               <MenuItem key={item.to} {...item} />
             ))}
             <li className="st-layout--sidebar__menu-item">
-              {/* <a onClick={handleLogout} style={{ cursor: "pointer" }}>
+              <a onClick={handleLogout} style={{ cursor: "pointer" }}>
                 <LogoutIcon />
                 <span>Logout</span>
-              </a> */}
+              </a>
             </li>
           </ul>
         </nav>

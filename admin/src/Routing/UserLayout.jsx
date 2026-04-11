@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { removeCookie } from "@utils/helper";
 import logo from "../assets/images/logo.svg";
@@ -75,12 +76,12 @@ export const UserLayout = () => {
   };
 
   const menuItems = [
-    { to: "/user/dashboard", icon: <DashboardIcon />, label: "Dashboard" },
-    { to: "/user/orders", icon: <OrdersIcon />, label: "My Orders" },
-    { to: "/user/cart", icon: <CartIcon />, label: "Shopping Cart" },
-    { to: "/user/wishlist", icon: <WishlistIcon />, label: "Wishlist" },
-    { to: "/user/profile", icon: <ProfileIcon />, label: "My Profile" },
-    { to: "/user/settings", icon: <SettingsIcon />, label: "Settings" },
+    { to: "/dashboard", icon: <DashboardIcon />, label: "Dashboard" },
+    { to: "/orders", icon: <OrdersIcon />, label: "My Orders" },
+    { to: "/cart", icon: <CartIcon />, label: "Shopping Cart" },
+    { to: "/wishlist", icon: <WishlistIcon />, label: "Wishlist" },
+    { to: "/profile", icon: <ProfileIcon />, label: "My Profile" },
+    { to: "/settings", icon: <SettingsIcon />, label: "Settings" },
   ];
 
   const handleLogout = () => {

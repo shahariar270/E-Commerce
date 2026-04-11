@@ -20,22 +20,26 @@ function App() {
     <Router>
       <Routes>
 
-        <Route path="/" element={<PublicProduct />} />
+        <Route path="*" element={<PublicProduct />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        
+
         <Route
-          path="/user"
+          path="/"
           element={
-            <ProtectedRoute allowedRoles={["user"]}>
-              <UserLayout/>
+            <ProtectedRoute allowedRoles={["buyer"]}>
+              <UserLayout />
             </ProtectedRoute>
           }
         >
           <Route index element={<PublicProduct />} />
-          <Route path="profile" element={<Profile />} />
+          <Route path="dashboard" element={<Dashboard />} />
           <Route path="orders" element={<Orders />} />
+          <Route path="cart" element={<PublicProduct />} />
+          <Route path="wishlist" element={<PublicProduct />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="settings" element={<Settings />} />
         </Route>
 
         <Route
@@ -55,9 +59,6 @@ function App() {
           <Route path="profile" element={<Profile />} />
           <Route path="categories" element={<Categories />} />
         </Route>
-
-        {/* FALLBACK */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
 
       </Routes>
     </Router>
