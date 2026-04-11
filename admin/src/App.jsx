@@ -13,6 +13,7 @@ import Categories from "./pages/Categories";
 import { PublicProduct } from "@Pages/PublicProduct";
 import UserLayout from "./Routing/UserLayout";
 import ProtectedRoute from "./Routing/ProtectedRoute";
+import { ProductSinge } from "./UserPage/ProductSinge";
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
       <Routes>
 
         <Route path="*" element={<PublicProduct />} />
+        <Route path="/product/:id" element={<ProductSinge />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 

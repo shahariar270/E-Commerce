@@ -1,7 +1,9 @@
 import React from 'react';
 import './styles.scss';
+import { useNavigate } from 'react-router-dom';
 
 const ProductCard = ({ product }) => {
+  const navigate = useNavigate();
   const getStockStatus = (stock) => {
     const statusMap = {
       in_stock: { label: 'In Stock', class: 'in-stock' },
@@ -47,7 +49,7 @@ const ProductCard = ({ product }) => {
           <span className="product-card__price">
             {product.price ? `$${product.price}` : 'Price not available'}
           </span>
-          <button className="product-card__btn">
+          <button className="product-card__btn" onClick={()=> navigate(`/product/${product?._id}`) }>
             View Details
           </button>
         </div>
