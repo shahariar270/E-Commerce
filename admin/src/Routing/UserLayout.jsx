@@ -76,12 +76,11 @@ export const UserLayout = () => {
   };
 
   const menuItems = [
-    { to: "/dashboard", icon: <DashboardIcon />, label: "Dashboard" },
+    { to: "/product", icon: <DashboardIcon />, label: "Product" },
     { to: "/orders", icon: <OrdersIcon />, label: "My Orders" },
     { to: "/cart", icon: <CartIcon />, label: "Shopping Cart" },
     { to: "/wishlist", icon: <WishlistIcon />, label: "Wishlist" },
     { to: "/profile", icon: <ProfileIcon />, label: "My Profile" },
-    { to: "/settings", icon: <SettingsIcon />, label: "Settings" },
   ];
 
   const handleLogout = () => {
