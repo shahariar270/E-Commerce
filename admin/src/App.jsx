@@ -33,11 +33,11 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<PublicProduct />} />
+          {/* <Route index element={<PublicProduct />} /> */}
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="orders" element={<Orders />} />
-          <Route path="cart" element={<PublicProduct />} />
-          <Route path="wishlist" element={<PublicProduct />} />
+          {/* <Route path="cart" element={<PublicProduct />} />
+          <Route path="wishlist" element={<PublicProduct />} /> */}
           <Route path="profile" element={<Profile />} />
           <Route path="settings" element={<Settings />} />
         </Route>
