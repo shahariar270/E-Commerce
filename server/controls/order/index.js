@@ -7,7 +7,7 @@ class order_controller {
             const { user_id } = req.user;
             const { shippingAddress } = req.body;
 
-            const cart = await Cart.findOne({ user: userId }).populate('items.product');
+            const cart = await Cart.findOne({ user: user_id }).populate('items.product');
 
             if (!cart || cart.items.length === 0) {
                 return res.status(400).json({ message: "Your cart is empty" });
@@ -22,7 +22,7 @@ class order_controller {
             const totalAmount = orderItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
 
             const newOrder = new Order({
-                user: userId,
+                user: user_id,
                 items: orderItems,
                 totalAmount,
                 shippingAddress,
@@ -32,7 +32,7 @@ class order_controller {
 
             const savedOrder = await newOrder.save();
 
-            await Cart.findOneAndUpdate({ user: userId }, { $set: { items: [] } });
+            await Cart.findOneAndUpdate({ user: user_id }, { $set: { items: [] } });
 
             res.status(201).json({
                 message: "Order placed successfully",
@@ -44,4 +44,58 @@ class order_controller {
             res.status(500).json({ message: "Server Error", error: error.message });
         }
     }
+
+    async admin_all_order(req, res) {
+        try {
+            const orders = await Order.find()
+                .populate('user', 'name email')
+                .sort({ createdAt: -1 });
+
+            if (!orders || orders.length === 0) {
+                return res.status(404).json({ message: "No orders found" });
+            }
+
+            const totalSales = orders.reduce((sum, order) => sum + order.totalAmount, 0);
+
+            res.status(200).json({
+                success: true,
+                count: orders.length,
+                totalSales,
+                orders
+            });
+
+        } catch (error) {
+            res.status(500).json({ message: "Server Error", error: error.message });
+        }
+    }
+
+    async get_single_order(req, res) {
+        try {
+            const orderId = req.params.id;
+            const userId = req.user.id;
+            const userRole = req.user.role;
+
+            const order = await Order.findById(orderId)
+                .populate('user', 'name email')
+                .populate('items.product', 'name image category');
+
+            if (!order) {
+                return res.status(404).json({ message: "Order not found!" });
+            }
+
+            if (userRole !== 'admin' && order.user._id.toString() !== userId) {
+                return res.status(403).json({ message: "Unauthorized to view this order" });
+            }
+
+            res.status(200).json({
+                success: true,
+                data: order
+            });
+
+        } catch (error) {
+            res.status(500).json({ message: "Invalid Order ID or Server Error" });
+        }
+    }
 }
+
+module.exports = new order_controller;
