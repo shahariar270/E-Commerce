@@ -77,12 +77,12 @@ export const Layout = () => {
   };
 
   const menuItems = [
-    { to: "/dashboard", icon: <DashboardIcon />, label: "Dashboard" },
-    { to: "/products", icon: <ProductsIcon />, label: "Products" },
-    { to: "/orders", icon: <OrdersIcon />, label: "Orders" },
-    { to: "/categories", icon: <CategoryIcon />, label: "Categories" },
-    { to: "/settings", icon: <SettingsIcon />, label: "Settings" },
-    { to: "/profile", icon: <ProfileIcon />, label: "Profile" },
+    { to: "/admin/dashboard", icon: <DashboardIcon />, label: "Dashboard" },
+    { to: "/admin/products", icon: <ProductsIcon />, label: "Products" },
+    { to: "/admin/orders", icon: <OrdersIcon />, label: "Orders" },
+    { to: "/admin/categories", icon: <CategoryIcon />, label: "Categories" },
+    { to: "/admin/settings", icon: <SettingsIcon />, label: "Settings" },
+    { to: "/admin/profile", icon: <ProfileIcon />, label: "Profile" },
   ];
 
   const handleLogout = () => {
