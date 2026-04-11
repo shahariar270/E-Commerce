@@ -1,7 +1,7 @@
 const express = require('express');
 const auth_middleware = require('../../middlewares/auth_middleware');
-const { get_products, update_product, create_product, get_single_product, delete_product } = require('../../controls/product');
 const router = express.Router();
+const { get_products, update_product, create_product, get_single_product, delete_product } = require('../../controls/product');
 
 router.post(
     '/product',
