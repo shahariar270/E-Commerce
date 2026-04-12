@@ -11,8 +11,6 @@ import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
 import Categories from "./pages/Categories";
 import { PublicProduct } from "@Pages/PublicProduct";
-import UserLayout from "./Routing/UserLayout";
-import ProtectedRoute from "./Routing/ProtectedRoute";
 import { ProductSinge } from "./UserPage/ProductSinge";
 
 
@@ -20,38 +18,20 @@ function App() {
   return (
     <Router>
       <Routes>
-
-        <Route path="*" element={<PublicProduct />} />
-        <Route path="/product/:id" element={<ProductSinge />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute allowedRoles={["buyer"]}>
-              <UserLayout />
-            </ProtectedRoute>
-          }
-        >
-          {/* <Route index element={<PublicProduct />} /> */}
+        <Route path="/" element={<Layout />}>
+          <Route index element={<PublicProduct />} />  {/* / */}
+          <Route path="product/:id" element={<ProductSinge />} />
+          <Route path="*" element={<PublicProduct />} />  {/* fallback */}
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="orders" element={<Orders />} />
-          {/* <Route path="cart" element={<PublicProduct />} />
-          <Route path="wishlist" element={<PublicProduct />} /> */}
           <Route path="profile" element={<Profile />} />
           <Route path="settings" element={<Settings />} />
         </Route>
 
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute allowedRoles={["admin"]}>
-              <Layout />
-            </ProtectedRoute>
-          }
-        >
+        <Route path="/admin" element={<Layout />}>
           <Route index element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="products" element={<Products />} />
@@ -61,7 +41,6 @@ function App() {
           <Route path="profile" element={<Profile />} />
           <Route path="categories" element={<Categories />} />
         </Route>
-
       </Routes>
     </Router>
   );
