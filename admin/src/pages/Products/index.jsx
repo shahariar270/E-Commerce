@@ -28,7 +28,7 @@ const Products = () => {
   };
 
   const handleAddProduct = () => {
-    navigate('/admin/product?action=new');
+    navigate('/admin/product/new');
   };
 
   const columns = [
