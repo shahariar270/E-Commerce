@@ -24,11 +24,11 @@ const Products = () => {
     dispatch(deleteProduct(id))
   };
   const handleEdit = (product) => {
-    navigate(`/product?action=edit&id=${product._id}`);
+    navigate(`/admin/product/${product._id}`);
   };
 
   const handleAddProduct = () => {
-    navigate('/product?action=new');
+    navigate('/admin/product?action=new');
   };
 
   const columns = [
@@ -100,9 +100,6 @@ const Products = () => {
       ),
     },
   ];
-
-
-
 
   return (
     <div className="products-page st-page">

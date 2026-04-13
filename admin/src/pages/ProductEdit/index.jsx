@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { createProduct, getProductById, updateProduct } from "@Store/slices/productSlice";
 import './styles.scss';
@@ -11,35 +11,35 @@ import { getCategories } from "@Store/slices/categorySlice";
 import { useSelectPagination } from "@utils/Hooks/SelectPagination";
 
 const ProductEdit = () => {
-    const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const action = searchParams.get('action') || 'new';
-    const id = searchParams.get('id');
+    const { id } = useParams();
+    console.log({ id });
+
     const currentProduct = useSelector(state => state.product.current);
 
     useEffect(() => {
-        if (action === 'edit' && id) {
+        if (id) {
             dispatch(getProductById(id));
         }
-    }, [id, action]);
+    }, [id]);
 
 
     const handleSubmit = async (values) => {
         try {
-            if (action === 'edit' && id) {
+            if (id) {
                 await dispatch(updateProduct({ id, data: values })).unwrap();
             } else {
                 await dispatch(createProduct(values)).unwrap();
             }
-            navigate("/products");
+            navigate("/admin/products");
         } catch (error) {
             console.error("Failed to save product:", error);
         }
     };
 
     const handleCancel = () => {
-        navigate("/products");
+        navigate("/admin/products");
     };
 
     const initialValues = {
@@ -57,7 +57,7 @@ const ProductEdit = () => {
     return (
         <div className="product-edit">
             <div className="product-edit__header">
-                <h2>{action === 'edit' ? "Edit Product" : "Create New Product"}</h2>
+                <h2>{id ? "Edit Product" : "Create New Product"}</h2>
             </div>
             <Formik
                 enableReinitialize
@@ -107,7 +107,7 @@ const ProductEdit = () => {
                                 type="button"
                             />
                             <Button
-                                label={"Save Product"}
+                                label={id ? "Updated product" : "Create Product"}
                                 variant="primary"
                                 type="submit"
                                 disabled={!dirty || isSubmitting}
