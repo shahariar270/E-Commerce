@@ -37,9 +37,9 @@ const Settings = () => {
   };
 
   return (
-    <div className="settings-page">
-      <div className="settings-page__header">
-        <div className="settings-page__title">
+    <div className="settings-page st-page">
+      <div className="settings-page__header st-page__header">
+        <div className="settings-page__title st-page__title">
           <h2>Settings</h2>
           <p>Configure your application preferences</p>
         </div>
@@ -208,25 +208,6 @@ const Settings = () => {
       <style>{`
         .settings-page {
           max-width: 800px;
-
-          &__header {
-            margin-bottom: 24px;
-          }
-
-          &__title {
-            h2 {
-              margin: 0;
-              font-size: 24px;
-              font-weight: 600;
-              color: var(--st-text-primary);
-            }
-
-            p {
-              margin: 4px 0 0;
-              font-size: 14px;
-              color: #666;
-            }
-          }
         }
 
         .settings-form {

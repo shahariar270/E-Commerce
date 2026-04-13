@@ -105,9 +105,9 @@ const Products = () => {
 
 
   return (
-    <div className="products-page">
-      <div className="products-page__header">
-        <div className="products-page__title">
+    <div className="products-page st-page">
+      <div className="products-page__header st-page__header">
+        <div className="products-page__title st-page__title">
           <h2>Products</h2>
           <p>Manage your product inventory</p>
         </div>

@@ -83,10 +83,12 @@ const Categories = () => {
     });
 
     return (
-        <div className="categories-page">
+        <div className="categories-page st-page">
 
-            <div className="page-header">
-                <h1>Categories</h1>
+            <div className="st-page__header">
+                <div className="st-page__title">
+                    <h1>Categories</h1>
+                </div>
                 <Button variant="primary" onClick={() => handleOpenModal()} label='Add New Category'>
                 </Button>
             </div>

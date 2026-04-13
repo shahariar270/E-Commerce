@@ -26,9 +26,9 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="dashboard-page">
-      <div className="dashboard-page__header">
-        <div className="dashboard-page__title">
+    <div className="dashboard-page st-page">
+      <div className="dashboard-page__header st-page__header">
+        <div className="dashboard-page__title st-page__title">
           <h2>Dashboard</h2>
           <p>Welcome back! Here's what's happening with your store.</p>
         </div>

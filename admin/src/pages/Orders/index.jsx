@@ -217,19 +217,10 @@ const Orders = () => {
     // Add new order logic here
   };
 
-  // Calculate order statistics
-  const stats = {
-    total: orders.length,
-    pending: orders.filter((o) => o.status === "Pending").length,
-    processing: orders.filter((o) => o.status === "Processing").length,
-    shipped: orders.filter((o) => o.status === "Shipped").length,
-    delivered: orders.filter((o) => o.status === "Delivered").length,
-  };
-
   return (
-    <div className="orders-page">
-      <div className="orders-page__header">
-        <div className="orders-page__title">
+    <div className="orders-page st-page">
+      <div className="orders-page__header st-page__header">
+        <div className="orders-page__title st-page__title">
           <h2>Orders</h2>
           <p>Manage customer orders and track deliveries</p>
         </div>
@@ -285,144 +276,6 @@ const Orders = () => {
           emptyMessage="No orders found"
         />
       </div>
-
-      <style>{`
-        .orders-page {
-          &__header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
-            gap: 16px;
-          }
-
-          &__title {
-            h2 {
-              margin: 0;
-              font-size: 24px;
-              font-weight: 600;
-              color: var(--st-text-primary);
-            }
-
-            p {
-              margin: 4px 0 0;
-              font-size: 14px;
-              color: #666;
-            }
-          }
-
-          &__stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 16px;
-            margin-bottom: 24px;
-          }
-        }
-
-        .stat-card {
-          background: white;
-          border-radius: 8px;
-          padding: 20px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-
-          &__value {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 4px;
-          }
-
-          &__label {
-            font-size: 12px;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-          }
-
-          &--total &__value {
-            color: #1976d2;
-          }
-
-          &--pending &__value {
-            color: #ff9800;
-          }
-
-          &--processing &__value {
-            color: #2196f3;
-          }
-
-          &--shipped &__value {
-            color: #9c27b0;
-          }
-
-          &--delivered &__value {
-            color: #4caf50;
-          }
-        }
-
-        .order-status {
-          display: inline-block;
-          padding: 4px 12px;
-          border-radius: 12px;
-          font-size: 12px;
-          font-weight: 500;
-
-          &--pending {
-            background-color: #fff3e0;
-            color: #e65100;
-          }
-
-          &--processing {
-            background-color: #e3f2fd;
-            color: #1565c0;
-          }
-
-          &--shipped {
-            background-color: #f3e5f5;
-            color: #7b1fa2;
-          }
-
-          &--delivered {
-            background-color: #e8f5e9;
-            color: #2e7d32;
-          }
-
-          &--cancelled {
-            background-color: #ffebee;
-            color: #c62828;
-          }
-        }
-
-        .table-actions {
-          display: flex;
-          gap: 8px;
-          justify-content: center;
-        }
-
-        .action-btn {
-          background: none;
-          border: none;
-          cursor: pointer;
-          padding: 4px 8px;
-          border-radius: 4px;
-          transition: background-color 0.2s;
-
-          &:hover {
-            background-color: #f0f0f0;
-          }
-
-          &--view {
-            color: #1976d2;
-          }
-
-          &--edit {
-            color: #388e3c;
-          }
-        }
-      `}</style>
     </div>
   );
 };
