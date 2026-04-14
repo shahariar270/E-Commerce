@@ -12,6 +12,7 @@ import Profile from "./pages/Profile";
 import Categories from "./pages/Categories";
 import { PublicProduct } from "@Pages/PublicProduct";
 import { ProductSinge } from "./UserPage/ProductSinge";
+import ErrorPage from "./pages/ErrorPage";
 
 
 function App() {
@@ -24,7 +25,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<PublicProduct />} />  {/* / */}
           <Route path="product/:id" element={<ProductSinge />} />
-          <Route path="*" element={<PublicProduct />} />  {/* fallback */}
+          <Route path="*" element={<ErrorPage code="404" title="Page Not Found" message="The page you are looking for does not exist." homeButtonLink="/" homeButtonText="Go to Home" />} />  {/* fallback */}
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="orders" element={<Orders />} />
           <Route path="profile" element={<Profile />} />
@@ -41,6 +42,7 @@ function App() {
           <Route path="settings" element={<Settings />} />
           <Route path="profile" element={<Profile />} />
           <Route path="categories" element={<Categories />} />
+          <Route path="*" element={<ErrorPage />} />
         </Route>
       </Routes>
     </Router>
