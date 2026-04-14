@@ -14,7 +14,6 @@ const ProductEdit = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { id } = useParams();
-    console.log({ id });
 
     const currentProduct = useSelector(state => state.product.current);
 
@@ -55,13 +54,12 @@ const ProductEdit = () => {
     const { options, handleLoadMore } = useSelectPagination(getCategories, selectedCategory);
 
     return (
-        <div className="product-edit">
+        <div className="st-form-inner st-gap-4">
             <div className="product-edit__header">
                 <h2>{id ? "Edit Product" : "Create New Product"}</h2>
             </div>
             <Formik
                 enableReinitialize
-                className="st-form-inner"
                 onSubmit={handleSubmit}
                 initialValues={initialValues}
             >

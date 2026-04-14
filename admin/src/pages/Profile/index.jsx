@@ -56,8 +56,8 @@ const Profile = () => {
 
   return (
     <div className="st-layout--content">
-      <div className="profile-page__header st-page__header">
-        <div className="profile-page__title st-page__title">
+      <div className="st-page__header">
+        <div className="st-page__title">
           <h2>Profile</h2>
           <p>Manage your personal information and account settings</p>
         </div>

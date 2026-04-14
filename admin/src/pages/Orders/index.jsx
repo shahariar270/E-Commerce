@@ -232,30 +232,6 @@ const Orders = () => {
         />
       </div>
 
-      {/* Order Stats */}
-      <div className="orders-page__stats">
-        <div className="stat-card stat-card--total">
-          <span className="stat-card__value">{stats.total}</span>
-          <span className="stat-card__label">Total Orders</span>
-        </div>
-        <div className="stat-card stat-card--pending">
-          <span className="stat-card__value">{stats.pending}</span>
-          <span className="stat-card__label">Pending</span>
-        </div>
-        <div className="stat-card stat-card--processing">
-          <span className="stat-card__value">{stats.processing}</span>
-          <span className="stat-card__label">Processing</span>
-        </div>
-        <div className="stat-card stat-card--shipped">
-          <span className="stat-card__value">{stats.shipped}</span>
-          <span className="stat-card__label">Shipped</span>
-        </div>
-        <div className="stat-card stat-card--delivered">
-          <span className="stat-card__value">{stats.delivered}</span>
-          <span className="stat-card__label">Delivered</span>
-        </div>
-      </div>
-
       <div className="table-container">
         <Table
           columns={columns}
