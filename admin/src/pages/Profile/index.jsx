@@ -1,21 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../../components/Buttons";
 import Input from "../../components/Input";
+import { useDispatch } from "react-redux";
+import { getProfile } from "@Store/slices/authSlice";
 
 const Profile = () => {
+  const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [profile, setProfile] = useState({
-    firstName: "Admin",
-    lastName: "User",
-    email: "admin@example.com",
-    phone: "+1 234 567 8900",
-    address: "123 Main Street",
-    city: "New York",
-    country: "USA",
-    postalCode: "10001",
-    bio: "Experienced administrator with 5+ years in e-commerce management.",
-  });
+  const [profile, setProfile] = useState();
+
+  useEffect(() => {
+    dispatch(getProfile()).then(({ payload }) => {
+      setProfile(payload.data)
+    })
+  }, [])
 
   const [formData, setFormData] = useState(profile);
 
@@ -49,11 +48,6 @@ const Profile = () => {
     }, 1000);
   };
 
-  // Calculate profile completion
-  const fields = ["firstName", "lastName", "email", "phone", "address", "city", "country", "postalCode"];
-  const filledFields = fields.filter((field) => formData[field] && formData[field].trim());
-  const completionPercent = Math.round((filledFields.length / fields.length) * 100);
-
   return (
     <div className="st-layout--content">
       <div className="st-page__header">
@@ -67,11 +61,11 @@ const Profile = () => {
       <div className="profile-card">
         <div className="profile-card__header">
           <div className="profile-avatar">
-            <span>{profile.firstName.charAt(0)}{profile.lastName.charAt(0)}</span>
+            <span>{profile?.first_name.charAt(0)}{profile?.last_name.charAt(0)}</span>
           </div>
           <div className="profile-info">
-            <h3>{profile.firstName} {profile.lastName}</h3>
-            <p>{profile.email}</p>
+            <h3>{profile?.first_name} {profile?.last_name}</h3>
+            <p>{profile?.email}</p>
             <span className="profile-role">Administrator</span>
           </div>
           {!isEditing && (
@@ -86,7 +80,7 @@ const Profile = () => {
 
         <div className="profile-card__stats">
           <div className="profile-stat">
-            <span className="profile-stat__value">{completionPercent}%</span>
+            {/* <span className="profile-stat__value">{completionPercent}%</span> */}
             <span className="profile-stat__label">Profile Complete</span>
           </div>
           <div className="profile-stat">

@@ -62,7 +62,7 @@ export const getProfile = createAsyncThunk(
         return rejectWithValue('No token found');
       }
 
-      const response = await fetch(`${authRoute}/profile`, {
+      const response = await fetch(`${authRoute}profile`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
