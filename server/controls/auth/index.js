@@ -1,4 +1,3 @@
-require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../../model/auth');
@@ -7,7 +6,8 @@ const {
     loginSchema,
     updateProfileSchema
 } = require('../../validation_schema/auth');
-const jwt_token = process.env.JWT_TOKEN || 'default_secret_key';
+const jwt_token = process.env.JWT_TOKEN;
+
 
 module.exports = {
     register_controller: async (req, res) => {
@@ -100,7 +100,8 @@ module.exports = {
             const userId = req.user.id;
             let updates = {}
 
-            const user = await User.findById(userId);
+            const user = await User.findById(userId).select("+password");
+
             if (!user) {
                 return res.status(404).json({
                     message: "User not found",
@@ -122,21 +123,20 @@ module.exports = {
             }
 
             if (first_name !== undefined) {
-                user.first_name = updates.first_name;
+                updates.first_name = first_name;
             }
 
             if (last_name !== undefined) {
-                user.last_name = updates.last_name;
+                updates.last_name = last_name;
             }
-            const updatedUser = await User.findByIdAndUpdate(
-                userId,
-                updates,
-            );
+
+            Object.assign(user, updates);
+            await user.save();
 
             return res.status(200).json({
                 message: "Profile updated successfully",
                 success: true,
-                data: updatedUser
+                data: user
             });
 
         } catch (error) {
@@ -149,7 +149,7 @@ module.exports = {
     profile_controller: async (req, res) => {
         try {
             const userId = req.user.id;
-            const userData = await User.findOne({ _id: userId });
+            const userData = await User.findById(userId);
 
             res.status(200).json({
                 message: 'User Get Successfully',

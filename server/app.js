@@ -1,9 +1,9 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const cors = require('cors');
 const { default: mongoose } = require('mongoose');
 const router = require('./router');
-require('dotenv').config();
 
 app.use(cors({
     origin: 'http://localhost:5173',
