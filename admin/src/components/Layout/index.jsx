@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { NavLink, Outlet, useLocation, Navigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { NavLink, Outlet, useLocation, Navigate, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { getCookie, removeCookie } from "@utils/helper";
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
+import { getProfile } from "../../store/slices/authSlice";
 import { Topbar } from "@Component/Topbar";
-// import logo from "../assets/images/logo.svg";
 
-// ── Icons ──────────────────────────────────────────────
 const Icon = ({ d, extra }) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     {extra}
@@ -103,23 +103,61 @@ const PREFIX = { admin: "st-layout", buyer: "st-user-layout" };
 export const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { user: reduxUser, loading } = useSelector((state) => state.auth);
 
   const token = getCookie("token");
-  // if (!token) return <Navigate to="/login" replace />;
+  const isPublicRoute = location.pathname === "/" || location.pathname.startsWith("/product");
+  const isProtectedRoute = location.pathname.startsWith("/admin") || !isPublicRoute;
 
-  if (!token) {
-    return (
-      <div>
-        <Outlet />
-      </div>
-    );
+  useEffect(() => {
+    const checkTokenValidity = () => {
+      const latestToken = getCookie("token");
+      if (!latestToken) {
+        removeCookie("token");
+        if (isProtectedRoute) {
+          navigate("/login", { replace: true });
+        }
+        return;
+      }
+
+      try {
+        const decoded = jwtDecode(latestToken);
+        if (decoded.exp && decoded.exp * 1000 < Date.now()) {
+          removeCookie("token");
+          if (isProtectedRoute) {
+            navigate("/login", { replace: true });
+          }
+        }
+      } catch {
+        removeCookie("token");
+        if (isProtectedRoute) {
+          navigate("/login", { replace: true });
+        }
+      }
+    };
+
+    checkTokenValidity();
+    const interval = setInterval(checkTokenValidity, 30 * 1000);
+    return () => clearInterval(interval);
+  }, [navigate, isProtectedRoute]);
+
+  if (!token && isProtectedRoute) {
+    removeCookie("token");
+    return <Navigate to="/login" replace />;
   }
 
   let role = "buyer";
-  let user = { name: "User", email: "user@example.com", initials: "U" };
+  let user = {
+    name: "User",
+    email: "user@example.com",
+    initials: "U",
+  };
 
   try {
     const decoded = jwtDecode(token);
+    console.log({decoded});
     role = decoded.user_role ?? "buyer";
     user = {
       name: decoded.name ?? (role === "admin" ? "Admin User" : "User"),
@@ -130,6 +168,19 @@ export const Layout = () => {
     removeCookie("token");
     return <Navigate to="/login" replace />;
   }
+
+  useEffect(() => {
+    if (token && !reduxUser) {
+      dispatch(getProfile());
+    }
+  }, [dispatch, token, reduxUser]);
+
+  // Use Redux user if available, otherwise fallback to JWT
+  const displayUser = reduxUser ? {
+    name: `${reduxUser.first_name} ${reduxUser.last_name}`.trim(),
+    email: reduxUser.email,
+    initials: `${reduxUser.first_name?.charAt(0) || ''}${reduxUser.last_name?.charAt(0) || reduxUser.user_name?.charAt(0) || ''}`.toUpperCase(),
+  } : user;
 
   const config = MENU_CONFIG[role] ?? MENU_CONFIG.buyer;
   const p = PREFIX[role] ?? PREFIX.buyer;   
@@ -194,10 +245,10 @@ export const Layout = () => {
 
         <div className={`${p}--sidebar__footer`}>
           <div className={`${p}--sidebar__footer-user`}>
-            <div className={`${p}--sidebar__footer-user-avatar`}>{user.initials}</div>
+            <div className={`${p}--sidebar__footer-user-avatar`}>{displayUser.initials || displayUser.name?.charAt(0).toUpperCase()}</div>
             <div className={`${p}--sidebar__footer-user-info`}>
-              <p>{user.name}</p>
-              <span>{user.email}</span>
+              <p>{displayUser.name}</p>
+              <span>{displayUser.email}</span>
             </div>
           </div>
         </div>

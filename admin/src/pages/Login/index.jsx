@@ -5,7 +5,7 @@ import Button from "../../components/Buttons";
 import { loginUser, clearError } from "../../store/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import "./style.scss";
-import { jwtDecode } from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
 import { getCookie } from '@utils/helper';
 
 const Login = () => {
