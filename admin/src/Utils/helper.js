@@ -42,12 +42,3 @@ export const useAuth = () => {
   const token = getCookie("token");
   return !!token;
 };
-
-export const decodeToken = () => {
-  const token = jwtDecode(getCookie("token"));
-  if (token) {
-    return token;
-  }
-};
-
-export const { id, user_name, user_role } = decodeToken();

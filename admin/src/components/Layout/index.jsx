@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, Outlet, useLocation, Navigate, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { decodeToken, getCookie, removeCookie, user_role } from "@utils/helper";
+import { decodeToken, getCookie, removeCookie, user_name, user_role } from "@utils/helper";
 import {jwtDecode} from "jwt-decode";
 import { getProfile } from "../../store/slices/authSlice";
 import { Topbar } from "@Component/Topbar";
