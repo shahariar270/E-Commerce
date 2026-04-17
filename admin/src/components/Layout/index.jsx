@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, Outlet, useLocation, Navigate, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { decodeToken, getCookie, removeCookie, user_name, user_role } from "@utils/helper";
-import {jwtDecode} from "jwt-decode";
+import { getCookie, removeCookie } from "@utils/helper";
+import { jwtDecode } from "jwt-decode";
 import { getProfile } from "../../store/slices/authSlice";
 import { Topbar } from "@Component/Topbar";
 
@@ -182,7 +182,7 @@ export const Layout = () => {
   } : user;
 
   const config = MENU_CONFIG[role] ?? MENU_CONFIG.buyer;
-  const p = PREFIX[role] ?? PREFIX.buyer;   
+  const p = PREFIX[role] ?? PREFIX.buyer;
 
   const getPageTitle = () => {
     const path = location.pathname.replace(/^\/(admin\/)?/, "");
