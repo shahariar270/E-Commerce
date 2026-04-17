@@ -1,3 +1,4 @@
+import { jwtDecode } from "jwt-decode";
 import { useLocation } from "react-router-dom";
 export const BASE = import.meta.env.VITE_API_BASE;
 
@@ -17,7 +18,7 @@ export const setCookie = (name, value, maxAgeSeconds = 3600) => {
 export const getCookie = (name) => {
   const nameEQ = name + "=";
   const cookies = document.cookie.split(';');
-  
+
   for (let i = 0; i < cookies.length; i++) {
     let cookie = cookies[i].trim();
     if (cookie.indexOf(nameEQ) === 0) {
@@ -41,3 +42,12 @@ export const useAuth = () => {
   const token = getCookie("token");
   return !!token;
 };
+
+export const decodeToken = () => {
+  const token = jwtDecode(getCookie("token"));
+  if (token) {
+    return token;
+  }
+};
+
+export const { id, user_name, user_role } = decodeToken();

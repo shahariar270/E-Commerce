@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, Outlet, useLocation, Navigate, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getCookie, removeCookie } from "@utils/helper";
+import { decodeToken, getCookie, removeCookie, user_role } from "@utils/helper";
 import {jwtDecode} from "jwt-decode";
 import { getProfile } from "../../store/slices/authSlice";
 import { Topbar } from "@Component/Topbar";
@@ -157,7 +157,6 @@ export const Layout = () => {
 
   try {
     const decoded = jwtDecode(token);
-    console.log({decoded});
     role = decoded.user_role ?? "buyer";
     user = {
       name: decoded.name ?? (role === "admin" ? "Admin User" : "User"),
