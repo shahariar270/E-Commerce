@@ -46,21 +46,9 @@ export const PublicProduct = () => {
     }, [searchQuery])
 
     const totalPages = Math.ceil(total / perPage);
-    const token = getCookie("token");
 
     return (
         <div className="public-product-page">
-            {!token &&
-                <Topbar
-                    leftContent={
-                        <div className='st-flex st-gap-2'>
-                            <Button onClick={() => navigate('/login')} label='login' />
-                            <Button onClick={() => navigate('/register')} label='Register' />
-                        </div>
-                    }
-                />
-            }
-
             <div className="public-product-page__content">
                 <div className="public-product-page__header">
                     <h1>Our Products</h1>
