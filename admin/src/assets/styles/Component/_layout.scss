@@ -11,7 +11,7 @@
 
     &__main {
         flex: 1;
-        background-color: var(--bg-body);
+        background-color: var(--st-background);
         padding: 10px;
 
         @media (min-width: 768px) {
