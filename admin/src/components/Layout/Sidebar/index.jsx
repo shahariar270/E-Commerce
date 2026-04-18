@@ -7,14 +7,14 @@ const NAV_CONFIG = {
     admin: [
         { label: 'Overview', link: "/admin/dashboard", icon: "overview" },
         { label: 'Products', link: "/admin/products", icon: "product" },
-        { label: 'Orders', link: "/admin/orders", icon: "cart" },
-        { label: 'Categories', link: "/admin/categories", icon: "category" },
+        { label: 'All Orders', link: "/admin/orders", icon: "cart" },
+        { label: 'Categories', link: "/admin/categories", icon: "filter" },
         { label: 'Settings', link: "/admin/settings", icon: "settings" },
         { label: 'Profile', link: "/admin/profile", icon: "profile" },
     ],
     user: [
-        { label: 'Home', link: "/", icon: "overview" },
-        { label: 'Orders', link: "/orders", icon: "cart" },
+        { label: 'Products', link: "/", icon: "product" },
+        { label: 'My Orders', link: "/orders", icon: "cart" },
         { label: 'Wishlist', link: "/wishlist", icon: "wishlist" },
         { label: 'Profile', link: "/profile", icon: "profile" },
         { label: 'Settings', link: "/settings", icon: "settings" },
