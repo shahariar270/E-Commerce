@@ -23,25 +23,25 @@ function App() {
         <Route path="/register" element={<Register />} />
 
         <Route path="/" element={<Layout />}>
-          <Route index element={<PublicProduct />} />  {/* / */}
+          <Route index element={<PublicProduct />} />
           <Route path="product/:id" element={<ProductSinge />} />
-          <Route path="*" element={<ErrorPage code="404" title="Page Not Found" message="The page you are looking for does not exist." homeButtonLink="/" homeButtonText="Go to Home" />} />  {/* fallback */}
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="orders" element={<Orders />} />
           <Route path="profile" element={<Profile />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="*" element={<ErrorPage />} />
         </Route>
 
         <Route path="/admin" element={<Layout />}>
-          <Route index element={<Dashboard />} />
+          <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="products" element={<Products />} />
-           <Route path="product/new" element={<ProductEdit />} />
+          <Route path="product/new" element={<ProductEdit />} />
           <Route path="product/:id" element={<ProductEdit />} />
           <Route path="orders" element={<Orders />} />
+          <Route path="categories" element={<Categories />} />
           <Route path="settings" element={<Settings />} />
           <Route path="profile" element={<Profile />} />
-          <Route path="categories" element={<Categories />} />
           <Route path="*" element={<ErrorPage />} />
         </Route>
       </Routes>
