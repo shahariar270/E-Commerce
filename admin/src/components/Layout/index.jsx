@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 import { Topbar } from "@Component/Topbar";
 // import "./styles/layout.scss";
@@ -8,12 +8,21 @@ import Button from "@Component/Buttons";
 
 export const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const token = getCookie("token");
   const navigate = useNavigate();
+  const [token, setToken] = useState(getCookie("token"));
+
+  useEffect(() => {
+    setToken(getCookie("token"));
+  }, []);
 
   return (
     <div className={`st-layout ${sidebarOpen ? "st-layout--sidebar-open" : "st-layout--sidebar-collapsed"}`}>
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      {token && (
+        <Sidebar
+          isOpen={sidebarOpen}
+          onToggle={() => setSidebarOpen(prev => !prev)}
+        />
+      )}
 
       <div className="st-layout__body">
         <Topbar
