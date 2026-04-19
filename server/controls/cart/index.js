@@ -5,8 +5,8 @@ const calculateTotals = require("./helper");
 class cart_system {
     async create_cart(req, res) {
         try {
-            const { product_id, name, price, quantity } = res.body;
-            const { user_id } = req.user;
+            const { product_id, name, price, quantity } = req.body;
+            const { id: user_id } = req.user;
             let cart = await Cart.findOne({ user_id });
 
             const totalPrice = price * quantity;
@@ -18,13 +18,13 @@ class cart_system {
                     cart.items[itemIndex].quantity += quantity;
                     cart.items[itemIndex].subtotal = cart.items[itemIndex].quantity * price;
                 } else {
-                    cart.items.push({ product_id, name, price, image, quantity, subtotal: totalPrice });
+                    cart.items.push({ product_id, name, price, quantity, subtotal: totalPrice });
                 }
 
             } else {
                 cart = new Cart({
                     user_id,
-                    items: [{ product_id, name, price, image, quantity, subtotal: totalPrice }]
+                    items: [{ product_id, name, price, quantity, subtotal: totalPrice }]
                 });
             }
 
@@ -33,7 +33,7 @@ class cart_system {
             res.status(201).json(cart);
 
         } catch (error) {
-            res.status(500).json({ message: "Error adding to cart", error });
+            res.status(500).json({ message: "Error adding to cart", error: error.message });
         }
     }
     async get_cart(req, res) {
@@ -44,7 +44,7 @@ class cart_system {
             if (!cart) return res.status(404).json({ message: "Cart is empty" });
             res.status(200).json(cart);
         } catch (error) {
-            res.status(500).json({ message: "Error fetching cart", error });
+            res.status(500).json({ message: "Error fetching cart", error: error.message });
         }
     }
     async updated_cart(req, res) {

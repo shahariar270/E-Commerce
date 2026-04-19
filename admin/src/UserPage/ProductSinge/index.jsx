@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import './styles.scss';
+import { createCart } from '@Store/slices/cartSlice';
 
 export const ProductSinge = () => {
     const { id } = useParams();
@@ -26,7 +27,14 @@ export const ProductSinge = () => {
         return <div className="loading-message">Loading product...</div>;
     }
 
-    const handleCart = () => { }
+    const handleCart = (quantity) => {
+        dispatch(createCart({
+            product_id: current._id,
+            name: current.product_name,
+            price: current.price,
+            quantity
+        }))
+    }
 
     return (
         <div className="product-single-container">
