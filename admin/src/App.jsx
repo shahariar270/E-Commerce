@@ -13,6 +13,7 @@ import Categories from "./pages/Categories";
 import { PublicProduct } from "@Pages/PublicProduct";
 import { ProductSinge } from "./UserPage/ProductSinge";
 import ErrorPage from "./pages/ErrorPage";
+import Cart from "./UserPage/Cart";
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
           <Route path="product/:id" element={<ProductSinge />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="orders" element={<Orders />} />
+          <Route path="wishlist" element={<Cart />} />
           <Route path="profile" element={<Profile />} />
           <Route path="settings" element={<Settings />} />
           <Route path="*" element={<ErrorPage />} />
