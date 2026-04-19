@@ -1,7 +1,7 @@
 import Button from '@Component/Buttons';
 import Tab from '@Component/Tab';
 import { getProductById } from '@Store/slices/productSlice';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import './styles.scss';
@@ -10,6 +10,13 @@ export const ProductSinge = () => {
     const { id } = useParams();
     const { current, loading } = useSelector(state => state.product);
     const dispatch = useDispatch();
+    const [quantity, setQuantity] = useState(1);
+
+    const increaseQty = () => setQuantity(prev => prev + 1);
+
+    const decreaseQty = () => {
+        setQuantity(prev => (prev > 1 ? prev - 1 : 1));
+    };
 
     useEffect(() => {
         dispatch(getProductById(id));
@@ -18,6 +25,8 @@ export const ProductSinge = () => {
     if (!current && loading) {
         return <div className="loading-message">Loading product...</div>;
     }
+
+    const handleCart = () => { }
 
     return (
         <div className="product-single-container">
@@ -33,12 +42,27 @@ export const ProductSinge = () => {
 
                         <div className="product-details">
                             {/* <h4>{current.category || 'Category'}</h4> */}
-                            <h2>{current.title}</h2>
+                            <h2>{current.product_name}</h2>
                             <p className="price">${current.price}</p>
 
                             <div className="button-group">
-                                <Button label='Buy Now' />
-                                <Button label='Add to Cart' />
+                                <div className="quantity-box">
+                                    <button onClick={decreaseQty}>-</button>
+                                    <input
+                                        type="number"
+                                        value={quantity}
+                                        onChange={(e) => setQuantity(Number(e.target.value))}
+                                        min="1"
+                                    />
+                                    <button onClick={increaseQty}>+</button>
+                                </div>
+
+                                <Button label="Buy Now" />
+
+                                <Button
+                                    label="Add to Cart"
+                                    onClick={() => handleCart(quantity)}
+                                />
                             </div>
                         </div>
                     </div>
@@ -80,7 +104,8 @@ export const ProductSinge = () => {
                 </>
             ) : (
                 <div className="loading-message">Product not found.</div>
-            )}
-        </div>
+            )
+            }
+        </div >
     );
 };
