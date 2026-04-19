@@ -56,13 +56,12 @@ export const ProductSinge = () => {
                                     />
                                     <button onClick={increaseQty}>+</button>
                                 </div>
-
-                                <Button label="Buy Now" />
-
                                 <Button
                                     label="Add to Cart"
                                     onClick={() => handleCart(quantity)}
                                 />
+                                <Button label="Buy Now" />
+
                             </div>
                         </div>
                     </div>
