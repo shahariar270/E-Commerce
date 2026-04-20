@@ -22,7 +22,9 @@ export const removeFromCart = createAsyncThunk(
 );
 
 const initialState = {
-  data: [],
+  items: [],
+  total_quantity: 0,
+  total_price: 0,
   loading: false,
   error: null,
 };
@@ -38,28 +40,36 @@ const cartSlice = createSlice({
       .addCase(createCart.pending, handlePending)
       .addCase(createCart.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload.data;
+        state.items = action.payload.items || [];
+        state.total_quantity = action.payload.total_quantity || 0;
+        state.total_price = action.payload.total_price || 0;
       })
       .addCase(createCart.rejected, handleRejected)
 
       .addCase(updateCart.pending, handlePending)
       .addCase(updateCart.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload.data;
+        state.items = action.payload.items || [];
+        state.total_quantity = action.payload.total_quantity || 0;
+        state.total_price = action.payload.total_price || 0;
       })
       .addCase(updateCart.rejected, handleRejected)
 
       .addCase(getCart.pending, handlePending)
       .addCase(getCart.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload.items;
+        state.items = action.payload.items || [];
+        state.total_quantity = action.payload.total_quantity || 0;
+        state.total_price = action.payload.total_price || 0;
       })
       .addCase(getCart.rejected, handleRejected)
 
       .addCase(removeFromCart.pending, handlePending)
       .addCase(removeFromCart.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload.data;
+        state.items = action.payload.items || [];
+        state.total_quantity = action.payload.total_quantity || 0;
+        state.total_price = action.payload.total_price || 0;
       })
       .addCase(removeFromCart.rejected, handleRejected);
   },

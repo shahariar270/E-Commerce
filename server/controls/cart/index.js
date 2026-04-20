@@ -63,7 +63,10 @@ class cart_system {
 
                 calculateTotals(cart);
                 await cart.save();
-                res.status(200).json(cart);
+
+                // Populate product_id before returning
+                const populatedCart = await Cart.findById(cart._id).populate("items.product_id");
+                res.status(200).json(populatedCart);
             } else {
                 res.status(404).json({ message: "Item not found in cart" });
             }
@@ -84,7 +87,10 @@ class cart_system {
 
             calculateTotals(cart);
             await cart.save();
-            return res.status(200).json({ message: "Item removed", cart });
+
+            // Populate product_id before returning
+            const populatedCart = await Cart.findById(cart._id).populate("items.product_id");
+            return res.status(200).json(populatedCart);
         } catch (error) {
             res.status(500).json({ message: "Error removing item", error : error.message });
         }
