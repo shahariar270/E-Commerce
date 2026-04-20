@@ -19,11 +19,12 @@ const Cart = () => {
   const handleQuantityChange = (item, delta) => {
     const newQty = (item.quantity || 1) + delta;
     if (newQty < 1) return;
-    dispatch(updateCart({ product_id: item._id, quantity: newQty }));
+    console.log({ item });
+    dispatch(updateCart({ product_id: item?.product_id?._id, quantity: newQty }));
   };
 
   const handleRemove = (id) => {
-    console.log({id});
+    console.log({ id });
     dispatch(removeFromCart(id));
   };
 
