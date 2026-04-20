@@ -14,16 +14,18 @@ const order_schema = new mongoose.Schema(
         ],
         totalAmount: { type: Number, required: true },
         shippingAddress: {
-            street: String,
+            name: String,
+            phone: String,
+            address: String,
             city: String,
-            zipCode: String
+            postalCode: String
         },
         status: {
             type: String,
             enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'],
             default: 'Pending'
         },
-        paymentStatus: { type: String, enum: ['Paid', 'Unpaid'], default: 'Unpaid' },
+        paymentStatus: { type: String, enum: ['Pending', 'Paid', 'Failed'], default: 'Unpaid' },
         createdAt: { type: Date, default: Date.now }
     },
     { timestamps: true }
