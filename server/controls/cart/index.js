@@ -38,11 +38,12 @@ class cart_system {
     }
     async get_cart(req, res) {
         try {
-            const { user_id } = req.user;
-            const cart = await Cart.findOne({ user_id }).populate("items.product_id");
+            const { id: user_id } = req.user;
+            const cart = await Cart.findOne({ user_id })
+                .populate("items.product_id");
 
             if (!cart) return res.status(404).json({ message: "Cart is empty" });
-            res.status(200).json(cart);
+            return res.status(200).json(cart);
         } catch (error) {
             res.status(500).json({ message: "Error fetching cart", error: error.message });
         }

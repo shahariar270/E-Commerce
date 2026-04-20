@@ -10,7 +10,8 @@ const Cart = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const cartData = useSelector(state => state.cart);
+  const cartData = useSelector(state => state.cart.data);
+  console.log({ cartData });
 
   useEffect(() => {
     dispatch(getCart());
@@ -38,7 +39,7 @@ const Cart = () => {
     // promo logic placeholder
   };
 
-  const items = cartData?.items || [];
+  const items = cartData;
   const subtotal = items.reduce((acc, item) => acc + (item.price * (item.quantity || 1)), 0);
   const tax = +(subtotal * 0.067).toFixed(2);
   const total = +(subtotal + tax).toFixed(2);
@@ -79,7 +80,7 @@ const Cart = () => {
                   <div>
                     <h4 className="cart__item-name">{item.product_name}</h4>
                     <p className="cart__item-meta">
-                      SKU: {item.sku || '—'} • {item.variant || ''}
+                      Product name: {item.sku || '—'} • {item.variant || ''}
                     </p>
                   </div>
                   <span className="cart__item-price">
