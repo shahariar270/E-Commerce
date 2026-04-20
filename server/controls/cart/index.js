@@ -49,7 +49,8 @@ class cart_system {
         }
     }
     async updated_cart(req, res) {
-        const { user_id, product_id, quantity } = req.body;
+        const { id: user_id } = req.user;
+        const { product_id, quantity } = req.body;
 
         try {
             const cart = await Cart.findOne({ user_id });
@@ -72,7 +73,7 @@ class cart_system {
     }
 
     async remove_item_from_cart(req, res) {
-        const { user_id } = req.user;
+        const { id: user_id } = req.user;
         const { id } = req.params;
 
         try {
@@ -83,9 +84,9 @@ class cart_system {
 
             calculateTotals(cart);
             await cart.save();
-            res.status(200).json({ message: "Item removed", cart });
+            return res.status(200).json({ message: "Item removed", cart });
         } catch (error) {
-            res.status(500).json({ message: "Error removing item", error });
+            res.status(500).json({ message: "Error removing item", error : error.message });
         }
     }
 

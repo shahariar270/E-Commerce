@@ -22,7 +22,7 @@ export const removeFromCart = createAsyncThunk(
 );
 
 const initialState = {
-  data: null,
+  data: [],
   loading: false,
   error: null,
 };

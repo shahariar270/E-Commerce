@@ -11,7 +11,6 @@ const Cart = () => {
   const dispatch = useDispatch();
 
   const cartData = useSelector(state => state.cart.data);
-  console.log({ cartData });
 
   useEffect(() => {
     dispatch(getCart());
@@ -24,6 +23,7 @@ const Cart = () => {
   };
 
   const handleRemove = (id) => {
+    console.log({id});
     dispatch(removeFromCart(id));
   };
 
@@ -40,21 +40,22 @@ const Cart = () => {
   };
 
   const items = cartData;
-  const subtotal = items.reduce((acc, item) => acc + (item.price * (item.quantity || 1)), 0);
-  const tax = +(subtotal * 0.067).toFixed(2);
-  const total = +(subtotal + tax).toFixed(2);
+  // console.log({items});
+  // const subtotal = items.reduce((acc, item) => acc + (item.price * (item.quantity || 1)), 0);
+  // const tax = +(subtotal * 0.067).toFixed(2);
+  // const total = +(subtotal + tax).toFixed(2);
 
   return (
     <div className="st-form-inner st-gap-4">
       <div className="cart__header">
-        <h2>Shopping Cart ({items.length} Items)</h2>
+        <h2>Shopping Cart ({items?.length} Items)</h2>
         <p className="cart__subtitle">Review your curated selection before finalization.</p>
       </div>
 
       <div className="cart__layout">
         <div className="cart__items">
 
-          {items.length === 0 && (
+          {items?.length === 0 && (
             <div className="cart__empty">
               <p>Your cart is empty.</p>
               <Button
@@ -66,7 +67,7 @@ const Cart = () => {
             </div>
           )}
 
-          {items.map((item) => (
+          {items?.map((item) => (
             <div className="cart__item" key={item._id}>
               <div className="cart__item-image">
                 {item.image
@@ -80,7 +81,7 @@ const Cart = () => {
                   <div>
                     <h4 className="cart__item-name">{item.product_name}</h4>
                     <p className="cart__item-meta">
-                      Product name: {item.sku || '—'} • {item.variant || ''}
+                      Product name: {item.name || '—'} • {item.variant || ''}
                     </p>
                   </div>
                   <span className="cart__item-price">
@@ -104,7 +105,7 @@ const Cart = () => {
                   </div>
                   <button
                     className="cart__remove"
-                    onClick={() => handleRemove(item._id)}
+                    onClick={() => handleRemove(item?.product_id?._id)}
                     type="button"
                   >
                     <span className="cart__remove-icon">🗑</span> Remove
@@ -128,22 +129,22 @@ const Cart = () => {
         <div className="cart__summary">
           <h3 className="cart__summary-title">Order Summary</h3>
 
-          <div className="cart__summary-row">
+          {/* <div className="cart__summary-row">
             <span>Subtotal</span>
             <span>${subtotal.toFixed(2)}</span>
-          </div>
+          </div> */}
           <div className="cart__summary-row">
             <span>Shipping</span>
             <a className="cart__summary-link" href="#">Calculated at next step</a>
           </div>
           <div className="cart__summary-row">
             <span>Estimated Tax</span>
-            <span>${tax.toFixed(2)}</span>
+            {/* <span>${tax.toFixed(2)}</span> */}
           </div>
 
           <div className="cart__summary-total">
             <span>Total</span>
-            <strong>${total.toFixed(2)}</strong>
+            {/* <strong>${total.toFixed(2)}</strong> */}
           </div>
 
           <div className="cart__promo">
@@ -168,7 +169,7 @@ const Cart = () => {
             variant="primary"
             type="button"
             onClick={handleCheckout}
-            disabled={items.length === 0}
+            disabled={items?.length === 0}
           />
 
           <p className="cart__secure-note">SECURE CHECKOUT POWERED BY CURATED PAY</p>

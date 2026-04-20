@@ -22,7 +22,7 @@ router.put(
 );
 
 router.delete(
-    '/cart:id',
+    '/cart/:id',
     auth_middleware.verify_token,
     remove_item_from_cart,
 );
