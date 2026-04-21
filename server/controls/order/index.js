@@ -1,22 +1,25 @@
 const Cart = require("../../model/cart");
+const Order = require("../../model/order");
 
 
 class order_controller {
     async create_order(req, res) {
         try {
-            const { user_id } = req.user;
+            const user_id = req.user.id;
             const { shippingAddress } = req.body;
 
-            const cart = await Cart.findOne({ user: user_id }).populate('items.product');
+            const cart = await Cart.findOne({ user_id })
+
+            console.log(user_id);
 
             if (!cart || cart.items.length === 0) {
                 return res.status(400).json({ message: "Your cart is empty" });
             }
             const orderItems = cart.items.map(item => ({
-                product: item.product._id,
-                name: item.product.name,
+                product: item.product_id,
+                name: item.name,
                 quantity: item.quantity,
-                price: item.product.price
+                price: item.price
             }));
 
             const totalAmount = orderItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);

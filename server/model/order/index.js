@@ -1,12 +1,12 @@
 
-const { default: mongoose } = require("mongoose");
+const { default: mongoose, Schema } = require("mongoose");
 
 const order_schema = new mongoose.Schema(
     {
-        user_id: { type: ObjectId, ref: 'User', required: true },
+        user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
         items: [
             {
-                product: { type: ObjectId, ref: 'Product', required: true },
+                product: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
                 name: { type: String, required: true },
                 quantity: { type: Number, required: true },
                 price: { type: Number, required: true }
@@ -25,7 +25,7 @@ const order_schema = new mongoose.Schema(
             enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'],
             default: 'Pending'
         },
-        paymentStatus: { type: String, enum: ['Pending', 'Paid', 'Failed'], default: 'Unpaid' },
+        paymentStatus: { type: String, enum: ['Pending', 'Paid', 'Failed', 'Unpaid'], default: 'Unpaid' },
         createdAt: { type: Date, default: Date.now }
     },
     { timestamps: true }
