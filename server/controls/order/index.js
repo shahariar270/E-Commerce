@@ -10,8 +10,6 @@ class order_controller {
 
             const cart = await Cart.findOne({ user_id })
 
-            console.log(user_id);
-
             if (!cart || cart.items.length === 0) {
                 return res.status(400).json({ message: "Your cart is empty" });
             }
@@ -82,12 +80,9 @@ class order_controller {
                 .populate('user', 'name email')
                 .populate('items.product', 'name image category');
 
+
             if (!order) {
                 return res.status(404).json({ message: "Order not found!" });
-            }
-
-            if (userRole !== 'admin' && order.user._id.toString() !== userId) {
-                return res.status(403).json({ message: "Unauthorized to view this order" });
             }
 
             res.status(200).json({
@@ -96,7 +91,7 @@ class order_controller {
             });
 
         } catch (error) {
-            res.status(500).json({ message: "Invalid Order ID or Server Error" });
+            res.status(500).json({ message: error.message });
         }
     }
 }
