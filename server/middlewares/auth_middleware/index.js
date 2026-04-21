@@ -32,6 +32,9 @@ class auth_middleware {
     verify_role = (...allowedRoles) => {
         return (req, res, next) => {
             const userRole = req?.user?.user_role;
+
+            console.log("Required Role:", allowedRoles);
+        console.log("Logged in User Role:", userRole);
             if (!allowedRoles.includes(userRole)) {
                 return res.status(403).json({ message: "Access denied" });
             }
