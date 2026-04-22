@@ -94,6 +94,47 @@ class order_controller {
             res.status(500).json({ message: error.message });
         }
     }
+
+    async update_order_status(req, res) {
+        try {
+            const orderId = req.params.id;
+            const { status } = req.body;
+            const order = await Order.findById(orderId);
+
+            if (!order) {
+                return res.status(404).json({ message: "Order not found!" });
+            }
+            order.status = status;
+            await order.save();
+            res.status(200).json({
+                success: true,
+                message: "Order status updated successfully",
+                data: order
+            });
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+
+    }
+
+    async delete_order(req, res) {
+        try {
+            const orderId = req.params.id;
+            const order = await Order
+                .findByIdAndDelete(orderId);
+
+            if (!order) {
+                return res.status(404).json({ message: "Order not found!" });
+            }
+            res.status(200).json({
+                success: true,
+                message: "Order deleted successfully",
+            });
+        }
+        catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    }
 }
 
 module.exports = new order_controller;
