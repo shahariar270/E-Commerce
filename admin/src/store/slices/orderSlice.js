@@ -7,6 +7,7 @@ export const getAllOrder = createAsyncThunk(
     async (_, thunApi) => apiClient('/order')
 );
 
+const initialState = {}
 
 const OrderSlices = createSlice({
     name: 'order',
@@ -16,7 +17,7 @@ const OrderSlices = createSlice({
         const handleRejected = (state, action) => { state.loading = false; state.error = action.error.message; };
 
         builder
-            .addCase(createCart.pending, handlePending)
+            // .addCase(createCart.pending, handlePending)
     }
 
 });

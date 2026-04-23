@@ -1,6 +1,6 @@
 const express = require('express');
 const auth_middleware = require('../../middlewares/auth_middleware');
-const { create_order, admin_all_order, get_single_order } = require('../../controls/order');
+const { create_order, admin_all_order, get_single_order, update_order_status, delete_order } = require('../../controls/order');
 const router = express.Router();
 
 
