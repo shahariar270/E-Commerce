@@ -14,6 +14,7 @@ import { PublicProduct } from "@Pages/PublicProduct";
 import { ProductSinge } from "./UserPage/ProductSinge";
 import ErrorPage from "./pages/ErrorPage";
 import Cart from "./UserPage/Cart";
+import { Checkout } from "./UserPage/Checkout";
 
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
           <Route path="profile" element={<Profile />} />
           <Route path="settings" element={<Settings />} />
           <Route path="*" element={<ErrorPage />} />
+          <Route path="checkout" element={<Checkout />} />
         </Route>
 
         <Route path="/admin" element={<Layout />}>
