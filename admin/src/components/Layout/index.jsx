@@ -5,6 +5,7 @@ import { Topbar } from "@Component/Topbar";
 import { Outlet, useNavigate } from "react-router-dom";
 import { getCookie } from "@utils/helper";
 import Button from "@Component/Buttons";
+import Notification from "@Component/Notifications";
 
 export const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -38,6 +39,7 @@ export const Layout = () => {
         <main className="st-layout__main">
           <div className="st-layout__content">
             <Outlet />
+            <Notification />
           </div>
         </main>
       </div>

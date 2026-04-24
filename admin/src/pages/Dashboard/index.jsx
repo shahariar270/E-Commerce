@@ -1,6 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { showNotification } from "@Store/slices/notificationSlice";
 
 const Dashboard = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(showNotification({
+      message: "Welcome back! Dashboard loaded successfully.",
+      type: "success",
+      delay: 3000
+    }));
+  }, [dispatch]);
   // Mock data for dashboard
   const stats = [
     { label: "Total Revenue", value: "$45,231", change: "+12%", positive: true },

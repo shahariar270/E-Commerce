@@ -3,9 +3,9 @@ import authReducer from './slices/authSlice';
 import categoryReducer from './slices/categorySlice';
 import productReducer from './slices/productSlice';
 import cartReducer from './slices/cartSlice';
-import { showNotification } from './slices/notificaionSlices';
 import orderReducer from './slices/orderSlice'
 import { logger } from 'redux-logger';
+import notificationReducer from './slices/notificationSlice';
 
 const store = configureStore({
   reducer: {
@@ -13,7 +13,7 @@ const store = configureStore({
     category: categoryReducer,
     product: productReducer,
     cart: cartReducer,
-    showNotification: showNotification,
+    notification: notificationReducer,
     order: orderReducer
   },
   middleware: (getDefaultMiddleware) =>
