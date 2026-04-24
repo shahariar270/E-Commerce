@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-import logger from 'redux-logger';
 import authReducer from './slices/authSlice';
 import categoryReducer from './slices/categorySlice';
 import productReducer from './slices/productSlice';
 import cartReducer from './slices/cartSlice';
 import { showNotification } from './slices/notificaionSlices';
 import orderReducer from './slices/orderSlice'
+import { logger } from 'redux-logger';
 
 const store = configureStore({
   reducer: {
@@ -16,7 +16,10 @@ const store = configureStore({
     showNotification: showNotification,
     order: orderReducer
   },
-  // middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(
+      import.meta.env.MODE === 'development' ? logger : []
+    )
 });
 
 export default store;
