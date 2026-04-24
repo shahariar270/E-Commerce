@@ -2,6 +2,7 @@ import { getCookie } from '@utils/helper'
 import { jwtDecode } from 'jwt-decode'
 import React, { useEffect, useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
+import './styles.scss'
 
 const NAV_CONFIG = {
     admin: [
@@ -25,11 +26,7 @@ const ChevronIcon = ({ flipped }) => (
     <svg
         width="12" height="12" viewBox="0 0 24 24"
         fill="none" stroke="currentColor" strokeWidth="2.5"
-        style={{
-            transition: 'transform 0.25s',
-            transform: flipped ? 'rotate(180deg)' : 'none',
-            flexShrink: 0,
-        }}
+        className={`st-sidebar__toggle-icon ${flipped ? 'st-sidebar__toggle-icon--flipped' : ''}`}
     >
         <polyline points="15 18 9 12 15 6" />
     </svg>
@@ -41,15 +38,7 @@ const UserAvatar = ({ name, email }) => {
         : email?.[0]?.toUpperCase() ?? '?'
 
     return (
-        <div style={{
-            width: '32px', height: '32px',
-            borderRadius: '50%',
-            background: 'linear-gradient(135deg, #6d28d9, #a78bfa)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: '#fff', fontSize: '12px', fontWeight: '700',
-            flexShrink: 0,
-            userSelect: 'none',
-        }}>
+        <div className="st-sidebar__user-avatar">
             {initials}
         </div>
     )
@@ -59,40 +48,12 @@ const NavItem = ({ label, icon, link, isOpen }) => (
     <NavLink
         to={link}
         end
-        style={({ isActive }) => ({
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-            padding: '10px 8px',
-            borderRadius: '8px',
-            textDecoration: 'none',
-            color: isActive ? '#6d28d9' : '#6b7280',
-            fontWeight: isActive ? '500' : '400',
-            fontSize: '14px',
-            background: isActive ? '#ede9fe' : 'transparent',
-            border: 'none',
-            width: '100%',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            marginBottom: '2px',
-            transition: 'background 0.15s, color 0.15s',
-        })}
-        onMouseEnter={e => {
-            if (e.currentTarget.style.background !== 'rgb(237, 233, 254)') {
-                e.currentTarget.style.background = '#f9fafb'
-            }
-        }}
-        onMouseLeave={e => {
-            if (e.currentTarget.style.background !== 'rgb(237, 233, 254)') {
-                e.currentTarget.style.background = 'transparent'
-            }
-        }}
+        className={({ isActive }) =>
+            `st-sidebar__nav-item ${isActive ? 'st-sidebar__nav-item--active' : ''}`
+        }
     >
-        <span className={`st-icon--${icon}`} style={{ flexShrink: 0 }} />
-        <span style={{
-            opacity: isOpen ? 1 : 0,
-            transition: 'opacity 0.2s ease',
-        }}>
+        <span className={`st-icon--${icon} st-sidebar__nav-icon`} />
+        <span className={`st-sidebar__nav-label ${!isOpen ? 'st-sidebar__nav-label--hidden' : ''}`}>
             {label}
         </span>
     </NavLink>
@@ -121,39 +82,21 @@ const Sidebar = () => {
     }
 
     return (
-        <div
-            className="st-layout--sidebar-wrapper"
-            style={{ position: 'relative', display: 'flex' }}
-        >
-            <aside style={{
-                width: isOpen ? '220px' : '60px',
-                minWidth: isOpen ? '220px' : '60px',
-                background: '#ffffff',
-                borderRight: '1px solid #e5e7eb',
-                display: 'flex',
-                flexDirection: 'column',
-                padding: isOpen ? '24px 16px' : '24px 10px',
-                transition: 'width 0.25s ease, min-width 0.25s ease, padding 0.25s ease',
-                overflow: 'hidden',
-                height: '100vh',
-            }}>
-                <div style={{ marginBottom: '28px', whiteSpace: 'nowrap', overflow: 'hidden' }}>
-                    <div style={{
-                        fontSize: '16px', fontWeight: '600', color: '#6d28d9',
-                        opacity: isOpen ? 1 : 0,
-                        transition: 'opacity 0.2s ease',
-                    }}>
+        <div className="st-layout--sidebar-wrapper">
+            <aside
+                className={`st-sidebar ${!isOpen ? 'st-sidebar--collapsed' : ''}`}
+                style={{ '--sidebar-width': isOpen ? '220px' : '60px' }}
+            >
+                <div className="st-sidebar__header">
+                    <div className="st-sidebar__logo">
                         The Curator
                     </div>
-                    <div style={{
-                        fontSize: '12px', color: '#9ca3af', marginTop: '2px',
-                        opacity: isOpen ? 1 : 0,
-                        transition: 'opacity 0.2s ease',
-                    }}>
+                    <div className="st-sidebar__tagline">
                         Premium Inventory
                     </div>
                 </div>
-                <nav style={{ flex: 1, overflow: 'hidden' }}>
+
+                <nav className="st-sidebar__nav">
                     {navItems.map(({ label, icon, link }) => (
                         <NavItem
                             key={label}
@@ -165,81 +108,45 @@ const Sidebar = () => {
                     ))}
                 </nav>
 
-                <div style={{ margin: '8px 0', borderTop: '1px solid #f3f4f6' }} />
+                <div className="st-sidebar__divider" />
+
                 <div
+                    className="st-sidebar__user"
                     onClick={() => navigate('/admin/profile')}
                     title={!isOpen ? (user?.name || user?.email || 'Profile') : undefined}
-                    style={{
-                        display: 'flex', alignItems: 'center', gap: '10px',
-                        padding: '10px 8px', borderRadius: '8px',
-                        cursor: 'pointer', overflow: 'hidden', whiteSpace: 'nowrap',
-                        transition: 'background 0.15s',
-                        marginBottom: '4px',
-                    }}
-                    onMouseEnter={e => e.currentTarget.style.background = '#f9fafb'}
-                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                 >
                     <UserAvatar name={user?.name} email={user?.email} />
-                    <div style={{
-                        opacity: isOpen ? 1 : 0,
-                        transition: 'opacity 0.2s ease',
-                        overflow: 'hidden',
-                        lineHeight: 1.3,
-                    }}>
-                        <div style={{ fontSize: '13px', fontWeight: '500', color: '#111827' }}>
+                    <div className={`st-sidebar__user-info ${!isOpen ? 'st-sidebar__user-info--hidden' : ''}`}>
+                        <div className="st-sidebar__user-name">
                             {user?.name || 'Admin'}
                         </div>
-                        <div style={{
-                            fontSize: '11px', color: '#9ca3af',
-                            overflow: 'hidden', textOverflow: 'ellipsis',
-                        }}>
+                        <div className="st-sidebar__user-email">
                             {user?.email || ''}
                         </div>
                     </div>
                 </div>
+
                 <button
+                    className="st-sidebar__logout"
                     onClick={handleLogout}
                     title={!isOpen ? 'Logout' : undefined}
-                    style={{
-                        display: 'flex', alignItems: 'center', gap: '12px',
-                        padding: '10px 8px', borderRadius: '8px',
-                        cursor: 'pointer', color: '#ef4444',
-                        fontSize: '14px', fontWeight: '400',
-                        background: 'transparent', border: 'none',
-                        width: '100%', textAlign: 'left',
-                        whiteSpace: 'nowrap', overflow: 'hidden',
-                        transition: 'background 0.15s',
-                    }}
-                    onMouseEnter={e => e.currentTarget.style.background = '#fef2f2'}
-                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                 >
-                    <span className="st-icon--logout" style={{ flexShrink: 0 }} />
-                    <span style={{ opacity: isOpen ? 1 : 0, transition: 'opacity 0.2s ease' }}>
+                    <span className="st-icon--logout st-sidebar__logout-icon" />
+                    <span className={`st-sidebar__logout-label ${!isOpen ? 'st-sidebar__logout-label--hidden' : ''}`}>
                         Logout
                     </span>
                 </button>
 
+                <button
+                    className="st-sidebar__toggle"
+                    onClick={() => setIsOpen(prev => !prev)}
+                    aria-label="Toggle sidebar"
+                >
+                    <ChevronIcon flipped={!isOpen} />
+                </button>
             </aside>
-
-            <button
-                onClick={() => setIsOpen(prev => !prev)}
-                aria-label="Toggle sidebar"
-                style={{
-                    position: 'absolute', top: '16px',
-                    left: isOpen ? '208px' : '48px',
-                    width: '24px', height: '24px',
-                    background: '#ffffff',
-                    border: '1px solid #e5e7eb',
-                    borderRadius: '50%', cursor: 'pointer',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    transition: 'left 0.25s ease',
-                    zIndex: 10, padding: 0,
-                }}
-            >
-                <ChevronIcon flipped={!isOpen} />
-            </button>
         </div>
     )
 }
 
-export default Sidebar;
+export default Sidebar
