@@ -7,8 +7,13 @@ export const getAllOrder = createAsyncThunk(
     async (_, thunApi) => apiClient('/order')
 );
 
+export const createOrder = createAsyncThunk(
+    "order/createOrder",
+    async (FormData, thunkApi) => apiClient('/order', { method: 'POST', body: JSON.stringify(FormData) })
+);
+
 const initialState = {
-    order : [],
+    order: [],
     loading: false,
     error: null,
 }
