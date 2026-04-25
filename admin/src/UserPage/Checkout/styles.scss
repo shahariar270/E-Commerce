@@ -4,10 +4,27 @@
     width: 100%;
 }
 
-.st-checkout_box {
-    background: var(--st-secondary);
-}
-
 .st-checkout__field {
     width: 50%;
+    display: flex;
+    flex-direction: column;
+}
+
+.st-checkout {
+    &--input-field {
+        padding: 24px;
+    }
+}
+
+.st-checkout_box {
+    background: var(--st-secondary);
+    padding: 24px;
+    display: flex;
+    gap: 32px;
+    h3 {
+        margin: 0;
+    }
+    &--summary {
+        
+    }
 }
