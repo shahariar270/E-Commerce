@@ -1,0 +1,11 @@
+.st-profile {
+    .st-page__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .st-profile--main{
+        display: flex;
+        gap: 32px;
+    }
+}
