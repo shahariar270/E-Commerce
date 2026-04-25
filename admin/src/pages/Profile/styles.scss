@@ -1,11 +1,29 @@
 .st-profile {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
     .st-page__header {
         display: flex;
         align-items: center;
         justify-content: space-between;
     }
-    .st-profile--main{
+    .st-profile--main {
         display: flex;
         gap: 32px;
+    }
+    &__top {
+        display: flex;
+        gap: 24px;
+        align-items: center;
+        img {
+            height: 130px;
+            width: 130px;
+            border-radius: 8px;
+            padding: 8px;
+            border: 4px solid var(--st-primary);
+        }
+        &--content{
+            
+        }
     }
 }

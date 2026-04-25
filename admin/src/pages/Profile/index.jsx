@@ -29,30 +29,50 @@ const Profile = () => {
         last_name: profile?.last_name || "",
       }}
     >
-      {({ values, dirty, isSubmitting }) => (
-        <Form className="st-profile">
-          <div className="st-page__header">
-            <div className="st-page__title">
-              <h2>Profile</h2>
-              <p>Manage your personal information and account settings</p>
+      {({ values, dirty, isSubmitting }) => {
+        let data = profile?.createdAt;
+        let date = new Date(data);
+
+        let formatted = date.toLocaleString('en-US', {
+          month: 'long',
+          year: 'numeric'
+        });
+
+        let result = `Member since ${formatted}`;
+        return (
+          <Form className="st-profile">
+            <div className="st-page__header">
+              <div className="st-page__title">
+                <h2>Profile</h2>
+                <p>Manage your personal information and account settings</p>
+              </div>
+              <div className="">
+                <Button label="Save Changes" type="submit" disabled={!dirty || isSubmitting} />
+              </div>
             </div>
-            <div className="">
-              <Button label="Save Changes" type="submit" disabled={!dirty || isSubmitting} />
-            </div>
-          </div>
-
-          <div className="st-profile--main">
-            <div className="st-page--main__edit">
-
-            </div>
-            <div className="st-page--main__address">
-
+            <div className="st-profile__top">
+              <img src={values?.image || 'https://dummyimage.com/600x600/eee/999&text=No+Image'} />
+              <div className="st-profile__top--content">
+                <h2>{`${values?.first_name}   ${values?.last_name}`}</h2>
+                <li>{result}</li>
+              </div>
             </div>
 
-          </div>
+            <div className="st-profile--main">
+              <div className="st-page--main__edit">
 
-        </Form>
-      )}
+              </div>
+              <div className="st-page--main__address">
+
+              </div>
+
+            </div>
+
+          </Form>
+        )
+      }
+      }
+
     </Formik>
   );
 };
