@@ -22,30 +22,30 @@ export const Checkout = () => {
 
   return (
     <Formik
-      className="st-page"
+      className="st-page--checkout"
       onSubmit={handleSubmit}
-      initialValues
+      initialValues={initialValues}
     >
-      <div className="st-checkout-field">
+      <div className="st-layout__content">
         <div className="st-page__header">
           <h2>Checkout</h2>
           <span>Complete your purchase</span>
         </div>
         <div className="st-checkout__form">
           <div className="st-checkout__field">
-          <h3>Shipping Information</h3>
+            <h3>Shipping Information</h3>
             <Input name={'name'} placeholder={'Johnathan Sterling'} label='FULL NAME' />
             <div className="st-form--group">
-              <Input name={'name'} placeholder={'Johnathan Sterling'} label='FULL NAME' />
-              <Input name={'name'} placeholder={'Johnathan Sterling'} label='FULL NAME' />
+              <Input name={'phone'} placeholder={'+880123456789'} label='PHONE NUMBER' />
+              <Input name={'address'} placeholder={'123 Main Street'} label='ADDRESS' />
             </div>
             <div className="st-form--group">
-              <Input name={'name'} placeholder={'Johnathan Sterling'} label='FULL NAME' />
-              <Input name={'name'} placeholder={'Johnathan Sterling'} label='FULL NAME' />
+              <Input name={'city'} placeholder={'New York'} label='CITY' />
+              <Input name={'postalCode'} placeholder={'10001'} label='POSTAL CODE' />
             </div>
           </div>
           <div className="st-checkout_box">
-dfsadf
+            dskfja sdjf
           </div>
         </div>
       </div>
