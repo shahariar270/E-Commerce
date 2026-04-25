@@ -18,13 +18,26 @@
 
 .st-checkout_box {
     background: var(--st-secondary);
-    padding: 24px;
     display: flex;
+    flex-direction: column;
     gap: 32px;
     h3 {
+        padding: 12px;
         margin: 0;
     }
     &--summary {
-        
+        .st-cart__item {
+            background: none;
+            display: flex;
+            align-items: center;
+        }
     }
+    &--total {
+        padding: 24px;
+    }
+}
+
+.st-checkout--button{
+    padding: 12px;
+    
 }
