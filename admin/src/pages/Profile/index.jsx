@@ -27,6 +27,7 @@ const Profile = () => {
       initialValues={{
         first_name: profile?.first_name || "",
         last_name: profile?.last_name || "",
+        email : profile?.email || "",
       }}
     >
       {({ values, dirty, isSubmitting }) => {
@@ -60,7 +61,46 @@ const Profile = () => {
 
             <div className="st-profile--main">
               <div className="st-page--main__edit">
-
+                <h3>Personal Details</h3>
+                <div className="st-profile--main__field">
+                  <div className="st-form--group">
+                    <Input
+                      label="First Name"
+                      name="first_name"
+                      type="text"
+                      placeholder="Enter your first name"
+                    />
+                    <Input
+                      label="Last Name"
+                      name="last_name"
+                      type="text"
+                      placeholder="Enter your last name"
+                    />
+                  </div>
+                  <div className="">
+                    <Input
+                      label="Email"
+                      name="email"
+                      type="email"
+                      placeholder="Enter your email"
+                      disabled
+                    />
+                  </div>
+                  <div className="st-form-group">
+                    <Input
+                      label="Phone"
+                      name="phone"
+                      type="text"
+                      placeholder="Enter your phone number"
+                    />
+                    <Input
+                      label="Phone"
+                      name="phone"
+                      type="text"
+                      placeholder="Enter your phone number"
+                    />
+                  </div>
+                </div>
               </div>
               <div className="st-page--main__address">
 

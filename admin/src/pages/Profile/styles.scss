@@ -22,8 +22,42 @@
             padding: 8px;
             border: 4px solid var(--st-primary);
         }
-        &--content{
-            
+        &--content {
+        }
+    }
+}
+
+.st-page {
+    &--main {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        &__edit,
+        &__address {
+            width: 100%;
+            padding: 16px;
+            background: var(--st-secondary);
+        }
+
+        @media (min-width: 768px) {
+            flex-direction: row;
+            gap: 24px;
+
+            &__edit,
+            &__address {
+                width: 50%;
+                padding: 20px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            gap: 32px;
+
+            &__edit,
+            &__address {
+                padding: 24px;
+            }
         }
     }
 }
