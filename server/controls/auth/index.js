@@ -57,7 +57,7 @@ module.exports = {
 
             if (!user) {
                 return res.status(404).json({
-                    message: "Your Request Email User Found",
+                    message: "Your Request Email User not Found",
                     success: false,
                 });
             }
