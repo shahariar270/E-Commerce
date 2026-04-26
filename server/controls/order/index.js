@@ -137,6 +137,26 @@ class order_controller {
             res.status(500).json({ message: error.message });
         }
     }
+
+    async single_user_orders(req, res) {
+        try {
+            const userId = req.user.id;
+            const orders = await Order.find({ user: userId })
+                .populate('items.product', 'name image price')
+                .sort({ createdAt: -1 });
+                
+            if (!orders || orders.length === 0) {
+                return res.status(404).json({ message: "No orders found for this user" });
+            }
+            res.status(200).json({
+                success: true,
+                count: orders.length,
+                orders
+            });
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    }
 }
 
 module.exports = new order_controller;
