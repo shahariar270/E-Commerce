@@ -91,11 +91,6 @@ module.exports = {
     },
     update_profile_controller: async (req, res) => {
         try {
-            const validate = updateProfileSchema.safeParse(req.body);
-            if (!validate.success) {
-                return res.status(400).json({ message: validate.error.errors[0].message, success: false });
-            }
-
             const { current_pass, new_pass, first_name, last_name, role } = req.body;
             const userId = req.user.id;
             let updates = {}
@@ -143,6 +138,7 @@ module.exports = {
             return res.status(500).json({
                 message: "Internal server error",
                 success: false,
+                error: error.message
             });
         }
     },

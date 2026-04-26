@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Button from "../../components/Buttons";
 import Input from "../../components/Input";
 import { useDispatch, useSelector } from "react-redux";
-import { getProfile } from "@Store/slices/authSlice";
+import { getProfile, updateProfile } from "@Store/slices/authSlice";
 import { Form, Formik } from "formik";
 import "./styles.scss"
 
@@ -15,6 +15,9 @@ const Profile = () => {
   }, [])
 
   const handleSubmit = (values, action) => {
+    dispatch(updateProfile(values)).then(() => {
+      action.setSubmitting(false);
+    });
   }
 
   return (

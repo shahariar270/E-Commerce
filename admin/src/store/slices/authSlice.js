@@ -93,7 +93,7 @@ export const updateProfile = createAsyncThunk(
         return rejectWithValue('No token found');
       }
 
-      const response = await fetch(`${authRoute}/update_profile`, {
+      const response = await fetch(`${authRoute}update_profile`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
