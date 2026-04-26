@@ -33,6 +33,12 @@
         flex-direction: column;
         gap: 16px;
 
+        &__field {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
         &__edit,
         &__address {
             width: 100%;
@@ -48,6 +54,7 @@
             &__address {
                 width: 50%;
                 padding: 20px;
+                margin: 20px;
             }
         }
 

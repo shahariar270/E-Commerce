@@ -27,7 +27,11 @@ const Profile = () => {
       initialValues={{
         first_name: profile?.first_name || "",
         last_name: profile?.last_name || "",
-        email : profile?.email || "",
+        email: profile?.email || "",
+        phone: profile?.phone || "",
+        image: profile?.image || "",
+        address: profile?.address || "",
+        password: "",
       }}
     >
       {({ values, dirty, isSubmitting }) => {
@@ -40,6 +44,7 @@ const Profile = () => {
         });
 
         let result = `Member since ${formatted}`;
+        console.log(values);
         return (
           <Form className="st-profile">
             <div className="st-page__header">
@@ -86,7 +91,7 @@ const Profile = () => {
                       disabled
                     />
                   </div>
-                  <div className="st-form-group">
+                  <div className="st-form--group">
                     <Input
                       label="Phone"
                       name="phone"
@@ -94,15 +99,33 @@ const Profile = () => {
                       placeholder="Enter your phone number"
                     />
                     <Input
-                      label="Phone"
-                      name="phone"
+                      label="Address"
+                      name="address"
                       type="text"
-                      placeholder="Enter your phone number"
+                      placeholder="Enter your address"
+                    />
+                  </div>
+                  <div className="st-form--group">
+                    <Input
+                      label="Old Password"
+                      name="password"
+                      type="text"
+                      placeholder="Enter your password"
+                    />
+                    <Input
+                      label="New Password"
+                      name="new_password"
+                      type="text"
+                      placeholder="Enter your new password"
                     />
                   </div>
                 </div>
               </div>
               <div className="st-page--main__address">
+                <h3>Address Details</h3>
+                <div className="st-profile--main__field">
+                  coming soon...
+                </div>
 
               </div>
 
