@@ -10,20 +10,29 @@ const Profile = () => {
   const dispatch = useDispatch();
   const profile = useSelector((state) => state.auth?.user);
 
-  console.log({ profile });
-
   useEffect(() => {
     dispatch(getProfile())
   }, [])
 
   const handleSubmit = (values, action) => {
-    console.log({ values });
   }
 
   return (
     <Formik
+      enableReinitialize
       className="st-layout--content"
       onSubmit={handleSubmit}
+      validate={(values) => {
+        const errors = {};
+
+        if (values.new_password && values.confirm_password) {
+          if (values.new_password !== values.confirm_password) {
+            errors.confirm_password = "Passwords do not match";
+          }
+        }
+
+        return errors
+      }}
       initialValues={{
         first_name: profile?.first_name || "",
         last_name: profile?.last_name || "",
@@ -31,7 +40,9 @@ const Profile = () => {
         phone: profile?.phone || "",
         image: profile?.image || "",
         address: profile?.address || "",
-        password: "",
+        new_pass: "",
+        current_pass: "",
+        conform_pass: "",
       }}
     >
       {({ values, dirty, isSubmitting }) => {
@@ -44,7 +55,7 @@ const Profile = () => {
         });
 
         let result = `Member since ${formatted}`;
-        console.log(values);
+
         return (
           <Form className="st-profile">
             <div className="st-page__header">
@@ -105,16 +116,24 @@ const Profile = () => {
                       placeholder="Enter your address"
                     />
                   </div>
-                  <div className="st-form--group">
+                  <div className="">
                     <Input
                       label="Old Password"
-                      name="password"
+                      name="current_pass"
                       type="text"
                       placeholder="Enter your password"
                     />
+                  </div>
+                  <div className="st-form--group">
                     <Input
                       label="New Password"
-                      name="new_password"
+                      name="new_pass"
+                      type="text"
+                      placeholder="Enter your new password"
+                    />
+                    <Input
+                      label="Conform Password"
+                      name="conform_pass"
                       type="text"
                       placeholder="Enter your new password"
                     />

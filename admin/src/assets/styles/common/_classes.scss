@@ -136,3 +136,9 @@
         width: 100%;
     }
 }
+
+.st-error {
+    color: var(--st-error, #dc3545);
+    font-size: 12px;
+    margin-top: -8px;
+}

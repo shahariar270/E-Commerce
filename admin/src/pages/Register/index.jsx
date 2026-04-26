@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form } from "formik";
-import * as Yup from "yup";
 import Input from "../../components/Input";
 import Button from "../../components/Buttons";
 import { registerUser, clearError } from "../../store/slices/authSlice";
+import { registerSchema } from "../../Utils/validationSchemas";
 import { useNavigate } from "react-router-dom";
 
 const Register = () => {
@@ -18,24 +18,6 @@ const Register = () => {
     first_name: "",
     last_name: "",
   };
-
-  const validationSchema = Yup.object({
-    user_name: Yup.string()
-      .min(2, "User name must be at least 2 characters")
-      .required("User name is required"),
-    email: Yup.string()
-      .email("Invalid email address")
-      .required("Email is required"),
-    password: Yup.string()
-      .min(6, "Password must be at least 6 characters")
-      .required("Password is required"),
-    first_name: Yup.string()
-      .min(2, "First name must be at least 2 characters")
-      .required("First name is required"),
-    last_name: Yup.string()
-      .min(2, "Last name must be at least 2 characters")
-      .required("Last name is required"),
-  });
 
   const handleSubmit = (values, { setSubmitting, resetForm }) => {
     dispatch(clearError());
@@ -68,7 +50,7 @@ const Register = () => {
 
         <Formik
           initialValues={initialValues}
-          validationSchema={validationSchema}
+          validationSchema={registerSchema}
           onSubmit={handleSubmit}
         >
           {({ isSubmitting }) => (
@@ -104,6 +86,7 @@ const Register = () => {
                 name="user_name"
                 type="text"
                 placeholder="Enter your user name"
+                required
               />
 
               <Input
@@ -111,6 +94,7 @@ const Register = () => {
                 name="email"
                 type="email"
                 placeholder="Enter your email"
+                required
               />
 
               <Input
@@ -118,6 +102,7 @@ const Register = () => {
                 name="password"
                 type="password"
                 placeholder="Enter your password"
+                required
               />
 
               <Input
@@ -125,6 +110,7 @@ const Register = () => {
                 name="first_name"
                 type="text"
                 placeholder="Enter your first name"
+                required
               />
 
               <Input
@@ -132,6 +118,7 @@ const Register = () => {
                 name="last_name"
                 type="text"
                 placeholder="Enter your last name"
+                required
               />
 
               <Button

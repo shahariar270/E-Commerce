@@ -9,6 +9,7 @@ import { Form, Formik } from "formik";
 import Select from "@Component/Select";
 import { getCategories } from "@Store/slices/categorySlice";
 import { useSelectPagination } from "@utils/Hooks/SelectPagination";
+import { productSchema } from "@utils/validationSchemas";
 
 const ProductEdit = () => {
     const navigate = useNavigate();
@@ -62,6 +63,7 @@ const ProductEdit = () => {
                 enableReinitialize
                 onSubmit={handleSubmit}
                 initialValues={initialValues}
+                validationSchema={productSchema}
             >
                 {({ setFieldValue, values, isSubmitting, dirty }) => (
                     <Form className='st-form-inner--container'>
@@ -70,6 +72,7 @@ const ProductEdit = () => {
                             name="product_name"
                             placeholder="Enter product name"
                             label="Product Name"
+                            required
                         />
 
                         <Input
@@ -83,6 +86,7 @@ const ProductEdit = () => {
                             name="price"
                             type="number"
                             placeholder="Enter price"
+                            required
                         />
                         <Select
                             name="category_ids"
