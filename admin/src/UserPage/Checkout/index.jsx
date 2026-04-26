@@ -6,9 +6,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import './styles.scss'
 import { getCart } from '@Store/slices/cartSlice'
 import Button from '@Component/Buttons'
+import { useNavigate } from 'react-router-dom'
 
 export const Checkout = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { items, total_quantity, total_price } = useSelector((state) => state.cart);
 
   useEffect(() => {
@@ -17,15 +19,19 @@ export const Checkout = () => {
 
 
   const handleSubmit = (values, action) => {
-    dispatch(createOrder(values)).then(() => { })
+    dispatch(createOrder(values)).then(() => {
+      navigate("/orders");
+    })
   }
 
   const initialValues = {
-    name: '',
-    phone: '',
-    address: '',
-    city: '',
-    postalCode: '',
+    shippingAddress: {
+      name: '',
+      phone: '',
+      address: '',
+      city: '',
+      postalCode: '',
+    }
   }
 
   return (
@@ -43,14 +49,14 @@ export const Checkout = () => {
           <div className="st-checkout__field">
             <h3>Shipping Information</h3>
             <div className="st-checkout--input-field">
-              <Input name={'name'} placeholder={'Johnathan Sterling'} label='Full Name' />
+              <Input name={'shippingAddress.name'} placeholder={'Johnathan Sterling'} label='Full Name' />
               <div className="st-form--group">
-                <Input name={'phone'} placeholder={'+880123456789'} label='Phone Number' />
-                <Input name={'address'} placeholder={'123 Main Street'} label='Address' />
+                <Input name={'shippingAddress.phone'} placeholder={'+880123456789'} label='Phone Number' />
+                <Input name={'shippingAddress.address'} placeholder={'123 Main Street'} label='Address' />
               </div>
               <div className="st-form--group">
-                <Input name={'city'} placeholder={'New York'} label='City' />
-                <Input name={'postalCode'} placeholder={'10001'} label='Postal Code' />
+                <Input name={'shippingAddress.city'} placeholder={'New York'} label='City' />
+                <Input name={'shippingAddress.postalCode'} placeholder={'10001'} label='Postal Code' />
               </div>
             </div>
           </div>

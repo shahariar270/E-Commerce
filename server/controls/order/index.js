@@ -33,8 +33,10 @@ class order_controller {
 
             const savedOrder = await newOrder.save();
 
-            await Cart.findOneAndUpdate({ user: user_id }, { $set: { items: [] } });
-
+            await Cart.findOneAndUpdate(
+                { user_id: user_id },
+                { $set: { items: [], total_quantity: 0, total_price: 0 } }
+            );
             res.status(201).json({
                 message: "Order placed successfully",
                 orderId: savedOrder._id,
