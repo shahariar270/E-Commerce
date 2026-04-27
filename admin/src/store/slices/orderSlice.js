@@ -12,8 +12,13 @@ export const createOrder = createAsyncThunk(
     async (FormData, thunkApi) => apiClient('/order', { method: 'POST', body: JSON.stringify(FormData) })
 );
 
+export const getUserOrders = createAsyncThunk(
+    "order/getUserOrders",
+    async (thunkApi) => apiClient(`/orders`)
+);
+
 const initialState = {
-    order: [],
+    orders: [],
     loading: false,
     error: null,
 }
@@ -32,6 +37,9 @@ const OrderSlices = createSlice({
                 state.order = action.payload;
             })
             .addCase(getAllOrder.rejected, handleRejected)
+            .addCase(getUserOrders.fulfilled, (state, action) => {
+                state.orders = action.payload.orders
+            })
     }
 
 });
