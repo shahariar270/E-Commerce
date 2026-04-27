@@ -15,6 +15,7 @@ import { ProductSinge } from "./UserPage/ProductSinge";
 import ErrorPage from "./pages/ErrorPage";
 import Cart from "./UserPage/Cart";
 import { Checkout } from "./UserPage/Checkout";
+import Order from "./UserPage/Order";
 
 
 function App() {
@@ -28,7 +29,7 @@ function App() {
           <Route index element={<PublicProduct />} />
           <Route path="product/:id" element={<ProductSinge />} />
           <Route path="dashboard" element={<Dashboard />} />
-          <Route path="orders" element={<Orders />} />
+          <Route path="orders" element={<Order />} />
           <Route path="wishlist" element={<Cart />} />
           <Route path="profile" element={<Profile />} />
           <Route path="settings" element={<Settings />} />
