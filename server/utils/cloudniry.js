@@ -1,4 +1,5 @@
 const cloudinary = require('cloudinary').v2;
+const fs = require('fs')
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -15,8 +16,12 @@ const uploadImage = async (filePath) => {
             unique_filename: false,
             overwrite: true
         });
+        fs.unlinkSync(filePath);
         return result.secure_url;
     } catch (error) {
+        fs.unlink(filePath, (err) => {
+            if (err) console.error('Error deleting file:', err);
+        });
         console.error('Cloudinary Upload Error:', error);
         throw error;
     }

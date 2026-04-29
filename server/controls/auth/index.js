@@ -6,6 +6,7 @@ const {
     loginSchema,
     updateProfileSchema
 } = require('../../validation_schema/auth');
+const { uploadImage } = require('../../utils/cloudniry');
 const jwt_token = process.env.JWT_TOKEN;
 
 
@@ -92,9 +93,12 @@ module.exports = {
     update_profile_controller: async (req, res) => {
         try {
             const { current_pass, new_pass, first_name, last_name, role } = req.body;
+            const file = req.file;
             const userId = req.user.id;
             let updates = {}
 
+            const localPath = req.file.path;
+            const imageUrl = await uploadImage(localPath);
             const user = await User.findById(userId).select("+password");
 
             if (!user) {
