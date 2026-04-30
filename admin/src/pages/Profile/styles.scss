@@ -15,15 +15,33 @@
         display: flex;
         gap: 24px;
         align-items: center;
-        img {
-            height: 130px;
-            width: 130px;
-            border-radius: 8px;
-            padding: 8px;
-            border: 4px solid var(--st-primary);
-        }
+        flex-wrap: wrap;
+
         &--content {
+            flex: 1;
+            min-width: 240px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 8px;
+
+            h2 {
+                margin: 0;
+                font-size: 24px;
+            }
+
+            li {
+                list-style: none;
+                color: var(--st-text-secondary);
+                padding: 0;
+                margin: 0;
+            }
         }
+    }
+
+    &__upload {
+        width: 100%;
+        max-width: 190px;
     }
 }
 
