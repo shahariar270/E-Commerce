@@ -93,12 +93,14 @@ module.exports = {
     update_profile_controller: async (req, res) => {
         try {
             const { current_pass, new_pass, first_name, last_name, role } = req.body;
-            const file = req.file;
             const userId = req.user.id;
             let updates = {}
 
-            const localPath = req.file.path;
-            const imageUrl = await uploadImage(localPath);
+            if (req.file) {
+                const localPath = req.file.path;
+                const imageUrl = await uploadImage(localPath);
+                updates.image = imageUrl;
+            }
             const user = await User.findById(userId).select("+password");
 
             if (!user) {

@@ -43,12 +43,13 @@ const Profile = () => {
         phone: profile?.phone || "",
         image: profile?.image || "",
         address: profile?.address || "",
+        profile_image: null,
         new_pass: "",
         current_pass: "",
         conform_pass: "",
       }}
     >
-      {({ values, dirty, isSubmitting }) => {
+      {({ values, dirty, isSubmitting, setFieldValue }) => {
         let data = profile?.createdAt;
         let date = new Date(data);
 
@@ -76,6 +77,22 @@ const Profile = () => {
                 <h2>{`${values?.first_name}   ${values?.last_name}`}</h2>
                 <li>{result}</li>
               </div>
+            </div>
+            <div className="st-profile__upload">
+              <label className="st-label" htmlFor="profile_image">Profile picture</label>
+              <input
+                id="profile_image"
+                name="profile_image"
+                type="file"
+                accept="image/*"
+                onChange={(event) => {
+                  const file = event.currentTarget.files?.[0];
+                  if (file) {
+                    setFieldValue('profile_image', file);
+                    setFieldValue('image', URL.createObjectURL(file));
+                  }
+                }}
+              />
             </div>
 
             <div className="st-profile--main">
