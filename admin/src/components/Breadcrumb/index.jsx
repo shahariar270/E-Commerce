@@ -1,5 +1,7 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useLocation, useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { getProductById } from '@Store/slices/productSlice';
 
 const routeLabels = {
     'dashboard': 'Dashboard',
@@ -7,6 +9,7 @@ const routeLabels = {
     'product': 'Products',
     'new': 'Add Product',
     'orders': 'Orders',
+    'order': 'Orders',
     'categories': 'Categories',
     'settings': 'Settings',
     'profile': 'Profile',
@@ -17,12 +20,10 @@ const routeLabels = {
     'register': 'Register',
 };
 
-const getRouteLabel = (segment, index, segments) => {
-    const key = segment.split(':')[0];
+const isObjectId = (str) => /^[0-9a-f]{24}$/.test(str);
 
-    if (index === segments.length - 1 && key === 'product' && segment.includes(':')) {
-        return 'Edit Product';
-    }
+const getRouteLabel = (segment, index, segments, productId) => {
+    const key = segment.split(':')[0];
 
     if (routeLabels[key]) {
         return routeLabels[key];
@@ -37,11 +38,34 @@ const getRouteLabel = (segment, index, segments) => {
 
 export const Breadcrumb = ({ separator = '/' }) => {
     const location = useLocation();
+    const params = useParams();
+    const dispatch = useDispatch();
     const pathnames = location.pathname.split('/').filter((x) => x);
+
+    const currentProduct = useSelector(state => state.product?.current);
+    const productId = params.id;
+
+    useEffect(() => {
+        if (productId && pathnames.includes('product')) {
+            dispatch(getProductById(productId));
+        }
+    }, [productId, dispatch, pathnames]);
 
     if (pathnames.length === 0) {
         return null;
     }
+
+    const getSegmentLabel = (name, index) => {
+        const key = name.split(':')[0];
+
+        // Check if this segment is an ObjectId and the previous segment was 'product'
+        const prevSegment = index > 0 ? pathnames[index - 1] : null;
+        if (isObjectId(name) && prevSegment === 'product' && currentProduct?.product_name) {
+            return currentProduct.product_name;
+        }
+
+        return getRouteLabel(name, index, pathnames, productId);
+    };
 
     return (
         <nav className="st-breadcrumb" aria-label="Breadcrumb">
@@ -61,7 +85,7 @@ export const Breadcrumb = ({ separator = '/' }) => {
             {pathnames.map((name, index) => {
                 const routeTo = '/' + pathnames.slice(0, index + 1).join('/');
                 const isLast = index === pathnames.length - 1;
-                const label = getRouteLabel(name, index, pathnames);
+                const label = getSegmentLabel(name, index);
 
                 return (
                     <React.Fragment key={index}>
