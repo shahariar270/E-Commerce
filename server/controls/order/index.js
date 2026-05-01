@@ -8,6 +8,10 @@ class order_controller {
             const user_id = req.user.id;
             const { shippingAddress } = req.body;
 
+            if (!shippingAddress) {
+                return res.status(400).json({ message: "Shipping address is required" });
+            }
+
             const cart = await Cart.findOne({ user_id })
 
             if (!cart || cart.items.length === 0) {
@@ -33,10 +37,7 @@ class order_controller {
 
             const savedOrder = await newOrder.save();
 
-            await Cart.findOneAndUpdate(
-                { user_id: user_id },
-                { $set: { items: [], total_quantity: 0, total_price: 0 } }
-            );
+            await Cart.findByIdAndDelete(cart._id);
             res.status(201).json({
                 message: "Order placed successfully",
                 orderId: savedOrder._id,
@@ -144,7 +145,7 @@ class order_controller {
             const orders = await Order.find({ user: userId })
                 .populate('items.product', 'name image price')
                 .sort({ createdAt: -1 });
-                
+
             if (!orders || orders.length === 0) {
                 return res.status(404).json({ message: "No orders found for this user" });
             }
