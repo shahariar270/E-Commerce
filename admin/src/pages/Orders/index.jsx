@@ -11,9 +11,8 @@ const statusOption = [
 
 const formattedOption = statusOption.map((option) => ({
   label: option,
-  value: option.toLowerCase
+  value: option.toLowerCase()
 }))
-
 
 const Orders = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -43,10 +42,13 @@ const Orders = () => {
       key: 'status',
       title: "Status",
       render: (value, row) => {
-        console.log({ row, value });
         return (
-          <Select options={formattedOption} value={value} onChange={(option) => dispatch(updateOrder({ ...row, status: option.value }))} />
-        )
+          <Select
+            options={formattedOption}
+            value={formattedOption.find((item) => item.value === value)}
+            onChange={(option) => dispatch(updateOrder({ ...row, status: option.value })).then(() => dispatch(getAllOrder()))}
+          />
+        );
       }
     },
     {
