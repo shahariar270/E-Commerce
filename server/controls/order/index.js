@@ -38,7 +38,7 @@ class order_controller {
             const savedOrder = await newOrder.save();
 
             await Cart.findByIdAndDelete(cart._id);
-            res.status(201).json({
+           return res.status(201).json({
                 message: "Order placed successfully",
                 orderId: savedOrder._id,
                 total: savedOrder.totalAmount
