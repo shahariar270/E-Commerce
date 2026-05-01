@@ -2,8 +2,17 @@ import React, { useEffect, useState } from "react";
 import Table from "../../components/Table";
 import Button from "../../components/Buttons";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllOrder } from "@Store/slices/orderSlice";
+import { getAllOrder, updateOrder } from "@Store/slices/orderSlice";
+import Select from "@Component/Select";
 
+const statusOption = [
+  'Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'
+]
+
+const formattedOption = statusOption.map((option) => ({
+  label: option,
+  value: option.toLowerCase
+}))
 
 
 const Orders = () => {
@@ -16,7 +25,7 @@ const Orders = () => {
 
   useEffect(() => {
     // if (orders?.length) {
-      dispatch(getAllOrder())
+    dispatch(getAllOrder())
     // }
   }, [])
 
@@ -29,6 +38,16 @@ const Orders = () => {
       // render: (value) => (
       //   <span style={{ fontWeight: 600, color: "#1976d2" }}>{value}</span>
       // ),
+    },
+    {
+      key: 'status',
+      title: "Status",
+      render: (value, row) => {
+        console.log({ row, value });
+        return (
+          <Select options={formattedOption} value={value} onChange={(option) => dispatch(updateOrder({ ...row, status: option.value }))} />
+        )
+      }
     },
     {
       key: "actions",
@@ -54,7 +73,7 @@ const Orders = () => {
       ),
     },
   ];
-console.log({orders});
+  console.log({ orders });
   const handleView = (order) => {
     // Add view logic here
   };

@@ -49,7 +49,7 @@ export const Breadcrumb = ({ separator = '/' }) => {
         if (productId && pathnames.includes('product')) {
             dispatch(getProductById(productId));
         }
-    }, [productId, dispatch, pathnames]);
+    }, []);
 
     if (pathnames.length === 0) {
         return null;

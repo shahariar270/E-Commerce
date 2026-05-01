@@ -49,6 +49,9 @@ export const Checkout = () => {
           <div className="st-checkout__field">
             <h3>Shipping Information</h3>
             <div className="st-checkout--input-field">
+              {
+                console.log({ values })
+              }
               <Input name={'shippingAddress.name'} placeholder={'Johnathan Sterling'} label='Full Name' />
               <div className="st-form--group">
                 <Input name={'shippingAddress.phone'} placeholder={'+880123456789'} label='Phone Number' />

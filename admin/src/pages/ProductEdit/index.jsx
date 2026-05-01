@@ -22,7 +22,7 @@ const ProductEdit = () => {
         if (id) {
             dispatch(getProductById(id));
         }
-    }, [id]);
+    }, []);
 
 
     const handleSubmit = async (values) => {

@@ -22,10 +22,10 @@ const order_schema = new mongoose.Schema(
         },
         status: {
             type: String,
-            enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'],
-            default: 'Pending'
+            enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
+            default: 'pending'
         },
-        paymentStatus: { type: String, enum: ['Pending', 'Paid', 'Failed', 'Unpaid'], default: 'Unpaid' },
+        paymentStatus: { type: String, enum: ['pending', 'paid', 'failed', 'unpaid'], default: 'unpaid' },
         createdAt: { type: Date, default: Date.now }
     },
     { timestamps: true }

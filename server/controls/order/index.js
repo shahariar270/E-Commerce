@@ -31,8 +31,8 @@ class order_controller {
                 items: orderItems,
                 totalAmount,
                 shippingAddress,
-                status: 'Pending',
-                paymentStatus: 'Unpaid'
+                status: 'pending',
+                paymentStatus: 'unpaid'
             });
 
             const savedOrder = await newOrder.save();

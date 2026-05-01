@@ -17,6 +17,11 @@ export const getUserOrders = createAsyncThunk(
     async (thunkApi) => apiClient(`/orders`)
 );
 
+export const updateOrder = createAsyncThunk(
+    "order/updateOrder",
+    async (data, thunkApi) => apiClient(`/admin/order/${data?._id}`, { method: "PUT", body: JSON.stringify(data) })
+)
+
 const initialState = {
     orders: [],
     loading: false,

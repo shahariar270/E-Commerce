@@ -68,7 +68,7 @@ const Sidebar = () => {
 
     useEffect(() => {
         const token = getCookie("token")
-        if (!token) return
+        if (!token) return navigate('/login')
         try {
             setUser(jwtDecode(token))
         } catch (err) {

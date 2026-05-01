@@ -21,7 +21,7 @@ export const ProductSinge = () => {
 
     useEffect(() => {
         dispatch(getProductById(id));
-    }, [id, dispatch]);
+    }, []);
 
     if (!current && loading) {
         return <div className="loading-message">Loading product...</div>;
