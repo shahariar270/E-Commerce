@@ -1,182 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Table from "../../components/Table";
 import Button from "../../components/Buttons";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllOrder } from "@Store/slices/orderSlice";
 
-// Mock orders data
-const initialOrders = [
-  {
-    id: "ORD-001",
-    customer: "John Smith",
-    email: "john.smith@email.com",
-    total: 299.99,
-    items: 3,
-    status: "Pending",
-    date: "2024-01-15",
-  },
-  {
-    id: "ORD-002",
-    customer: "Sarah Johnson",
-    email: "sarah.j@email.com",
-    total: 149.99,
-    items: 2,
-    status: "Processing",
-    date: "2024-01-14",
-  },
-  {
-    id: "ORD-003",
-    customer: "Mike Brown",
-    email: "mike.brown@email.com",
-    total: 599.99,
-    items: 5,
-    status: "Shipped",
-    date: "2024-01-13",
-  },
-  {
-    id: "ORD-004",
-    customer: "Emily Davis",
-    email: "emily.d@email.com",
-    total: 89.99,
-    items: 1,
-    status: "Delivered",
-    date: "2024-01-12",
-  },
-  {
-    id: "ORD-005",
-    customer: "David Wilson",
-    email: "d.wilson@email.com",
-    total: 449.99,
-    items: 4,
-    status: "Cancelled",
-    date: "2024-01-11",
-  },
-  {
-    id: "ORD-006",
-    customer: "Lisa Anderson",
-    email: "l.anderson@email.com",
-    total: 199.99,
-    items: 2,
-    status: "Pending",
-    date: "2024-01-10",
-  },
-  {
-    id: "ORD-007",
-    customer: "Robert Taylor",
-    email: "r.taylor@email.com",
-    total: 379.99,
-    items: 3,
-    status: "Processing",
-    date: "2024-01-09",
-  },
-  {
-    id: "ORD-008",
-    customer: "Jennifer Lee",
-    email: "jennifer.lee@email.com",
-    total: 129.99,
-    items: 1,
-    status: "Shipped",
-    date: "2024-01-08",
-  },
-  {
-    id: "ORD-009",
-    customer: "Thomas Garcia",
-    email: "t.garcia@email.com",
-    total: 249.99,
-    items: 2,
-    status: "Delivered",
-    date: "2024-01-07",
-  },
-  {
-    id: "ORD-010",
-    customer: "Amanda Martinez",
-    email: "a.martinez@email.com",
-    total: 549.99,
-    items: 4,
-    status: "Processing",
-    date: "2024-01-06",
-  },
-  {
-    id: "ORD-011",
-    customer: "Chris Robinson",
-    email: "c.robinson@email.com",
-    total: 179.99,
-    items: 2,
-    status: "Pending",
-    date: "2024-01-05",
-  },
-  {
-    id: "ORD-012",
-    customer: "Michelle Clark",
-    email: "m.clark@email.com",
-    total: 399.99,
-    items: 3,
-    status: "Shipped",
-    date: "2024-01-04",
-  },
-];
+
 
 const Orders = () => {
-  const [orders, setOrders] = useState(initialOrders);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const dispatch = useDispatch();
 
-  // Table columns configuration
+  const { orders } = useSelector((state) => state.order);
+
+  useEffect(() => {
+    // if (orders?.length) {
+      dispatch(getAllOrder())
+    // }
+  }, [])
+
+
   const columns = [
     {
-      key: "id",
+      key: "_id",
       title: "Order ID",
       sortable: true,
-      render: (value) => (
-        <span style={{ fontWeight: 600, color: "#1976d2" }}>{value}</span>
-      ),
-    },
-    {
-      key: "customer",
-      title: "Customer",
-      sortable: true,
-    },
-    {
-      key: "email",
-      title: "Email",
-    },
-    {
-      key: "items",
-      title: "Items",
-      align: "center",
-      render: (value) => <span>{value} items</span>,
-    },
-    {
-      key: "total",
-      title: "Total",
-      sortable: true,
-      align: "right",
-      render: (value) => (
-        <span style={{ fontWeight: 600 }}>${value.toFixed(2)}</span>
-      ),
-    },
-    {
-      key: "date",
-      title: "Date",
-      sortable: true,
-    },
-    {
-      key: "status",
-      title: "Status",
-      render: (value) => {
-        const statusConfig = {
-          Pending: { class: "pending", label: "Pending" },
-          Processing: { class: "processing", label: "Processing" },
-          Shipped: { class: "shipped", label: "Shipped" },
-          Delivered: { class: "delivered", label: "Delivered" },
-          Cancelled: { class: "cancelled", label: "Cancelled" },
-        };
-        const config = statusConfig[value] || statusConfig.Pending;
-        return (
-          <span className={`order-status order-status--${config.class}`}>
-            {config.label}
-          </span>
-        );
-      },
+      // render: (value) => (
+      //   <span style={{ fontWeight: 600, color: "#1976d2" }}>{value}</span>
+      // ),
     },
     {
       key: "actions",
@@ -202,7 +54,7 @@ const Orders = () => {
       ),
     },
   ];
-
+console.log({orders});
   const handleView = (order) => {
     // Add view logic here
   };

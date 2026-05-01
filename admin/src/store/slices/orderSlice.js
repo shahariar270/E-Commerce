@@ -4,7 +4,7 @@ import { apiRoute, getCookie } from '@utils/helper';
 
 export const getAllOrder = createAsyncThunk(
     "order/getAllOrder",
-    async (_, thunApi) => apiClient('/order')
+    async (_, thunApi) => apiClient('/admin/order')
 );
 
 export const createOrder = createAsyncThunk(
@@ -34,7 +34,7 @@ const OrderSlices = createSlice({
             .addCase(getAllOrder.pending, handlePending)
             .addCase(getAllOrder.fulfilled, (state, action) => {
                 state.loading = false;
-                state.order = action.payload;
+                state.orders = action.payload.data;
             })
             .addCase(getAllOrder.rejected, handleRejected)
             .addCase(getUserOrders.fulfilled, (state, action) => {

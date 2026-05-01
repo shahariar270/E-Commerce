@@ -38,7 +38,7 @@ class order_controller {
             const savedOrder = await newOrder.save();
 
             await Cart.findByIdAndDelete(cart._id);
-           return res.status(201).json({
+            return res.status(201).json({
                 message: "Order placed successfully",
                 orderId: savedOrder._id,
                 total: savedOrder.totalAmount
@@ -61,11 +61,11 @@ class order_controller {
 
             const totalSales = orders.reduce((sum, order) => sum + order.totalAmount, 0);
 
-            res.status(200).json({
+            return res.status(200).json({
                 success: true,
                 count: orders.length,
                 totalSales,
-                orders
+                data: orders
             });
 
         } catch (error) {
