@@ -96,18 +96,15 @@ const Orders = () => {
     //   ),
     // },
   ];
-  console.log({ orders });
   const handleView = (order) => {
     // Add view logic here
   };
 
   const handleEdit = (order) => {
-    console.log("Edit order:", order);
     // Add edit logic here
   };
 
   const handleAddOrder = () => {
-    console.log("Add new order");
     // Add new order logic here
   };
 

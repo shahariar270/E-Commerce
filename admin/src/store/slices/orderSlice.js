@@ -43,7 +43,6 @@ const OrderSlices = createSlice({
             })
             .addCase(getAllOrder.rejected, handleRejected)
             .addCase(getUserOrders.fulfilled, (state, action) => {
-                console.log(action.payload);
                 state.orders = action.payload?.data;
             })
             .addCase(updateOrder.fulfilled, (state, action) => {
