@@ -6,6 +6,7 @@ import cartReducer from './slices/cartSlice';
 import orderReducer from './slices/orderSlice'
 import { logger } from 'redux-logger';
 import notificationReducer from './slices/notificationSlice';
+import { notificationMiddleware } from './notificationMiddleware';
 
 const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ const store = configureStore({
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
+      notificationMiddleware,
       import.meta.env.MODE === 'development' ? logger : []
     )
 });

@@ -3,7 +3,7 @@ import { apiRoute, getCookie } from '@utils/helper';
 
 export const createCategory = createAsyncThunk(
     'category/createCategory',
-    async (categoryData, { rejectWithValue, dispatch }) => {
+    async (categoryData, { rejectWithValue }) => {
         try {
             const token = getCookie('token');
             const response = await fetch(`${apiRoute}category`, {
@@ -20,11 +20,6 @@ export const createCategory = createAsyncThunk(
             if (!response.ok) {
                 return rejectWithValue(data.message || 'Failed to create category');
             }
-            dispatch({
-                message: 'category added successfully',
-                delay: "5000",
-                type: "success"
-            })
 
             return data;
         } catch (error) {
