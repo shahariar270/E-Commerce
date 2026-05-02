@@ -3,12 +3,13 @@ import Tab from '@Component/Tab';
 import { getProductById } from '@Store/slices/productSlice';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import './styles.scss';
 import { createCart } from '@Store/slices/cartSlice';
 
 export const ProductSinge = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
     const { current, loading } = useSelector(state => state.product);
     const dispatch = useDispatch();
     const [quantity, setQuantity] = useState(1);
@@ -33,7 +34,9 @@ export const ProductSinge = () => {
             name: current.product_name,
             price: current.price,
             quantity
-        }))
+        })).then((res) => {
+            navigate('/wishlist');
+        })
     }
 
     return (
@@ -53,7 +56,7 @@ export const ProductSinge = () => {
                             <h2>{current.product_name}</h2>
                             <p className="price">Price: ${current.price} </p>
                             <div className="st-category-pill">
-                                <p>Category: </p> 
+                                <p>Category: </p>
                                 {current.category && current.category.map((cat) => (
                                     <span key={cat._id}>{cat.name}</span>
                                 ))}
