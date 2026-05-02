@@ -39,6 +39,27 @@ const Orders = () => {
       // ),
     },
     {
+      key: "shippingAddress.name",
+      title: "Customer Name",
+      render: (value, row)=>(
+        <span>{row?.shippingAddress?.name}</span>
+      )
+    },
+    {
+      key: "shippingAddress.name",
+      title: "Customer Phone",
+      render: (value, row)=>(
+        <span>{row?.shippingAddress?.phone}</span>
+      )
+    },
+    {
+      key: "totalAmount",
+      title: "Customer Name",
+      // render: (value, row)=>(
+      //   <span>{row?.shippingAddress?.phone}</span>
+      // )
+    },
+    {
       key: 'status',
       title: "Status",
       render: (value, row) => {
@@ -51,29 +72,29 @@ const Orders = () => {
         );
       }
     },
-    {
-      key: "actions",
-      title: "Actions",
-      width: "120px",
-      render: (_, row) => (
-        <div className="table-actions">
-          <button
-            className="action-btn action-btn--view"
-            onClick={() => handleView(row)}
-            title="View Details"
-          >
-            👁️
-          </button>
-          <button
-            className="action-btn action-btn--edit"
-            onClick={() => handleEdit(row)}
-            title="Edit"
-          >
-            ✏️
-          </button>
-        </div>
-      ),
-    },
+    // {
+    //   key: "actions",
+    //   title: "Actions",
+    //   width: "120px",
+    //   render: (_, row) => (
+    //     <div className="table-actions">
+    //       <button
+    //         className="action-btn action-btn--view"
+    //         onClick={() => handleView(row)}
+    //         title="View Details"
+    //       >
+    //         👁️
+    //       </button>
+    //       <button
+    //         className="action-btn action-btn--edit"
+    //         onClick={() => handleEdit(row)}
+    //         title="Edit"
+    //       >
+    //         ✏️
+    //       </button>
+    //     </div>
+    //   ),
+    // },
   ];
   console.log({ orders });
   const handleView = (order) => {
