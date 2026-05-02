@@ -51,7 +51,13 @@ export const ProductSinge = () => {
                         <div className="product-details">
                             {/* <h4>{current.category || 'Category'}</h4> */}
                             <h2>{current.product_name}</h2>
-                            <p className="price">${current.price}</p>
+                            <p className="price">Price: ${current.price} </p>
+                            <div className="st-category-pill">
+                                <p>Category: </p> 
+                                {current.category && current.category.map((cat) => (
+                                    <span key={cat._id}>{cat.name}</span>
+                                ))}
+                            </div>
 
                             <div className="button-group">
                                 <div className="quantity-box">

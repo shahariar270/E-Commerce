@@ -1,6 +1,6 @@
 .product-single-container {
     padding: 2rem;
-    max-width: 1200px;
+    max-width: 800px;
     margin: 0 auto;
     background-color: var(--st-background);
     min-height: 100vh;
@@ -8,23 +8,23 @@
     color: var(--st-text-primary);
 
     .st-single-product {
-        display: grid;
-        grid-template-columns: 1.2fr 1fr; // Slightly larger space for image
-        gap: 4rem;
+        display: flex;
         background: var(--st-text-white);
-        padding: 3rem;
+        padding: 1rem;
+        gap: 20px;
         border-radius: 12px;
         border: 1px solid var(--st-border);
         margin-bottom: 2rem;
         align-items: center;
 
         .product-image-wrapper {
+            width: 30%;
             img {
                 width: 100%;
                 height: auto;
                 border-radius: 8px;
                 object-fit: contain;
-                max-height: 500px;
+                // max-height: 500px;
             }
         }
 
@@ -32,19 +32,19 @@
             h4 {
                 text-transform: uppercase;
                 color: var(--st-secondary-hover);
-                font-size: 0.9rem;
+                font-size: 16px;
                 letter-spacing: 1.5px;
-                margin-bottom: 0.5rem;
+                margin: 0;
             }
 
             h2 {
-                font-size: 2.5rem;
-                margin-bottom: 1rem;
+                font-size: 24px;
+                margin: 0;
                 line-height: 1.2;
             }
 
             .price {
-                font-size: 1.8rem;
+                font-size: 16px;
                 font-weight: 700;
                 color: var(--st-primary);
                 margin-bottom: 2rem;
@@ -63,7 +63,7 @@
                     border: 1.5px solid #ddd;
                     border-radius: 10px;
                     overflow: hidden;
-                    height: 48px;
+                    height: 30px;
 
                     button {
                         width: 40px;
@@ -105,8 +105,7 @@
 
                 /* Main Buttons Only */
                 > button {
-                    flex: 1;
-                    padding: 0.9rem 1.8rem;
+                    // flex: 1;
                     border-radius: 10px;
                     font-weight: 600;
                     cursor: pointer;
@@ -142,7 +141,7 @@
         background: var(--st-text-white);
         border-radius: 12px;
         padding: 2rem;
-        border: 1px solid var(--st-border);
+        // border: 1px solid var(--st-border);
         margin-bottom: 3rem;
 
         .tab-content {
@@ -209,6 +208,29 @@
                 }
             }
         }
+    }
+}
+
+.st-category-pill{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+
+    p {
+        font-size: 12px;
+        color: var(--st-text-primary);
+        margin: 0;
+        font-weight: 600;
+    }
+
+    span {
+        background-color: var(--st-secondary);
+        color: var(--st-text-primary);
+        padding: 4px 10px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 500;
     }
 }
 
