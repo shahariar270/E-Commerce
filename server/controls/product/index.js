@@ -164,11 +164,16 @@ class product_controller {
                     message: "No files uploaded",
                 });
             }
-            const imageUrl = await uploadImage(localPath);
+            const image_urls = [];
+
+            for (let file of files) {
+                const url = await uploadImage(file.path);
+                image_urls.push(url);
+            }
             return res.status(201).json({
                 message: "Image Upload successfully",
                 success: true,
-                data: imageUrl
+                data: image_urls,
             })
         } catch (error) {
             return res.status(500).json({

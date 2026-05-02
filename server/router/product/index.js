@@ -1,7 +1,7 @@
 const express = require('express');
 const auth_middleware = require('../../middlewares/auth_middleware');
 const router = express.Router();
-const { get_products, update_product, create_product, get_single_product, delete_product } = require('../../controls/product');
+const { get_products, update_product, create_product, get_single_product, delete_product, upload_image } = require('../../controls/product');
 const { upload } = require('../../middlewares/file_handle');
 
 router.post(
@@ -39,7 +39,7 @@ router.post(
     '/products/:id/images',
     auth_middleware.verify_token,
     auth_middleware.verify_role('admin'),
-    upload.array('images', 5),
+    upload.array('products_gallery', 5),
     upload_image
 );
 

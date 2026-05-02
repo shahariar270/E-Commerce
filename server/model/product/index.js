@@ -13,9 +13,9 @@ const product_schema = new mongoose.Schema(
         description: {
             type: String,
         },
-        image: {
-            type: String,
-            default: '',
+        image_gallery: {
+            type: [String],
+            default: [],
             trim: true,
         },
         user_id: {
