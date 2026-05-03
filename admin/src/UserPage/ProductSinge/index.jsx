@@ -46,7 +46,7 @@ export const ProductSinge = () => {
                     <div className="st-single-product">
                         <div className="product-image-wrapper">
                             <img
-                                src={current.image || 'https://dummyimage.com/600x600/eee/999&text=No+Image'}
+                                src={current.image_gallery[0] || 'https://dummyimage.com/600x600/eee/999&text=No+Image'}
                                 alt={current.title}
                             />
                         </div>
