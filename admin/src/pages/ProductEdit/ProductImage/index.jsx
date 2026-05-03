@@ -33,9 +33,30 @@ const ProductImages = ({ productId, data }) => {
     };
 
     // remove
-    const handleRemove = (index) => {
+    const handleRemove = async (index) => {
+        const removedImage = images[index];
+
+        // remove from UI first
         const updated = images.filter((_, i) => i !== index);
         setImages(updated);
+
+        // if it's an existing image → update backend
+        if (removedImage?.isExisting) {
+            try {
+                const updatedGallery = data.image_gallery.filter(
+                    (img) => img !== removedImage.preview
+                );
+
+                await dispatch(
+                    updateProduct({
+                        id: productId,
+                        data: { image_gallery: updatedGallery },
+                    })
+                );
+            } catch (error) {
+                console.error(error);
+            }
+        }
     };
 
     // add new field
@@ -58,7 +79,7 @@ const ProductImages = ({ productId, data }) => {
             await dispatch(
                 updateProduct({
                     id: productId,
-                    data: { image_gallery: res },
+                    data: { image_gallery: [...data?.image_gallery, ...res] },
                 })
             );
 
