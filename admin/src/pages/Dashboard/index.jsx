@@ -12,12 +12,12 @@ const Dashboard = () => {
       delay: 3000
     }));
   }, [dispatch]);
-  // Mock data for dashboard
+
   const stats = [
-    { label: "Total Revenue", value: "$45,231", change: "+12%", positive: true },
-    { label: "Total Orders", value: "1,234", change: "+8%", positive: true },
-    { label: "Total Products", value: "156", change: "+3%", positive: true },
-    { label: "Total Customers", value: "8,921", change: "+15%", positive: true },
+    { label: "Total Revenue", value: "$45,231" },
+    { label: "Total Orders", value: "1,234" },
+    { label: "Total Products", value: "156" },
+    { label: "Total Customers", value: "8,921" },
   ];
 
   const recentOrders = [
