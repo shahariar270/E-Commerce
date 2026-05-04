@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { updateProduct, uploadProductImages } from "@Store/slices/productSlice";
 import ImageUpload from "@Component/ImageUpload";
+import Button from "@Component/Buttons";
 
 const ProductImages = ({ productId, data }) => {
     const [images, setImages] = useState([]);
@@ -42,7 +43,7 @@ const ProductImages = ({ productId, data }) => {
                     .filter((_, i) => i !== index)
                     .filter((img) => img.isExisting)
                     .map((img) => img.preview);
-
+                setImages(updatedGallery);
                 await dispatch(
                     updateProduct({
                         id: productId,
@@ -84,19 +85,23 @@ const ProductImages = ({ productId, data }) => {
     };
 
     return (
-        <div>
-            {images.map((img, index) => (
-                <ImageUpload
-                    key={index}
-                    label={`Image ${index + 1}`}
-                    previewSrc={img.preview}
-                    onFileSelect={(file) => handleSelect(index, file)}
-                    onRemove={() => handleRemove(index)}
-                />
-            ))}
-            <button onClick={handleAdd}>➕ Add Image</button>
-            <br /><br />
-            <button onClick={handleUpload}>Upload All</button>
+        <div className="st-product-images-upload-container">
+            <span>Current Images:</span>
+            <div className="st-image-upload-row">
+                {images.map((img, index) => (
+                    <ImageUpload
+                        key={index}
+                        // label={`Image ${index + 1}`}
+                        previewSrc={img.preview}
+                        onFileSelect={(file) => handleSelect(index, file)}
+                        onRemove={() => handleRemove(index)}
+                    />
+                ))}
+            </div>
+            <div className="st-image-upload-actions">
+                <Button variant="secondary" onClick={handleAdd} label="➕ Add Image" />
+                <Button variant="primary" onClick={handleUpload} label="Upload All" />
+            </div>
         </div>
     );
 };
