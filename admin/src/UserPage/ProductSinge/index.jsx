@@ -13,6 +13,7 @@ export const ProductSinge = () => {
     const { current, loading } = useSelector(state => state.product);
     const dispatch = useDispatch();
     const [quantity, setQuantity] = useState(1);
+    const [activeImage, setActiveImage] = useState(current?.image_gallery[0]);
 
     const increaseQty = () => setQuantity(prev => prev + 1);
 
@@ -39,16 +40,30 @@ export const ProductSinge = () => {
         })
     }
 
+    useEffect(() => {
+        if (current?.image_gallery?.length > 0) {
+            setActiveImage(current.image_gallery[0]);
+        }
+    }, [current]);
+
     return (
         <div className="product-single-container">
             {current ? (
                 <>
                     <div className="st-single-product">
                         <div className="product-image-wrapper">
-                            <img
-                                src={current.image_gallery[0] || 'https://dummyimage.com/600x600/eee/999&text=No+Image'}
-                                alt={current.title}
-                            />
+                            <img src={activeImage || 'https://dummyimage.com/600x600/eee/999&text=No+Image'} />
+                            <div className="image-thumbnails">
+                                {current.image_gallery.length > 1 && current.image_gallery.map((img, index) => (
+                                    <img
+                                        key={index}
+                                        src={img}
+                                        onClick={() => setActiveImage(img)}
+                                        className={activeImage === img ? 'active' : ''}
+                                        width={'40px'}
+                                    />
+                                ))}
+                            </div>
                         </div>
 
                         <div className="product-details">
