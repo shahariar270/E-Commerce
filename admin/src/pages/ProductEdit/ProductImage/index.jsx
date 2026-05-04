@@ -5,6 +5,7 @@ import ImageUpload from "@Component/ImageUpload";
 
 const ProductImages = ({ productId, data }) => {
     const [images, setImages] = useState([]);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (data?.image_gallery?.length) {
@@ -20,9 +21,6 @@ const ProductImages = ({ productId, data }) => {
         }
     }, [data?.image_gallery]);
 
-    const dispatch = useDispatch();
-
-    // handle select
     const handleSelect = (index, file) => {
         const updated = [...images];
         updated[index] = {
@@ -32,20 +30,18 @@ const ProductImages = ({ productId, data }) => {
         setImages(updated);
     };
 
-    // remove
     const handleRemove = async (index) => {
         const removedImage = images[index];
 
-        // remove from UI first
         const updated = images.filter((_, i) => i !== index);
-        setImages(updated);
+        setImages(updated.length > 0 ? updated : [{ file: null, preview: null }]);
 
-        // if it's an existing image → update backend
         if (removedImage?.isExisting) {
             try {
-                const updatedGallery = data.image_gallery.filter(
-                    (img) => img !== removedImage.preview
-                );
+                const updatedGallery = images
+                    .filter((_, i) => i !== index)
+                    .filter((img) => img.isExisting)
+                    .map((img) => img.preview);
 
                 await dispatch(
                     updateProduct({
@@ -59,30 +55,29 @@ const ProductImages = ({ productId, data }) => {
         }
     };
 
-    // add new field
     const handleAdd = () => {
         setImages([...images, { file: null, preview: null }]);
     };
 
     const handleUpload = async () => {
         try {
-            const files = images
-                .map((img) => img.file)
-                .filter(Boolean);
-
+            const files = images.map((img) => img.file).filter(Boolean);
             if (files.length === 0) return;
 
             const res = await dispatch(
                 uploadProductImages({ id: productId, images: files })
             ).unwrap();
 
+            const existingUrls = images
+                .filter((img) => img.isExisting)
+                .map((img) => img.preview);
+
             await dispatch(
                 updateProduct({
                     id: productId,
-                    data: { image_gallery: [...data?.image_gallery, ...res] },
+                    data: { image_gallery: [...existingUrls, ...res] },
                 })
             );
-
         } catch (error) {
             console.error(error);
         }
@@ -99,7 +94,6 @@ const ProductImages = ({ productId, data }) => {
                     onRemove={() => handleRemove(index)}
                 />
             ))}
-
             <button onClick={handleAdd}>➕ Add Image</button>
             <br /><br />
             <button onClick={handleUpload}>Upload All</button>
