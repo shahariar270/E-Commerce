@@ -8,16 +8,31 @@ export const getCardData = createAsyncThunk(
 );
 
 const initialState = {
-    card: {}
+    card: {},
+    loading: false,
+    error: null
 }
 
 
 const dashboardSlices = createSlice({
     name: "dashboard",
     initialState,
-    extraReducers:(builder)=>{
+    // reducer: {},
+    extraReducers: (builder) => {
         builder
+            .addCase(getCardData.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(getCardData.fulfilled, (state, action) => {
+                state.loading = false;
+                state.card = action.payload.data || action.payload;
+            })
+            .addCase(getCardData.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
+            })
     }
 });
 
-export default dashboardSlices;
+export default dashboardSlices.reducer;
