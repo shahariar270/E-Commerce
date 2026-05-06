@@ -1,0 +1,43 @@
+.st-checkout__form {
+    display: flex;
+    gap: 24px;
+    width: 100%;
+}
+
+.st-checkout__field {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+}
+
+.st-checkout {
+    &--input-field {
+        padding: 24px;
+    }
+}
+
+.st-checkout_box {
+    background: var(--st-secondary);
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    h3 {
+        padding: 12px;
+        margin: 0;
+    }
+    &--summary {
+        .st-cart__item {
+            background: none;
+            display: flex;
+            align-items: center;
+        }
+    }
+    &--total {
+        padding: 24px;
+    }
+}
+
+.st-checkout--button{
+    padding: 12px;
+    
+}

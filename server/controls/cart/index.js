@@ -5,8 +5,8 @@ const calculateTotals = require("./helper");
 class cart_system {
     async create_cart(req, res) {
         try {
-            const { product_id, name, price, quantity } = res.body;
-            const { user_id } = req.user;
+            const { product_id, name, price, quantity } = req.body;
+            const { id: user_id } = req.user;
             let cart = await Cart.findOne({ user_id });
 
             const totalPrice = price * quantity;
@@ -18,13 +18,13 @@ class cart_system {
                     cart.items[itemIndex].quantity += quantity;
                     cart.items[itemIndex].subtotal = cart.items[itemIndex].quantity * price;
                 } else {
-                    cart.items.push({ product_id, name, price, image, quantity, subtotal: totalPrice });
+                    cart.items.push({ product_id, name, price, quantity, subtotal: totalPrice });
                 }
 
             } else {
                 cart = new Cart({
                     user_id,
-                    items: [{ product_id, name, price, image, quantity, subtotal: totalPrice }]
+                    items: [{ product_id, name, price, quantity, subtotal: totalPrice }]
                 });
             }
 
@@ -33,22 +33,24 @@ class cart_system {
             res.status(201).json(cart);
 
         } catch (error) {
-            res.status(500).json({ message: "Error adding to cart", error });
+            res.status(500).json({ message: "Error adding to cart", error: error.message });
         }
     }
     async get_cart(req, res) {
         try {
-            const { user_id } = req.user;
-            const cart = await Cart.findOne({ user_id }).populate("items.product_id");
+            const { id: user_id } = req.user;
+            const cart = await Cart.findOne({ user_id })
+                .populate("items.product_id");
 
             if (!cart) return res.status(404).json({ message: "Cart is empty" });
-            res.status(200).json(cart);
+            return res.status(200).json(cart);
         } catch (error) {
-            res.status(500).json({ message: "Error fetching cart", error });
+            res.status(500).json({ message: "Error fetching cart", error: error.message });
         }
     }
     async updated_cart(req, res) {
-        const { user_id, product_id, quantity } = req.body;
+        const { id: user_id } = req.user;
+        const { product_id, quantity } = req.body;
 
         try {
             const cart = await Cart.findOne({ user_id });
@@ -61,7 +63,10 @@ class cart_system {
 
                 calculateTotals(cart);
                 await cart.save();
-                res.status(200).json(cart);
+
+                // Populate product_id before returning
+                const populatedCart = await Cart.findById(cart._id).populate("items.product_id");
+                res.status(200).json(populatedCart);
             } else {
                 res.status(404).json({ message: "Item not found in cart" });
             }
@@ -71,7 +76,7 @@ class cart_system {
     }
 
     async remove_item_from_cart(req, res) {
-        const { user_id } = req.user;
+        const { id: user_id } = req.user;
         const { id } = req.params;
 
         try {
@@ -82,9 +87,12 @@ class cart_system {
 
             calculateTotals(cart);
             await cart.save();
-            res.status(200).json({ message: "Item removed", cart });
+
+            // Populate product_id before returning
+            const populatedCart = await Cart.findById(cart._id).populate("items.product_id");
+            return res.status(200).json(populatedCart);
         } catch (error) {
-            res.status(500).json({ message: "Error removing item", error });
+            res.status(500).json({ message: "Error removing item", error : error.message });
         }
     }
 

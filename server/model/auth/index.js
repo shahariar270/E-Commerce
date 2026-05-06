@@ -34,6 +34,11 @@ const userSchema = new mongoose.Schema(
             default: '',
             trim: true,
         },
+        image: {
+            type: String,
+            default: '',
+            trim: true,
+        },
         user_role: {
             type: String,
             default: 'buyer',

@@ -1,5 +1,6 @@
 const Category = require("../../model/category");
 const Product = require("../../model/product");
+const { uploadImage } = require('../../utils/cloudniry');
 
 
 class product_controller {
@@ -145,6 +146,35 @@ class product_controller {
             })
 
 
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: error.message,
+            });
+        }
+    }
+
+    async upload_image(req, res) {
+        try {
+            const files = req.files;
+            const product_id = req.query.product_id;
+            if (!files || files.length === 0) {
+                return res.status(400).json({
+                    success: false,
+                    message: "No files uploaded",
+                });
+            }
+            const image_urls = [];
+
+            for (let file of files) {
+                const url = await uploadImage(file.path);
+                image_urls.push(url);
+            }
+            return res.status(201).json({
+                message: "Image Upload successfully",
+                success: true,
+                data: image_urls,
+            })
         } catch (error) {
             return res.status(500).json({
                 success: false,

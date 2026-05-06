@@ -1,13 +1,47 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { showNotification } from "@Store/slices/notificationSlice";
+import { getCardData } from "@Store/slices/dashboardSlice";
 
 const Dashboard = () => {
-  // Mock data for dashboard
-  const stats = [
-    { label: "Total Revenue", value: "$45,231", change: "+12%", positive: true },
-    { label: "Total Orders", value: "1,234", change: "+8%", positive: true },
-    { label: "Total Products", value: "156", change: "+3%", positive: true },
-    { label: "Total Customers", value: "8,921", change: "+15%", positive: true },
+  const dispatch = useDispatch();
+  const { card: stats, loading } = useSelector(state => state?.dashboard)
+
+  useEffect(() => {
+    if (Object.keys(stats).length === 0 && !loading) {
+      dispatch(getCardData())
+    }
+  }, [stats, loading, dispatch]);
+
+  console.log({stats});
+
+  const statsData = [
+    {
+      label: "Revenue",
+      value: stats?.revenue_count,
+      change: "+12%", // optional (you can calculate later)
+      positive: true,
+    },
+    {
+      label: "Orders",
+      value: stats?.total_order,
+      change: "+5%",
+      positive: true,
+    },
+    {
+      label: "Products",
+      value: stats?.total_product,
+      change: "-2%",
+      positive: false,
+    },
+    {
+      label: "Customers",
+      value: stats?.customer_count,
+      change: "+8%",
+      positive: true,
+    },
   ];
+
 
   const recentOrders = [
     { id: "ORD-001", customer: "John Smith", total: 299.99, status: "Pending" },
@@ -36,7 +70,7 @@ const Dashboard = () => {
 
       {/* Stats Cards */}
       <div className="dashboard-stats">
-        {stats.map((stat, index) => (
+        {statsData.map((stat, index) => (
           <div key={index} className="stat-card">
             <div className="stat-card__content">
               <span className="stat-card__label">{stat.label}</span>

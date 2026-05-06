@@ -93,13 +93,22 @@ export const updateProfile = createAsyncThunk(
         return rejectWithValue('No token found');
       }
 
-      const response = await fetch(`${authRoute}/update_profile`, {
+      const formData = new FormData();
+      const { first_name, last_name, current_pass, new_pass, profile_image, remove_image } = profileData;
+
+      if (first_name !== undefined) formData.append('first_name', first_name);
+      if (last_name !== undefined) formData.append('last_name', last_name);
+      if (current_pass) formData.append('current_pass', current_pass);
+      if (new_pass) formData.append('new_pass', new_pass);
+      if (profile_image) formData.append('profile_image', profile_image);
+      if (remove_image) formData.append('remove_image', 'true');
+
+      const response = await fetch(`${authRoute}update_profile`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(profileData),
+        body: formData,
       });
 
       const data = await response.json();

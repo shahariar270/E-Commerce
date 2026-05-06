@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { apiClient } from '@utils/api'
 import ProductCard from '@Component/ProductCard'
 import './styles.scss'
+import { getCookie } from '@utils/helper'
 
 export const PublicProduct = () => {
     const navigate = useNavigate()
@@ -44,17 +45,10 @@ export const PublicProduct = () => {
         return () => clearTimeout(timeoutId)
     }, [searchQuery])
 
-    const totalPages = Math.ceil(total / perPage)
+    const totalPages = Math.ceil(total / perPage);
 
     return (
         <div className="public-product-page">
-            <Topbar leftContent={
-                <div className='st-flex st-gap-2'>
-                    <Button onClick={() => navigate('/login')} label='login' />
-                    <Button onClick={() => navigate('/register')} label='Register' />
-                </div>
-            } />
-
             <div className="public-product-page__content">
                 <div className="public-product-page__header">
                     <h1>Our Products</h1>

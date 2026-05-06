@@ -70,3 +70,29 @@
   margin-top: 30px;
   justify-content: flex-end;
 }
+
+.st-product-images-upload-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  .st-image-upload {
+    &-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      .st-image-upload{
+        margin-top: 0;
+      }
+
+      .st-image-upload-item {
+        width: 150px;
+        display: flex;
+        flex-direction: column;
+      }
+    }
+    &-actions {
+      display: flex;
+      gap: 12px;
+    }
+  }
+}

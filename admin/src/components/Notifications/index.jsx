@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import React from "react";
 import './styles.scss'
-import { showNotification } from "@Store/slices/notificaionSlices";
+import { showNotification } from "@Store/slices/notificationSlice";
 
 
 const Notification = () => {

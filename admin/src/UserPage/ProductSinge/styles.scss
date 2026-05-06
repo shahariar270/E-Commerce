@@ -1,0 +1,252 @@
+.product-single-container {
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: var(--st-background);
+    min-height: 100vh;
+    font-family: "Inter", sans-serif;
+    color: var(--st-text-primary);
+
+    .st-single-product {
+        display: flex;
+        background: var(--st-text-white);
+        padding: 1rem;
+        gap: 20px;
+        border-radius: 12px;
+        border: 1px solid var(--st-border);
+        margin-bottom: 2rem;
+        align-items: center;
+
+        .product-image-wrapper {
+            width: 30%;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            img {
+                width: 100%;
+                height: auto;
+                border-radius: 8px;
+                object-fit: contain;
+                // max-height: 500px;
+            }
+            .image-thumbnails{
+                height: 60px;
+                display: flex;
+                gap: 0.5rem;
+            }
+        }
+
+        .product-details {
+            h4 {
+                text-transform: uppercase;
+                color: var(--st-secondary-hover);
+                font-size: 16px;
+                letter-spacing: 1.5px;
+                margin: 0;
+            }
+
+            h2 {
+                font-size: 24px;
+                margin: 0;
+                line-height: 1.2;
+            }
+
+            .price {
+                font-size: 16px;
+                font-weight: 700;
+                color: var(--st-primary);
+                margin-bottom: 2rem;
+            }
+
+            .button-group {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                margin-top: 1.2rem;
+
+                /* Quantity Box */
+                .quantity-box {
+                    display: flex;
+                    align-items: center;
+                    border: 1.5px solid #ddd;
+                    border-radius: 10px;
+                    overflow: hidden;
+                    height: 30px;
+
+                    button {
+                        width: 40px;
+                        height: 100%;
+                        border: none;
+                        background: #f5f5f5;
+                        font-size: 1.2rem;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: 0.2s;
+
+                        &:hover {
+                            background: #eaeaea;
+                        }
+
+                        &:disabled {
+                            opacity: 0.5;
+                            cursor: not-allowed;
+                        }
+                    }
+
+                    input {
+                        width: 55px;
+                        height: 100%;
+                        border: none;
+                        text-align: center;
+                        font-size: 1rem;
+                        font-weight: 500;
+                        outline: none;
+
+                        /* remove arrows */
+                        &::-webkit-outer-spin-button,
+                        &::-webkit-inner-spin-button {
+                            -webkit-appearance: none;
+                            margin: 0;
+                        }
+                    }
+                }
+
+                /* Main Buttons Only */
+                > button {
+                    // flex: 1;
+                    border-radius: 10px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.25s ease;
+
+                    &:first-of-type {
+                        background-color: var(--st-primary);
+                        color: white;
+                        border: none;
+
+                        &:hover {
+                            opacity: 0.92;
+                            transform: translateY(-2px);
+                        }
+                    }
+
+                    &:last-of-type {
+                        background-color: transparent;
+                        color: var(--st-primary);
+                        border: 2px solid var(--st-primary);
+
+                        &:hover {
+                            background-color: var(--st-primary);
+                            color: white;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .tab-container {
+        background: var(--st-text-white);
+        border-radius: 12px;
+        padding: 2rem;
+        // border: 1px solid var(--st-border);
+        margin-bottom: 3rem;
+
+        .tab-content {
+            // padding: 1rem 0;
+            line-height: 1.6;
+            color: var(--st-text-secondary);
+        }
+    }
+
+    .related-products-section {
+        h2 {
+            margin-bottom: 1.5rem;
+            font-size: 1.75rem;
+        }
+
+        .related-products-scroll {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            padding: 1rem 0.5rem 1.5rem;
+            scrollbar-width: thin;
+
+            &::-webkit-scrollbar {
+                height: 6px;
+            }
+            &::-webkit-scrollbar-thumb {
+                background: var(--st-border);
+                border-radius: 10px;
+            }
+
+            .related-product-card {
+                min-width: 240px;
+                background: var(--st-text-white);
+                padding: 1.2rem;
+                border-radius: 10px;
+                border: 1px solid var(--st-border);
+                transition: all 0.3s ease;
+                cursor: pointer;
+
+                &:hover {
+                    transform: translateY(-8px);
+                    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+                }
+
+                .related-product-image {
+                    width: 100%;
+                    height: 180px;
+                    object-fit: cover;
+                    border-radius: 6px;
+                    margin-bottom: 1rem;
+                }
+
+                h3 {
+                    font-size: 1.1rem;
+                    margin-bottom: 0.5rem;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+
+                p {
+                    font-weight: 700;
+                    color: var(--st-primary);
+                }
+            }
+        }
+    }
+}
+
+.st-category-pill{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+
+    p {
+        font-size: 12px;
+        color: var(--st-text-primary);
+        margin: 0;
+        font-weight: 600;
+    }
+
+    span {
+        background-color: var(--st-secondary);
+        color: var(--st-text-primary);
+        padding: 4px 10px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+}
+
+// Responsive
+@media (max-width: 992px) {
+    .product-single-container .st-single-product {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        padding: 2rem;
+    }
+}

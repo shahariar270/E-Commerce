@@ -1,4 +1,4 @@
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form, Field } from 'formik';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCategoryInitialValues, getCategoryValidationSchema } from './helper';
@@ -6,6 +6,7 @@ import { createCategory, updateCategory, getCategoryById } from '@Store/slices/c
 import { Modal } from '@Component/Modal';
 import Input from '@Component/Input';
 import Button from '@Component/Buttons';
+import ErrorMessage from '@Component/ErrorMessage';
 
 export const CategoryFormInner = ({ id, openModalHandler, handleCloseModal }) => {
     const dispatch = useDispatch();
@@ -47,17 +48,18 @@ export const CategoryFormInner = ({ id, openModalHandler, handleCloseModal }) =>
         >
             <Formik
                 initialValues={getCategoryInitialValues(currentCategory)}
+                validationSchema={getCategoryValidationSchema()}
                 onSubmit={handleSubmit}
                 enableReinitialize
             >
-                {({ values, isSubmitting, setFieldValue }) => (
+                {({ values, isSubmitting, setFieldValue, errors, touched }) => (
                     <Form className='st-form'>
                         <label className="st-label" >Enter Category Title</label>
                         <div className="st-input-wrapper">
                             <Field
                                 name="name"
                                 placeholder="Title"
-                                className='st-input'
+                                className={`st-input ${errors.name && touched.name ? 'st-input--error' : ''}`}
                                 onChange={(e) => {
                                     const val = e.target.value;
 
@@ -66,11 +68,7 @@ export const CategoryFormInner = ({ id, openModalHandler, handleCloseModal }) =>
                                 }}
                             />
                         </div>
-                        <ErrorMessage
-                            name="name"
-                            component="span"
-                            className="error-text"
-                        />
+                        <ErrorMessage name="name" />
 
                         <Input
                             id="slug"
@@ -79,11 +77,6 @@ export const CategoryFormInner = ({ id, openModalHandler, handleCloseModal }) =>
                             label="Slug"
                             disabled
                             required
-                        />
-                        <ErrorMessage
-                            name="slug"
-                            component="span"
-                            className="error-text"
                         />
 
                         <label>
@@ -94,11 +87,7 @@ export const CategoryFormInner = ({ id, openModalHandler, handleCloseModal }) =>
                             />
                             Active
                         </label>
-                        <ErrorMessage
-                            name="is_active"
-                            component="span"
-                            className="error-text"
-                        />
+                        <ErrorMessage name="is_active" />
                         <div className="st-flex st-modal-footer-button">
                             <Button
                                 type="submit"

@@ -6,6 +6,7 @@ const {
     loginSchema,
     updateProfileSchema
 } = require('../../validation_schema/auth');
+const { uploadImage } = require('../../utils/cloudniry');
 const jwt_token = process.env.JWT_TOKEN;
 
 
@@ -57,7 +58,7 @@ module.exports = {
 
             if (!user) {
                 return res.status(404).json({
-                    message: "Your Request Email User Found",
+                    message: "Your Request Email User not Found",
                     success: false,
                 });
             }
@@ -91,15 +92,17 @@ module.exports = {
     },
     update_profile_controller: async (req, res) => {
         try {
-            const validate = updateProfileSchema.safeParse(req.body);
-            if (!validate.success) {
-                return res.status(400).json({ message: validate.error.errors[0].message, success: false });
-            }
-
-            const { current_pass, new_pass, first_name, last_name, role } = req.body;
+            const { current_pass, new_pass, first_name, last_name, role, remove_image } = req.body;
             const userId = req.user.id;
             let updates = {}
 
+            if (req.file) {
+                const localPath = req.file.path;
+                const imageUrl = await uploadImage(localPath);
+                updates.image = imageUrl;
+            } else if (remove_image === 'true') {
+                updates.image = '';
+            }
             const user = await User.findById(userId).select("+password");
 
             if (!user) {
@@ -143,6 +146,7 @@ module.exports = {
             return res.status(500).json({
                 message: "Internal server error",
                 success: false,
+                error: error.message
             });
         }
     },

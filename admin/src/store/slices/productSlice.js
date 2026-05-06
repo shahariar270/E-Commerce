@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { apiClient } from '@utils/api';
+import { getCookie } from '@utils/helper';
 
 export const createProduct = createAsyncThunk(
   'product/createProduct',
@@ -32,6 +33,37 @@ export const deleteProduct = createAsyncThunk(
   'product/deleteProduct',
   async (id) => apiClient(`/product/${id}`, { method: 'DELETE' })
 );
+
+export const uploadProductImages = createAsyncThunk(
+  'product/uploadProductImages',
+  async ({ id, images }, thunkApi) => {
+    try {
+      let formData = new FormData();
+
+      images.forEach(element => {
+        formData.append('products_gallery', element);
+      });
+       const token = getCookie('token');
+
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE}/api/products/${id}/images`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        }
+      );
+
+      const data = await res.json();
+
+      return data?.data;
+    } catch (error) {
+      return thunkApi.rejectWithValue(error.message)
+    }
+  }
+)
 
 const initialState = {
   data: [],

@@ -127,3 +127,18 @@
         }
     }
 }
+
+.st-form--group{
+    display: flex;
+    width: 100%;
+    gap: 24px;
+    .st-input-compo{
+        width: 100%;
+    }
+}
+
+.st-error {
+    color: var(--st-error, #dc3545);
+    font-size: 12px;
+    margin-top: -8px;
+}

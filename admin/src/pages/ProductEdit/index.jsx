@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { createProduct, getProductById, updateProduct } from "@Store/slices/productSlice";
+import { createProduct, getProductById, updateProduct, uploadProductImages } from "@Store/slices/productSlice";
 import './styles.scss';
 import Button from "@Component/Buttons";
 import Input from "@Component/Input";
@@ -9,6 +9,8 @@ import { Form, Formik } from "formik";
 import Select from "@Component/Select";
 import { getCategories } from "@Store/slices/categorySlice";
 import { useSelectPagination } from "@utils/Hooks/SelectPagination";
+import { productSchema } from "@utils/validationSchemas";
+import ProductImages from "./ProductImage";
 
 const ProductEdit = () => {
     const navigate = useNavigate();
@@ -21,7 +23,7 @@ const ProductEdit = () => {
         if (id) {
             dispatch(getProductById(id));
         }
-    }, [id]);
+    }, []);
 
 
     const handleSubmit = async (values) => {
@@ -31,7 +33,7 @@ const ProductEdit = () => {
             } else {
                 await dispatch(createProduct(values)).unwrap();
             }
-            navigate("/admin/products");
+            // navigate("/admin/products");
         } catch (error) {
             console.error("Failed to save product:", error);
         }
@@ -41,12 +43,21 @@ const ProductEdit = () => {
         navigate("/admin/products");
     };
 
-    const initialValues = {
-        product_name: currentProduct?.product_name || '',
-        description: currentProduct?.description || '',
-        stock: currentProduct?.stock || 'in_stock',
-        category_ids: currentProduct?.category?.map(i => i._id) || [],
-        price: currentProduct?.price || ''
+    const initialValues = (data) => {
+        if (data) {
+            return {
+                ...data,
+                category_ids: currentProduct?.category?.map(i => i._id) || []
+            }
+        }
+
+        return {
+            product_name: currentProduct?.product_name || '',
+            description: currentProduct?.description || '',
+            stock: currentProduct?.stock || 'in_stock',
+            category_ids: currentProduct?.category?.map(i => i._id) || [],
+            price: currentProduct?.price || ''
+        }
     }
 
 
@@ -61,7 +72,8 @@ const ProductEdit = () => {
             <Formik
                 enableReinitialize
                 onSubmit={handleSubmit}
-                initialValues={initialValues}
+                initialValues={initialValues(currentProduct)}
+                validationSchema={productSchema}
             >
                 {({ setFieldValue, values, isSubmitting, dirty }) => (
                     <Form className='st-form-inner--container'>
@@ -70,8 +82,8 @@ const ProductEdit = () => {
                             name="product_name"
                             placeholder="Enter product name"
                             label="Product Name"
+                            required
                         />
-
                         <Input
                             name={'description'}
                             as="textarea"
@@ -83,6 +95,7 @@ const ProductEdit = () => {
                             name="price"
                             type="number"
                             placeholder="Enter price"
+                            required
                         />
                         <Select
                             name="category_ids"
@@ -95,7 +108,9 @@ const ProductEdit = () => {
                             onMenuScrollToBottom={handleLoadMore}
                             isMulti
                         />
-
+                        {values?._id && (
+                            <ProductImages productId={values?._id} data={values} />
+                        )}
 
                         <div className="form-actions">
                             <Button

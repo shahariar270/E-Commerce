@@ -3,6 +3,7 @@ import { Formik, Form } from "formik";
 import Input from "../../components/Input";
 import Button from "../../components/Buttons";
 import { loginUser, clearError } from "../../store/slices/authSlice";
+import { loginSchema } from "../../Utils/validationSchemas";
 import { useNavigate } from "react-router-dom";
 import "./style.scss";
 import {jwtDecode} from 'jwt-decode';
@@ -29,7 +30,7 @@ const Login = () => {
           if (user.user_role === "admin") {
             navigate("/admin/dashboard");
           } else {
-            navigate("/user");
+            navigate("/");
           }
       })
       .catch(() => {
@@ -57,6 +58,7 @@ const Login = () => {
 
         <Formik
           initialValues={initialValues}
+          validationSchema={loginSchema}
           onSubmit={handleSubmit}
         >
           {({ isSubmitting }) => (
@@ -79,6 +81,7 @@ const Login = () => {
                 name="email"
                 type="email"
                 placeholder="Enter your email"
+                required
               />
 
               <Input
@@ -86,6 +89,7 @@ const Login = () => {
                 name="password"
                 type="password"
                 placeholder="Enter your password"
+                required
               />
 
               <div className="st-login-options">

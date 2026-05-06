@@ -6,6 +6,7 @@
 @use "Component/modal";
 @use "Component/notification";
 @use "Component/popovers";
+// @use "../styles/Component/sidebar";
 @use "Component/tab";
 @use "Component/table";
 @use "Component/topbar";
@@ -13,7 +14,6 @@
 @use "common/formInner";
 @use "common/root";
 @use "common/typography";
-@use "common/page";
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
 
 :root {
