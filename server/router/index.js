@@ -6,6 +6,7 @@ const product_router = require('../router/product/index');
 const cart_router = require('../router/cart/index');
 const order_router = require('../router/order/index');
 const dashboard = require('../router/dashboard/index');
+const comment = require('../router/comment/index');
 
 
 router.use('/auth', auth_router);
@@ -14,5 +15,6 @@ router.use('/api', product_router);
 router.use('/api', cart_router);
 router.use('/api', order_router);
 router.use('/api', dashboard);
+router.use('/api', comment);
 
 module.exports = router;
