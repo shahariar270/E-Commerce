@@ -9,14 +9,15 @@ import Notification from "@Component/Notifications";
 export const Layout = () => {
   const navigate = useNavigate();
   const [token, setToken] = useState(getCookie("token"));
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   useEffect(() => {
     setToken(getCookie("token"));
   }, []);
 
   return (
-    <div className="st-layout">
-      {token && <Sidebar />}
+    <div className={`st-layout ${sidebarOpen ? 'st-layout--sidebar-open' : 'st-layout--sidebar-collapsed'}`}>
+      {token && <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />}
 
       <div className="st-layout__body">
         <Topbar
