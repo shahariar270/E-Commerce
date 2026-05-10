@@ -86,16 +86,40 @@ const commentSlice = createSlice({
                 state.error = action.payload;
             })
             .addCase(createComment.fulfilled, (state, action) => {
-                // If it's a top-level comment, unshift it. 
-                if (!action.payload.data.parent) {
-                    state.comments.unshift(action.payload.data);
+                const newComment = action.payload.data;
+                if (!newComment.parent) {
+                    state.comments.unshift(newComment);
                 } else {
-                    // For replies, the UI usually refetches or we'd need to find the parent in nested state.
-                    // For now, let's keep it simple.
+                    const addToNested = (list) => {
+                        return list.map(c => {
+                            if (c._id === newComment.parent) {
+                                return {
+                                    ...c,
+                                    children: [newComment, ...(c.children || [])]
+                                };
+                            }
+                            if (c.children && c.children.length > 0) {
+                                return { ...c, children: addToNested(c.children) };
+                            }
+                            return c;
+                        });
+                    };
+                    state.comments = addToNested(state.comments);
                 }
             })
             .addCase(deleteComment.fulfilled, (state, action) => {
-                state.comments = state.comments.filter(c => c._id !== action.payload.data._id);
+                const deleteId = action.payload.data?._id;
+                const removeFromNested = (list) => {
+                    return list
+                        .filter(c => c._id !== deleteId)
+                        .map(c => {
+                            if (c.children && c.children.length > 0) {
+                                return { ...c, children: removeFromNested(c.children) };
+                            }
+                            return c;
+                        });
+                };
+                state.comments = removeFromNested(state.comments);
             })
             .addCase(updateComment.fulfilled, (state, action) => {
                 // Find and update the comment in the flat or nested state

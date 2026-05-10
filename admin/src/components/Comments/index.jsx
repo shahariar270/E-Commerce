@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getComments, createComment, deleteComment, updateComment } from '@Store/slices/commentSlice';
 import Button from '@Component/Buttons';
+import { jwtDecode } from 'jwt-decode';
 import './styles.scss';
 
-const CommentItem = ({ comment, onReply, onDelete, onUpdate, currentUserId }) => {
+const CommentItem = ({ comment, onReply, onDelete, onUpdate, currentUserId, isAdmin }) => {
     const isAuthor = currentUserId === comment.author?._id;
     const [isEditing, setIsEditing] = useState(false);
     const [editContent, setEditContent] = useState(comment.content);
@@ -36,19 +37,19 @@ const CommentItem = ({ comment, onReply, onDelete, onUpdate, currentUserId }) =>
                 </div>
                 <div className="st-comment-item__actions">
                     {!comment.parent && !isEditing && (
-                        <button className="st-comment-item__action-btn" onClick={() => onReply(comment)}>
+                        <button className="st-comment-item__action-btn" onClick={() => onReply(comment)} title="Reply">
                             Reply
                         </button>
                     )}
                     {isAuthor && !isEditing && (
-                        <>
-                            <button className="st-comment-item__action-btn" onClick={() => setIsEditing(true)}>
-                                Edit
-                            </button>
-                            <button className="st-comment-item__action-btn st-comment-item__action-btn--delete" onClick={() => onDelete(comment._id)}>
-                                Delete
-                            </button>
-                        </>
+                        <button className="st-comment-item__action-btn" onClick={() => setIsEditing(true)} title="Edit">
+                            <span className="st-icon--edit"></span>
+                        </button>
+                    )}
+                    {(isAuthor || isAdmin) && !isEditing && (
+                        <button className="st-comment-item__action-btn st-comment-item__action-btn--delete" onClick={() => onDelete(comment._id)} title="Delete">
+                            <span className="st-icon--delete"></span>
+                        </button>
                     )}
                 </div>
             </div>
@@ -80,9 +81,21 @@ const CommentItem = ({ comment, onReply, onDelete, onUpdate, currentUserId }) =>
 export const Comments = ({ productId }) => {
     const dispatch = useDispatch();
     const { comments, loading } = useSelector(state => state.comment);
-    const { user } = useSelector(state => state.auth);
+    const { token } = useSelector(state => state.auth);
     const [content, setContent] = useState('');
     const [replyTo, setReplyTo] = useState(null);
+
+    let currentUser = null;
+    if (token) {
+        try {
+            currentUser = jwtDecode(token);
+        } catch (e) {
+            console.error("Token decode error", e);
+        }
+    }
+
+    const isAdmin = currentUser?.user_role === 'admin';
+    const currentUserId = currentUser?.id;
 
     useEffect(() => {
         if (productId) {
@@ -101,15 +114,12 @@ export const Comments = ({ productId }) => {
         })).then(() => {
             setContent('');
             setReplyTo(null);
-            dispatch(getComments(productId));
         });
     };
 
     const handleDelete = (commentId) => {
         if (window.confirm('Are you sure you want to delete this comment?')) {
-            dispatch(deleteComment(commentId)).then(() => {
-                dispatch(getComments(productId));
-            });
+            dispatch(deleteComment(commentId));
         }
     };
 
@@ -161,7 +171,8 @@ export const Comments = ({ productId }) => {
                                 onReply={setReplyTo}
                                 onDelete={handleDelete}
                                 onUpdate={handleUpdate}
-                                currentUserId={user?.id}
+                                currentUserId={currentUserId}
+                                isAdmin={isAdmin}
                             />
                             <div className="st-comment-group__replies">
                                 {comment.children?.map(reply => (
@@ -170,7 +181,8 @@ export const Comments = ({ productId }) => {
                                         comment={reply}
                                         onDelete={handleDelete}
                                         onUpdate={handleUpdate}
-                                        currentUserId={user?.id}
+                                        currentUserId={currentUserId}
+                                        isAdmin={isAdmin}
                                     />
                                 ))}
                             </div>

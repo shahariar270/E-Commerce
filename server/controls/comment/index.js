@@ -42,7 +42,7 @@ class comment_controls {
                 });
             }
 
-            // Optional: Check if the user is the author
+            // Check if the user is the author
             if (comment.author.toString() !== req.user.id) {
                 return res.status(403).json({
                     success: false,
@@ -120,6 +120,22 @@ class comment_controls {
                     message: "Comment not Found"
                 });
             };
+
+            const comment = await Comment.findById(comment_id);
+            if (!comment) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Comment not Found"
+                });
+            }
+
+            // Check if the user is the author or an admin
+            if (comment.author.toString() !== req.user.id && req.user.user_role !== 'admin') {
+                return res.status(403).json({
+                    success: false,
+                    message: "You are not authorized to delete this comment"
+                });
+            }
 
             const deleted_comment = await Comment.findByIdAndDelete(comment_id);
 
