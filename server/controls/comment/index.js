@@ -30,29 +30,43 @@ class comment_controls {
     }
     async update_comment(req, res) {
         try {
-            const { content, parent } = req.body
-            const product_id = req?.params?.id
-            const comment_id = req?.query?.comment_id;
+            const { content } = req.body;
+            const comment_id = req.params.id;
 
             const comment = await Comment.findById(comment_id);
 
             if (!comment) {
-                return res.status(200).json({
+                return res.status(404).json({
                     success: false,
-                    message: "Comment is not Found",
-                })
+                    message: "Comment not Found",
+                });
             }
 
-            const updated_comment = await Comment.findByIdAndUpdate(comment_id, { content }, { new: true });
+            // Optional: Check if the user is the author
+            if (comment.author.toString() !== req.user.id) {
+                return res.status(403).json({
+                    success: false,
+                    message: "You are not authorized to update this comment"
+                });
+            }
+
+            const updated_comment = await Comment.findByIdAndUpdate(
+                comment_id, 
+                { content }, 
+                { new: true }
+            ).populate('author', 'user_name first_name last_name image');
 
             return res.status(200).json({
                 success: true,
                 data: updated_comment,
                 message: "Comment Updated Successfully"
-            })
+            });
 
         } catch (error) {
-
+            return res.status(500).json({
+                success: false,
+                message: error.message
+            });
         }
     }
 

@@ -1,12 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getComments, createComment, deleteComment } from '@Store/slices/commentSlice';
+import { getComments, createComment, deleteComment, updateComment } from '@Store/slices/commentSlice';
 import Button from '@Component/Buttons';
 import './styles.scss';
 
-const CommentItem = ({ comment, onReply, onDelete, currentUserId }) => {
+const CommentItem = ({ comment, onReply, onDelete, onUpdate, currentUserId }) => {
     const isAuthor = currentUserId === comment.author?._id;
-    
+    const [isEditing, setIsEditing] = useState(false);
+    const [editContent, setEditContent] = useState(comment.content);
+
+    const handleUpdate = () => {
+        if (!editContent.trim() || editContent === comment.content) {
+            setIsEditing(false);
+            return;
+        }
+        onUpdate(comment._id, editContent);
+        setIsEditing(false);
+    };
+
     return (
         <div className={`st-comment-item ${comment.parent ? 'st-comment-item--reply' : ''}`}>
             <div className="st-comment-item__header">
@@ -24,20 +35,43 @@ const CommentItem = ({ comment, onReply, onDelete, currentUserId }) => {
                     <span className="st-comment-item__date">{new Date(comment.createdAt).toLocaleDateString()}</span>
                 </div>
                 <div className="st-comment-item__actions">
-                    {!comment.parent && (
+                    {!comment.parent && !isEditing && (
                         <button className="st-comment-item__action-btn" onClick={() => onReply(comment)}>
                             Reply
                         </button>
                     )}
-                    {isAuthor && (
-                        <button className="st-comment-item__action-btn st-comment-item__action-btn--delete" onClick={() => onDelete(comment._id)}>
-                            Delete
-                        </button>
+                    {isAuthor && !isEditing && (
+                        <>
+                            <button className="st-comment-item__action-btn" onClick={() => setIsEditing(true)}>
+                                Edit
+                            </button>
+                            <button className="st-comment-item__action-btn st-comment-item__action-btn--delete" onClick={() => onDelete(comment._id)}>
+                                Delete
+                            </button>
+                        </>
                     )}
                 </div>
             </div>
             <div className="st-comment-item__content">
-                {comment.content}
+                {isEditing ? (
+                    <div className="st-comment-item__edit-form">
+                        <textarea
+                            className="st-text-area"
+                            value={editContent}
+                            onChange={(e) => setEditContent(e.target.value)}
+                        />
+                        <div className="st-comment-item__edit-actions">
+                            <button className="st-comment-item__action-btn" onClick={() => setIsEditing(false)}>
+                                Cancel
+                            </button>
+                            <button className="st-comment-item__action-btn" onClick={handleUpdate}>
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                ) : (
+                    comment.content
+                )}
             </div>
         </div>
     );
@@ -67,7 +101,6 @@ export const Comments = ({ productId }) => {
         })).then(() => {
             setContent('');
             setReplyTo(null);
-            // Refetch to get populated authors for new comments
             dispatch(getComments(productId));
         });
     };
@@ -78,6 +111,10 @@ export const Comments = ({ productId }) => {
                 dispatch(getComments(productId));
             });
         }
+    };
+
+    const handleUpdate = (commentId, content) => {
+        dispatch(updateComment({ commentId, content }));
     };
 
     return (
@@ -123,6 +160,7 @@ export const Comments = ({ productId }) => {
                                 comment={comment}
                                 onReply={setReplyTo}
                                 onDelete={handleDelete}
+                                onUpdate={handleUpdate}
                                 currentUserId={user?.id}
                             />
                             <div className="st-comment-group__replies">
@@ -131,6 +169,7 @@ export const Comments = ({ productId }) => {
                                         key={reply._id}
                                         comment={reply}
                                         onDelete={handleDelete}
+                                        onUpdate={handleUpdate}
                                         currentUserId={user?.id}
                                     />
                                 ))}

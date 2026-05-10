@@ -144,4 +144,21 @@
         color: var(--st-text-primary);
         white-space: pre-wrap;
     }
+
+    &__edit-form {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 8px;
+
+        textarea {
+            min-height: 80px;
+        }
+    }
+
+    &__edit-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+    }
 }

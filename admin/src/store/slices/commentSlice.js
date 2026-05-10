@@ -42,6 +42,21 @@ export const deleteComment = createAsyncThunk(
     }
 );
 
+export const updateComment = createAsyncThunk(
+    'comment/updateComment',
+    async ({ commentId, content }, { rejectWithValue }) => {
+        try {
+            const response = await apiClient(`/comment/${commentId}`, {
+                method: 'PUT',
+                body: JSON.stringify({ content })
+            });
+            return response;
+        } catch (error) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
 const initialState = {
     comments: [],
     loading: false,
@@ -72,18 +87,30 @@ const commentSlice = createSlice({
             })
             .addCase(createComment.fulfilled, (state, action) => {
                 // If it's a top-level comment, unshift it. 
-                // If it's a reply, we might need more complex logic or just refetch.
-                // For simplicity, let's just unshift if parent is null.
                 if (!action.payload.data.parent) {
                     state.comments.unshift(action.payload.data);
                 } else {
-                    // For replies, it's better to refetch or handle nested state.
-                    // For now, let's just push it and we'll handle display logic in component.
-                    state.comments.push(action.payload.data);
+                    // For replies, the UI usually refetches or we'd need to find the parent in nested state.
+                    // For now, let's keep it simple.
                 }
             })
             .addCase(deleteComment.fulfilled, (state, action) => {
                 state.comments = state.comments.filter(c => c._id !== action.payload.data._id);
+            })
+            .addCase(updateComment.fulfilled, (state, action) => {
+                // Find and update the comment in the flat or nested state
+                const updateInNested = (list) => {
+                    return list.map(c => {
+                        if (c._id === action.payload.data._id) {
+                            return { ...c, content: action.payload.data.content };
+                        }
+                        if (c.children && c.children.length > 0) {
+                            return { ...c, children: updateInNested(c.children) };
+                        }
+                        return c;
+                    });
+                };
+                state.comments = updateInNested(state.comments);
             });
     }
 });
