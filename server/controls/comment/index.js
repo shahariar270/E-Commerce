@@ -46,12 +46,41 @@ class comment_controls {
             const updated_comment = await Comment.findByIdAndUpdate(comment_id, content, { new: true });
 
             return res.status(200).json({
-                success:false,
+                success: false,
                 data: updated_comment,
                 message: "Comment Updated Successfully"
             })
 
         } catch (error) {
+
+        }
+    }
+
+    async delete_comment(req, res) {
+        try {
+            const comment_id = req.params.id;
+
+            if (!comment_id) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Comment not Found"
+                });
+            };
+
+            const deleted_comment = await Comment.findByIdAndDelete(comment_id);
+
+            await Comment.deleteMany({ parent: comment_id });
+
+            return res.status(200).json({
+                success: true,
+                message: "Comment Deleted Successfully",
+                data: deleted_comment,
+            })
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: error.message
+            })
 
         }
     }

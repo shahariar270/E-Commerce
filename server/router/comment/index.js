@@ -9,11 +9,17 @@ router.post(
     comment_create
 );
 
+router.delete(
+    '/comment/:id',
+    auth_middleware.verify_token,
+    
+)
+
 router.put(
     '/comment/:id?comment_id',
     auth_middleware.verify_token,
     update_comment
-)
+);
 
 
 module.exports = router;
