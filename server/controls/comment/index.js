@@ -30,7 +30,7 @@ class comment_controls {
     }
     async update_comment(req, res) {
         try {
-            const { content, parent } = res.body
+            const { content, parent } = req.body
             const product_id = req?.params?.id
             const comment_id = req?.query?.comment_id;
 
@@ -43,16 +43,56 @@ class comment_controls {
                 })
             }
 
-            const updated_comment = await Comment.findByIdAndUpdate(comment_id, content, { new: true });
+            const updated_comment = await Comment.findByIdAndUpdate(comment_id, { content }, { new: true });
 
             return res.status(200).json({
-                success: false,
+                success: true,
                 data: updated_comment,
                 message: "Comment Updated Successfully"
             })
 
         } catch (error) {
 
+        }
+    }
+
+    async get_comments(req, res) {
+        try {
+            const product_id = req.params.id;
+            const comments = await Comment.find({ product: product_id })
+                .populate('author', 'user_name first_name last_name image')
+                .sort({ createdAt: 1 }); // Sort by oldest first to maintain thread flow
+
+            // Create a map to store comments by their ID for quick lookup
+            const commentMap = {};
+            comments.forEach(comment => {
+                commentMap[comment._id] = { ...comment._doc, children: [] };
+            });
+
+            const nestedComments = [];
+            comments.forEach(comment => {
+                if (comment.parent) {
+                    if (commentMap[comment.parent]) {
+                        commentMap[comment.parent].children.push(commentMap[comment._id]);
+                    }
+                } else {
+                    nestedComments.push(commentMap[comment._id]);
+                }
+            });
+
+            // For the frontend, it might be easier if we sort the final list to show newest threads first
+            nestedComments.reverse();
+
+            return res.status(200).json({
+                success: true,
+                data: nestedComments,
+                message: "Comments fetched successfully"
+            })
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: error.message
+            })
         }
     }
 

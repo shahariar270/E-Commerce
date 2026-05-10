@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import './styles.scss';
 import { createCart } from '@Store/slices/cartSlice';
+import { Comments } from '@Component/Comments';
 
 export const ProductSinge = () => {
     const { id } = useParams();
@@ -113,7 +114,9 @@ export const ProductSinge = () => {
                                 },
                                 {
                                     label: 'Product Q/A',
-                                    content: <div className="tab-content">Have a question? Ask below.</div>
+                                    content: <div className="tab-content">
+                                        <Comments productId={current._id} />
+                                    </div>
                                 },
                             ]}
                         />
