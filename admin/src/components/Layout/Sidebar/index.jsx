@@ -59,8 +59,7 @@ const NavItem = ({ label, icon, link, isOpen }) => (
     </NavLink>
 )
 
-const Sidebar = () => {
-    const [isOpen, setIsOpen] = useState(true)
+const Sidebar = ({ isOpen, setIsOpen }) => {
     const [user, setUser] = useState(null)
     const navigate = useNavigate();
     const role = user?.user_role ?? 'user'
@@ -82,70 +81,76 @@ const Sidebar = () => {
     }
 
     return (
-        <div className="st-layout--sidebar-wrapper">
-            <aside
-                className={`st-sidebar ${!isOpen ? 'st-sidebar--collapsed' : ''}`}
-                style={{ '--sidebar-width': isOpen ? '220px' : '60px' }}
-            >
-                <div className="st-sidebar__header">
-                    <div className="st-sidebar__logo">
-                        The Curator
-                    </div>
-                    <div className="st-sidebar__tagline">
-                        Premium Inventory
-                    </div>
-                </div>
-
-                <nav className="st-sidebar__nav">
-                    {navItems.map(({ label, icon, link }) => (
-                        <NavItem
-                            key={label}
-                            label={label}
-                            icon={icon}
-                            link={link}
-                            isOpen={isOpen}
-                        />
-                    ))}
-                </nav>
-
-                <div className="st-sidebar__divider" />
-
-                <div
-                    className="st-sidebar__user"
-                    onClick={() => navigate('/admin/profile')}
-                    title={!isOpen ? (user?.name || user?.email || 'Profile') : undefined}
+        <>
+            <div 
+                className={`st-sidebar-overlay ${isOpen ? 'st-sidebar-overlay--visible' : ''}`}
+                onClick={() => setIsOpen(false)}
+            />
+            <div className="st-layout--sidebar-wrapper">
+                <aside
+                    className={`st-sidebar ${!isOpen ? 'st-sidebar--collapsed' : ''}`}
+                    style={{ '--sidebar-width': isOpen ? '220px' : '60px' }}
                 >
-                    <UserAvatar name={user?.name} email={user?.email} />
-                    <div className={`st-sidebar__user-info ${!isOpen ? 'st-sidebar__user-info--hidden' : ''}`}>
-                        <div className="st-sidebar__user-name">
-                            {user?.name || 'Admin'}
+                    <div className="st-sidebar__header">
+                        <div className="st-sidebar__logo">
+                            The Curator
                         </div>
-                        <div className="st-sidebar__user-email">
-                            {user?.email || ''}
+                        <div className="st-sidebar__tagline">
+                            Premium Inventory
                         </div>
                     </div>
-                </div>
 
-                <button
-                    className="st-sidebar__logout"
-                    onClick={handleLogout}
-                    title={!isOpen ? 'Logout' : undefined}
-                >
-                    <span className="st-icon--logout st-sidebar__logout-icon" />
-                    <span className={`st-sidebar__logout-label ${!isOpen ? 'st-sidebar__logout-label--hidden' : ''}`}>
-                        Logout
-                    </span>
-                </button>
+                    <nav className="st-sidebar__nav">
+                        {navItems.map(({ label, icon, link }) => (
+                            <NavItem
+                                key={label}
+                                label={label}
+                                icon={icon}
+                                link={link}
+                                isOpen={isOpen}
+                            />
+                        ))}
+                    </nav>
 
-                <button
-                    className="st-sidebar__toggle"
-                    onClick={() => setIsOpen(prev => !prev)}
-                    aria-label="Toggle sidebar"
-                >
-                    <ChevronIcon flipped={!isOpen} />
-                </button>
-            </aside>
-        </div>
+                    <div className="st-sidebar__divider" />
+
+                    <div
+                        className="st-sidebar__user"
+                        onClick={() => navigate('/admin/profile')}
+                        title={!isOpen ? (user?.name || user?.email || 'Profile') : undefined}
+                    >
+                        <UserAvatar name={user?.name} email={user?.email} />
+                        <div className={`st-sidebar__user-info ${!isOpen ? 'st-sidebar__user-info--hidden' : ''}`}>
+                            <div className="st-sidebar__user-name">
+                                {user?.name || 'Admin'}
+                            </div>
+                            <div className="st-sidebar__user-email">
+                                {user?.email || ''}
+                            </div>
+                        </div>
+                    </div>
+
+                    <button
+                        className="st-sidebar__logout"
+                        onClick={handleLogout}
+                        title={!isOpen ? 'Logout' : undefined}
+                    >
+                        <span className="st-icon--logout st-sidebar__logout-icon" />
+                        <span className={`st-sidebar__logout-label ${!isOpen ? 'st-sidebar__logout-label--hidden' : ''}`}>
+                            Logout
+                        </span>
+                    </button>
+
+                    <button
+                        className="st-sidebar__toggle"
+                        onClick={() => setIsOpen(prev => !prev)}
+                        aria-label="Toggle sidebar"
+                    >
+                        <ChevronIcon flipped={!isOpen} />
+                    </button>
+                </aside>
+            </div>
+        </>
     )
 }
 
