@@ -7,6 +7,7 @@ const {
     updateProfileSchema
 } = require('../../validation_schema/auth');
 const { uploadImage } = require('../../utils/cloudniry');
+const ApiResponse = require('../../utils/api_response');
 const jwt_token = process.env.JWT_TOKEN;
 
 
@@ -15,17 +16,14 @@ module.exports = {
         try {
             const validate = registerSchema.safeParse(req.body);
             if (!validate.success) {
-                return res.status(400).json({
-                    message: validate.error.issues[0].message,
-                    success: false
-                });
+                return ApiResponse.error(res, validate.error.issues[0].message, 400);
             }
 
             const { user_name, email, password, first_name, last_name, user_role } = req.body;
 
             const existUser = await User.findOne({ email });
             if (existUser)
-                return res.status(400).json({ message: "email already registered", success: false });
+                return ApiResponse.error(res, "email already registered", 400);
 
             const hashedPass = await bcrypt.hash(password, 10);
 
@@ -38,16 +36,16 @@ module.exports = {
                 user_role,
             });
 
-            return res.status(201).json({ message: "User created successfully", success: true });
+            return ApiResponse.success(res, "User created successfully", null, 201);
         } catch (error) {
-            res.status(500).json({ message: error.message, success: false });
+            return ApiResponse.error(res, error.message, 500);
         }
     },
     login_controller: async (req, res) => {
         try {
             const validate = loginSchema.safeParse(req.body);
             if (!validate.success) {
-                return res.status(400).json({ message: validate.error.errors[0].message, success: false });
+                return ApiResponse.error(res, validate.error.errors[0].message, 400);
             }
 
             const { email, password } = req.body;
@@ -57,19 +55,14 @@ module.exports = {
             }).select("+password");
 
             if (!user) {
-                return res.status(404).json({
-                    message: "Your Request Email User not Found",
-                    success: false,
-                });
+                return ApiResponse.error(res, "Your Request Email User not Found", 404);
             }
 
             const isMatch = await bcrypt.compare(password, user.password);
 
 
             if (!isMatch) {
-                return res.status(401).json({
-                    message: "Password Wrong",
-                });
+                return ApiResponse.error(res, "Password Wrong", 401);
             }
             const token = jwt.sign(
                 { id: user._id, user_name: user.user_name, user_role: user.user_role },
@@ -77,17 +70,10 @@ module.exports = {
                 { expiresIn: "1h" }
             );
 
-            return res.status(200).json({
-                token,
-                message: "Login successfully",
-                success: true,
-            });
+            return ApiResponse.success(res, "Login successfully", { token });
 
         } catch (error) {
-            return res.status(500).json({
-                message: error.message,
-                success: false,
-            })
+            return ApiResponse.error(res, error.message, 500);
         }
     },
     update_profile_controller: async (req, res) => {
@@ -106,20 +92,14 @@ module.exports = {
             const user = await User.findById(userId).select("+password");
 
             if (!user) {
-                return res.status(404).json({
-                    message: "User not found",
-                    success: false,
-                });
+                return ApiResponse.error(res, "User not found", 404);
             }
 
             if (current_pass && new_pass) {
 
                 const match = await bcrypt.compare(current_pass, user.password);
                 if (!match) {
-                    return res.status(422).json({
-                        message: "Current password is incorrect",
-                        success: false,
-                    });
+                    return ApiResponse.error(res, "Current password is incorrect", 422);
                 }
 
                 updates.password = await bcrypt.hash(new_pass, 10);
@@ -136,18 +116,10 @@ module.exports = {
             Object.assign(user, updates);
             await user.save();
 
-            return res.status(200).json({
-                message: "Profile updated successfully",
-                success: true,
-                data: user
-            });
+            return ApiResponse.success(res, "Profile updated successfully", user);
 
         } catch (error) {
-            return res.status(500).json({
-                message: "Internal server error",
-                success: false,
-                error: error.message
-            });
+            return ApiResponse.error(res, "Internal server error", 500, error.message);
         }
     },
     profile_controller: async (req, res) => {
@@ -155,18 +127,10 @@ module.exports = {
             const userId = req.user.id;
             const userData = await User.findById(userId);
 
-            res.status(200).json({
-                message: 'User Get Successfully',
-                data: userData,
-                success: true
-            })
+            return ApiResponse.success(res, 'User Get Successfully', userData);
 
         } catch (error) {
-            res.status(500).json({
-                message: error.message,
-                success: false,
-            })
-
+            return ApiResponse.error(res, error.message, 500);
         }
     }
 }

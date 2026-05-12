@@ -4,6 +4,7 @@ const app = express();
 const cors = require('cors');
 const { default: mongoose } = require('mongoose');
 const router = require('./router');
+const ApiResponse = require('./utils/api_response');
 
 app.use(cors({
     origin: 'http://localhost:5173',
@@ -29,7 +30,5 @@ mongoose.connect(process.env.DB_URL)
     });
 
 app.get('/', (req, res) => {
-    res.status(200).json({
-        massage: 'data get successfully',
-    })
+    return ApiResponse.success(res, 'data get successfully');
 })

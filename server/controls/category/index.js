@@ -1,4 +1,5 @@
 const Category = require('../../model/category/index');
+const ApiResponse = require('../../utils/api_response');
 
 
 class category_controller {
@@ -8,32 +9,18 @@ class category_controller {
             const user_id = req.user.id;
 
             if (!name || !slug) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Name and slug are required"
-                });
+                return ApiResponse.error(res, "Name and slug are required", 400);
             }
             const existing = await Category.find({ slug });
 
             if (existing.length > 0) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Category already exists"
-                });
+                return ApiResponse.error(res, "Category already exists", 400);
             }
             const new_category = await Category.create({ name, slug, user_id, is_active });
 
-            return res.status(201).json({
-                success: true,
-                message: 'Category created successfully',
-                data: new_category,
-            });
+            return ApiResponse.success(res, 'Category created successfully', new_category, 201);
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                message: 'Error creating category',
-                data: error.message
-            });
+            return ApiResponse.error(res, 'Error creating category', 500, error.message);
         };
     }
 
@@ -42,17 +29,9 @@ class category_controller {
             const { page = 1, limit = 10 } = req.query;
             const skip = (page - 1) * limit;
             const categories = await Category.find().skip(skip).limit(parseInt(limit));
-            return res.status(200).json({
-                success: true,
-                message: 'Categories retrieved successfully',
-                data: categories,
-            });
+            return ApiResponse.success(res, 'Categories retrieved successfully', categories);
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                message: 'Error retrieving categories',
-                data: error.message
-            });
+            return ApiResponse.error(res, 'Error retrieving categories', 500, error.message);
         };
     }
 
@@ -64,22 +43,12 @@ class category_controller {
                 .findByIdAndUpdate(id, { name, slug, is_active }, { new: true });
 
             if (!updated_category) {
-                return res.status(404).json({
-                    success: false,
-                    message: 'Category not found',
-                });
+                return ApiResponse.error(res, 'Category not found', 404);
             }
-            return res.status(200).json({
-                success: true,
-                message: 'Category updated successfully',
-                data: updated_category,
-            });
+            return ApiResponse.success(res, 'Category updated successfully', updated_category);
 
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                message: error.message
-            });
+            return ApiResponse.error(res, error.message, 500);
         };
     }
 
@@ -88,23 +57,12 @@ class category_controller {
             const { id } = req.params;
             const deleted_category = await Category.findByIdAndDelete(id);
             if (!deleted_category) {
-                return res.status(404).json({
-                    success: false,
-                    message: 'Category not found',
-                });
+                return ApiResponse.error(res, 'Category not found', 404);
             }
-            return res.status(200).json({
-                success: true,
-                message: 'Category deleted successfully',
-                data: deleted_category
-            });
+            return ApiResponse.success(res, 'Category deleted successfully', deleted_category);
         }
         catch (error) {
-            return res.status(500).json({
-                success: false,
-                message: 'Error deleting category',
-                data: error.message
-            });
+            return ApiResponse.error(res, 'Error deleting category', 500, error.message);
         };
     }
 
@@ -113,23 +71,12 @@ class category_controller {
             const { id } = req.params;
             const category = await Category.findById(id);
             if (!category) {
-                return res.status(404).json({
-                    success: false,
-                    message: 'Category not found',
-                });
+                return ApiResponse.error(res, 'Category not found', 404);
             }
-            return res.status(200).json({
-                success: true,
-                message: 'Category retrieved successfully',
-                data: category,
-            });
+            return ApiResponse.success(res, 'Category retrieved successfully', category);
         }
         catch (error) {
-            return res.status(500).json({
-                success: false,
-                message: 'Error retrieving category',
-                data: error.message
-            });
+            return ApiResponse.error(res, 'Error retrieving category', 500, error.message);
         };
     }
 }

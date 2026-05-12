@@ -1,4 +1,5 @@
 const Cart = require("../../model/cart");
+const ApiResponse = require("../../utils/api_response");
 const calculateTotals = require("./helper");
 
 
@@ -30,10 +31,10 @@ class cart_system {
 
             calculateTotals(cart);
             await cart.save();
-            res.status(201).json(cart);
+            return ApiResponse.success(res, "Item added to cart", cart, 201);
 
         } catch (error) {
-            res.status(500).json({ message: "Error adding to cart", error: error.message });
+            return ApiResponse.error(res, "Error adding to cart", 500, error.message);
         }
     }
     async get_cart(req, res) {
@@ -42,10 +43,10 @@ class cart_system {
             const cart = await Cart.findOne({ user_id })
                 .populate("items.product_id");
 
-            if (!cart) return res.status(404).json({ message: "Cart is empty" });
-            return res.status(200).json(cart);
+            if (!cart) return ApiResponse.error(res, "Cart is empty", 404);
+            return ApiResponse.success(res, "Cart fetched successfully", cart);
         } catch (error) {
-            res.status(500).json({ message: "Error fetching cart", error: error.message });
+            return ApiResponse.error(res, "Error fetching cart", 500, error.message);
         }
     }
     async updated_cart(req, res) {
@@ -54,7 +55,7 @@ class cart_system {
 
         try {
             const cart = await Cart.findOne({ user_id });
-            if (!cart) return res.status(404).json({ message: "Cart not found" });
+            if (!cart) return ApiResponse.error(res, "Cart not found", 404);
 
             const item = cart.items.find(p => p.product_id.toString() === product_id);
             if (item) {
@@ -66,12 +67,12 @@ class cart_system {
 
                 // Populate product_id before returning
                 const populatedCart = await Cart.findById(cart._id).populate("items.product_id");
-                res.status(200).json(populatedCart);
+                return ApiResponse.success(res, "Cart updated successfully", populatedCart);
             } else {
-                res.status(404).json({ message: "Item not found in cart" });
+                return ApiResponse.error(res, "Item not found in cart", 404);
             }
         } catch (error) {
-            res.status(500).json({ message: "Error updating quantity", error });
+            return ApiResponse.error(res, "Error updating quantity", 500, error.message);
         }
     }
 
@@ -81,7 +82,7 @@ class cart_system {
 
         try {
             const cart = await Cart.findOne({ user_id });
-            if (!cart) return res.status(404).json({ message: "Cart not found" });
+            if (!cart) return ApiResponse.error(res, "Cart not found", 404);
 
             cart.items = cart.items.filter(item => item.product_id.toString() !== id);
 
@@ -90,9 +91,9 @@ class cart_system {
 
             // Populate product_id before returning
             const populatedCart = await Cart.findById(cart._id).populate("items.product_id");
-            return res.status(200).json(populatedCart);
+            return ApiResponse.success(res, "Item removed from cart", populatedCart);
         } catch (error) {
-            res.status(500).json({ message: "Error removing item", error : error.message });
+            return ApiResponse.error(res, "Error removing item", 500, error.message);
         }
     }
 

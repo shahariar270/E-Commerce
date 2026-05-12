@@ -1,6 +1,7 @@
 const Order = require("../../model/order");
 const Product = require("../../model/product");
 const User = require('../../model/auth');
+const ApiResponse = require('../../utils/api_response');
 
 class dashboard {
     async get_card_data(req, res) {
@@ -26,22 +27,15 @@ class dashboard {
 
             const customer_count = await User.countDocuments({ role: "buyer" });
 
-            return res.status(200).json({
-                success: true,
-                message: "Dashboard Loading successfully",
-                data: {
-                    revenue_count,
-                    total_order,
-                    total_product,
-                    customer_count,
-                },
-            })
+            return ApiResponse.success(res, "Dashboard Loading successfully", {
+                revenue_count,
+                total_order,
+                total_product,
+                customer_count,
+            });
 
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                message: error.message
-            })
+            return ApiResponse.error(res, error.message, 500);
         }
     }
 }
