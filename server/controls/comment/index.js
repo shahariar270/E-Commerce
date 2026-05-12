@@ -1,4 +1,5 @@
 const Comment = require("../../model/conmment");
+const ApiResponse = require("../../utils/api_response");
 
 
 class comment_controls {
@@ -15,11 +16,12 @@ class comment_controls {
                 parent,
             })
 
-            return res.status(201).json({
-                success: true,
-                data: new_comment,
-                message: "comment created successfully"
-            })
+            // return res.status(201).json({
+            //     success: true,
+            //     data: new_comment,
+            //     message: "comment created successfully"
+            // })
+            return ApiResponse.success(res, "comment created successfully", new_comment, 201)
 
         } catch (error) {
             return res.status(500).json({
@@ -51,8 +53,8 @@ class comment_controls {
             }
 
             const updated_comment = await Comment.findByIdAndUpdate(
-                comment_id, 
-                { content }, 
+                comment_id,
+                { content },
                 { new: true }
             ).populate('author', 'user_name first_name last_name image');
 
