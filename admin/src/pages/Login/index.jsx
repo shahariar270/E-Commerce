@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form } from "formik";
 import Input from "../../components/Input";
 import Button from "../../components/Buttons";
-import { loginUser, clearError } from "../../store/slices/authSlice";
+import { loginUser, clearError } from "../../store/slices/auth/authSlice";
 import { loginSchema } from "../../Utils/validationSchemas";
 import { useNavigate } from "react-router-dom";
 import "./style.scss";

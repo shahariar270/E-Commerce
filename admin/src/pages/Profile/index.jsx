@@ -3,7 +3,7 @@ import Button from "../../components/Buttons";
 import Input from "../../components/Input";
 import ImageUpload from "../../components/ImageUpload";
 import { useDispatch, useSelector } from "react-redux";
-import { getProfile, updateProfile } from "@Store/slices/authSlice";
+import { getProfile, updateProfile } from "@Store/slices/auth/authSlice";
 import { Form, Formik } from "formik";
 import "./styles.scss"
 
