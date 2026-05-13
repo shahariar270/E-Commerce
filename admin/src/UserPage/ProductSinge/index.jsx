@@ -7,14 +7,22 @@ import { useNavigate, useParams } from 'react-router-dom';
 import './styles.scss';
 import { createCart } from '@Store/slices/cartSlice';
 import { Comments } from '@Component/Comments';
+import { createReview } from '@Store/slices/reviewSlice';
 
 export const ProductSinge = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { current, loading } = useSelector(state => state.product);
+    const { loading: reviewLoading, latest: latestReview } = useSelector(state => state.review);
+    const { token } = useSelector(state => state.auth);
     const dispatch = useDispatch();
     const [quantity, setQuantity] = useState(1);
-    const [activeImage, setActiveImage] = useState(current?.image_gallery[0]);
+    const [activeImage, setActiveImage] = useState(current?.image_gallery?.[0]);
+    const [reviewForm, setReviewForm] = useState({
+        rating: 5,
+        title: '',
+        comment: '',
+    });
 
     const increaseQty = () => setQuantity(prev => prev + 1);
 
@@ -41,6 +49,38 @@ export const ProductSinge = () => {
         })
     }
 
+    const handleReviewChange = (event) => {
+        const { name, value } = event.target;
+        setReviewForm(prev => ({
+            ...prev,
+            [name]: name === 'rating' ? Number(value) : value,
+        }));
+    };
+
+    const handleReviewSubmit = (event) => {
+        event.preventDefault();
+
+        if (!token) {
+            navigate('/login');
+            return;
+        }
+
+        if (!reviewForm.comment.trim()) return;
+
+        dispatch(createReview({
+            productId: current._id,
+            rating: reviewForm.rating,
+            title: reviewForm.title.trim(),
+            comment: reviewForm.comment.trim(),
+        })).unwrap().then(() => {
+            setReviewForm({
+                rating: 5,
+                title: '',
+                comment: '',
+            });
+        }).catch(() => {});
+    };
+
     useEffect(() => {
         if (current?.image_gallery?.length > 0) {
             setActiveImage(current.image_gallery[0]);
@@ -55,7 +95,7 @@ export const ProductSinge = () => {
                         <div className="product-image-wrapper">
                             <img src={activeImage || 'https://dummyimage.com/600x600/eee/999&text=No+Image'} />
                             <div className="image-thumbnails">
-                                {current.image_gallery.length > 1 && current.image_gallery.map((img, index) => (
+                                {current.image_gallery?.length > 1 && current.image_gallery.map((img, index) => (
                                     <img
                                         key={index}
                                         src={img}
@@ -110,7 +150,55 @@ export const ProductSinge = () => {
                                 },
                                 {
                                     label: 'Reviews and Ratings',
-                                    content: <div className="tab-content">No reviews yet.</div>
+                                    content: (
+                                        <div className="tab-content">
+                                            <div className="st-review-panel">
+                                                <h3>Write a Review</h3>
+                                                <form className="st-review-form" onSubmit={handleReviewSubmit}>
+                                                    <div className="st-review-rating" role="radiogroup" aria-label="Product rating">
+                                                        {[1, 2, 3, 4, 5].map((rating) => (
+                                                            <label key={rating} className={rating <= reviewForm.rating ? 'active' : ''}>
+                                                                <input
+                                                                    type="radio"
+                                                                    name="rating"
+                                                                    value={rating}
+                                                                    checked={reviewForm.rating === rating}
+                                                                    onChange={handleReviewChange}
+                                                                />
+                                                                <span>★</span>
+                                                            </label>
+                                                        ))}
+                                                    </div>
+                                                    <input
+                                                        className="st-review-input"
+                                                        type="text"
+                                                        name="title"
+                                                        placeholder="Review title"
+                                                        maxLength="100"
+                                                        value={reviewForm.title}
+                                                        onChange={handleReviewChange}
+                                                    />
+                                                    <textarea
+                                                        className="st-text-area st-review-textarea"
+                                                        name="comment"
+                                                        placeholder="Share your product experience"
+                                                        maxLength="1000"
+                                                        value={reviewForm.comment}
+                                                        onChange={handleReviewChange}
+                                                        required
+                                                    />
+                                                    <Button
+                                                        label={reviewLoading ? 'Submitting...' : 'Submit Review'}
+                                                        type="submit"
+                                                        disabled={reviewLoading || !reviewForm.comment.trim()}
+                                                    />
+                                                </form>
+                                                {latestReview?.product === current._id && (
+                                                    <p className="st-review-success">Your review was submitted.</p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )
                                 },
                                 {
                                     label: 'Product Q/A',

@@ -157,6 +157,79 @@
             line-height: 1.6;
             color: var(--st-text-secondary);
         }
+
+        .st-review-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+
+            h3 {
+                margin: 0;
+                color: var(--st-text-primary);
+                font-size: 18px;
+            }
+        }
+
+        .st-review-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .st-review-rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+
+            label {
+                cursor: pointer;
+                color: var(--st-border);
+                font-size: 24px;
+                line-height: 1;
+
+                &.active {
+                    color: #f5a623;
+                }
+            }
+
+            input {
+                position: absolute;
+                opacity: 0;
+                pointer-events: none;
+            }
+        }
+
+        .st-review-input,
+        .st-review-textarea {
+            width: 100%;
+            border: 1px solid var(--st-border);
+            border-radius: 8px;
+            color: var(--st-text-primary);
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s ease;
+
+            &:focus {
+                border-color: var(--st-primary);
+            }
+        }
+
+        .st-review-input {
+            min-height: 42px;
+            padding: 0 12px;
+        }
+
+        .st-review-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .st-review-success {
+            margin: 0;
+            color: var(--st-primary);
+            font-weight: 600;
+        }
     }
 
     .related-products-section {

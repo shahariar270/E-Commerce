@@ -7,5 +7,7 @@ const router = express.Router();
 router.post(
     '/review/:id', //here apply product id.
     auth_middleware.verify_token,
-    review.create_rating(),
+    review.create_rating,
 );
+
+module.exports = router;

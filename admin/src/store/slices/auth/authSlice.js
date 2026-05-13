@@ -19,8 +19,12 @@ export const loginUser = createAsyncThunk(
       if (!response.ok) {
         return rejectWithValue(data.message || 'Login failed');
       }
-      setCookie('token', data.token);
-      return data;
+
+      const token = data?.data?.token || data?.token;
+      if (token) {
+        setCookie('token', token);
+      }
+      return { ...data, token };
     } catch (error) {
       return rejectWithValue(error.message);
     }
