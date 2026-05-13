@@ -5,10 +5,6 @@ const ApiResponse = require('../../utils/api_response');
 
 
 class product_controller {
-    constructor() {
-
-    }
-
     async create_product(req, res) {
         try {
             const { category_ids, ...data } = req.body;
