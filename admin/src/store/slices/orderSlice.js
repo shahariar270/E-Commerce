@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { apiClient } from '@utils/api';
-import { apiRoute, getCookie } from '@utils/helper';
 
 export const getAllOrder = createAsyncThunk(
     "order/getAllOrder",
@@ -28,23 +27,35 @@ const initialState = {
     error: null,
 }
 
+const getOrderList = (payload) => {
+    const orders = payload?.data?.data ?? payload?.data;
+    return Array.isArray(orders) ? orders : [];
+};
+
 const OrderSlices = createSlice({
     name: 'order',
     initialState,
     extraReducers: (builder) => {
         const handlePending = (state) => { state.loading = true; state.error = null; };
-        const handleRejected = (state, action) => { state.loading = false; state.error = action.error.message; };
+        const handleRejected = (state, action) => {
+            state.loading = false;
+            state.error = action.error.message;
+            state.orders = [];
+        };
 
         builder
             .addCase(getAllOrder.pending, handlePending)
             .addCase(getAllOrder.fulfilled, (state, action) => {
                 state.loading = false;
-                state.orders = action.payload.data;
+                state.orders = getOrderList(action.payload);
             })
             .addCase(getAllOrder.rejected, handleRejected)
+            .addCase(getUserOrders.pending, handlePending)
             .addCase(getUserOrders.fulfilled, (state, action) => {
-                state.orders = action.payload?.data;
+                state.loading = false;
+                state.orders = getOrderList(action.payload);
             })
+            .addCase(getUserOrders.rejected, handleRejected)
             .addCase(updateOrder.fulfilled, (state, action) => {
                 const index = state.orders.findIndex(item => item._id === action.payload?.data?._id);
                 if (index !== -1) {
