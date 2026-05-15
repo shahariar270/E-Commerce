@@ -24,6 +24,8 @@ class review_controls {
                 title,
                 rating,
             });
+            await new_review.populate("author", "user_name first_name last_name image");
+            await new_review.populate("product", "product_name");
 
             return ApiResponse.success(res, "Rating added Created successfully", new_review, 201);
 
@@ -35,8 +37,9 @@ class review_controls {
     async get_all_reviews(req, res) {
         try {
             const reviews = await Review.find()
-                .populate("author", "name")
-                .populate("product", "name");
+                .populate("author", "user_name first_name last_name image")
+                .populate("product", "product_name")
+                .sort({ createdAt: -1 });
             return ApiResponse.success(res, "Reviews fetched successfully", reviews, 200);
         } catch (error) {
             return ApiResponse.error(res, error.message, 500);
@@ -46,8 +49,8 @@ class review_controls {
     async get_review_by_id(req, res) {
         try {
             const review = await Review.findById(req.params.id)
-                .populate("author", "name")
-                .populate("product", "name");
+                .populate("author", "user_name first_name last_name image")
+                .populate("product", "product_name");
             if (!review) {
                 return ApiResponse.error(res, "Review not found", 404);
             }

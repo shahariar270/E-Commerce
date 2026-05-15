@@ -16,7 +16,7 @@ router.get(
 );
 
 router.get(
-    '/review/:id',
+    '/review/:id',// review id. 
     review.get_review_by_id,
 );
 
