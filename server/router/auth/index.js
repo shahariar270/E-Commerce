@@ -10,7 +10,6 @@ const {
 } = require('../../controls/auth');
 const auth_middleware = require('../../middlewares/auth_middleware');
 const { upload } = require('../../middlewares/file_handle');
-require('dotenv').config();
 
 router.post('/register', register_controller);
 

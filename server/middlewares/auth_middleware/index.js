@@ -1,7 +1,5 @@
 const jwt = require('jsonwebtoken');
 const ApiResponse = require('../../utils/api_response');
-// require('dotenv').config();
-require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 
 
 class auth_middleware {
