@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const ApiResponse = require('../../utils/api_response');
 // require('dotenv').config();
 require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 
@@ -15,13 +16,13 @@ class auth_middleware {
         const authHeader = req.headers.authorization;
 
         if (!authHeader) {
-            return res.status(401).json({ message: "Token missing" });
+            return ApiResponse.error(res, "Token missing", 401);
         }
         const token = authHeader.split(" ")[1];
 
         jwt.verify(token, this.secret, (err, decoded) => {
             if (err) {
-                return res.status(403).json({ message: "Invalid token" });
+                return ApiResponse.error(res, "Invalid token", 403);
             }
 
             req.user = decoded;
@@ -33,7 +34,7 @@ class auth_middleware {
         return (req, res, next) => {
             const userRole = req?.user?.user_role;
             if (!allowedRoles.includes(userRole)) {
-                return res.status(403).json({ message: "Access denied" });
+                return ApiResponse.error(res, "Access denied", 403);
             }
             next();
         };

@@ -7,14 +7,53 @@ import { useNavigate, useParams } from 'react-router-dom';
 import './styles.scss';
 import { createCart } from '@Store/slices/cartSlice';
 import { Comments } from '@Component/Comments';
+import { createReview, getReviews } from '@Store/slices/reviewSlice';
+
+const normalizeProductId = (product) => {
+    if (!product) return null;
+    return typeof product === 'object' ? product._id : product;
+};
+
+const getAuthorName = (author) => {
+    if (!author) return 'Verified customer';
+    return author.user_name || author.name || 'Verified customer';
+};
+
+const renderStars = (rating, className = '') => (
+    <span className={`st-stars ${className}`.trim()} aria-label={`${rating} out of 5 stars`}>
+        {[1, 2, 3, 4, 5].map((star) => (
+            <span key={star} className={star <= Math.round(rating) ? 'is-filled' : ''} aria-hidden="true">
+                &#9733;
+            </span>
+        ))}
+    </span>
+);
 
 export const ProductSinge = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { current, loading } = useSelector(state => state.product);
+    const {
+        reviews,
+        loading: reviewsLoading,
+        creating: reviewCreating,
+        latest: latestReview,
+        error: reviewError,
+    } = useSelector(state => state.review);
+    const { token } = useSelector(state => state.auth);
     const dispatch = useDispatch();
     const [quantity, setQuantity] = useState(1);
-    const [activeImage, setActiveImage] = useState(current?.image_gallery[0]);
+    const [activeImage, setActiveImage] = useState(current?.image_gallery?.[0]);
+    const [reviewForm, setReviewForm] = useState({
+        rating: 5,
+        title: '',
+        comment: '',
+    });
+
+    const productReviews = reviews.filter((review) => normalizeProductId(review.product) === current?._id);
+    const averageRating = productReviews.length
+        ? productReviews.reduce((sum, review) => sum + Number(review.rating || 0), 0) / productReviews.length
+        : 0;
 
     const increaseQty = () => setQuantity(prev => prev + 1);
 
@@ -24,22 +63,8 @@ export const ProductSinge = () => {
 
     useEffect(() => {
         dispatch(getProductById(id));
-    }, []);
-
-    if (!current && loading) {
-        return <div className="loading-message">Loading product...</div>;
-    }
-
-    const handleCart = (quantity) => {
-        dispatch(createCart({
-            product_id: current._id,
-            name: current.product_name,
-            price: current.price,
-            quantity
-        })).then((res) => {
-            navigate('/wishlist');
-        })
-    }
+        dispatch(getReviews());
+    }, [dispatch, id]);
 
     useEffect(() => {
         if (current?.image_gallery?.length > 0) {
@@ -47,54 +72,104 @@ export const ProductSinge = () => {
         }
     }, [current]);
 
+    if (!current && loading) {
+        return <div className="loading-message">Loading product...</div>;
+    }
+
+    const handleCart = (cartQuantity) => {
+        dispatch(createCart({
+            product_id: current._id,
+            name: current.product_name,
+            price: current.price,
+            quantity: cartQuantity
+        })).then(() => {
+            navigate('/wishlist');
+        });
+    };
+
+    const handleReviewChange = (event) => {
+        const { name, value } = event.target;
+        setReviewForm(prev => ({
+            ...prev,
+            [name]: name === 'rating' ? Number(value) : value,
+        }));
+    };
+
+    const handleReviewSubmit = (event) => {
+        event.preventDefault();
+
+        if (!token) {
+            navigate('/login');
+            return;
+        }
+
+        if (!reviewForm.comment.trim() || reviewCreating) return;
+
+        dispatch(createReview({
+            productId: current._id,
+            rating: reviewForm.rating,
+            title: reviewForm.title.trim(),
+            comment: reviewForm.comment.trim(),
+        })).unwrap().then(() => {
+            setReviewForm({
+                rating: 5,
+                title: '',
+                comment: '',
+            });
+        }).catch(() => {});
+    };
+
     return (
         <div className="product-single-container">
             {current ? (
                 <>
                     <div className="st-single-product">
                         <div className="product-image-wrapper">
-                            <img src={activeImage || 'https://dummyimage.com/600x600/eee/999&text=No+Image'} />
+                            <img
+                                src={activeImage || 'https://dummyimage.com/600x600/eee/999&text=No+Image'}
+                                alt={current.product_name}
+                            />
                             <div className="image-thumbnails">
-                                {current.image_gallery.length > 1 && current.image_gallery.map((img, index) => (
-                                    <img
-                                        key={index}
-                                        src={img}
+                                {current.image_gallery?.length > 1 && current.image_gallery.map((img, index) => (
+                                    <button
+                                        type="button"
+                                        key={img}
                                         onClick={() => setActiveImage(img)}
                                         className={activeImage === img ? 'active' : ''}
-                                        width={'40px'}
-                                    />
+                                        aria-label={`View product image ${index + 1}`}
+                                    >
+                                        <img src={img} alt="" />
+                                    </button>
                                 ))}
                             </div>
                         </div>
 
                         <div className="product-details">
-                            {/* <h4>{current.category || 'Category'}</h4> */}
                             <h2>{current.product_name}</h2>
-                            <p className="price">Price: ${current.price} </p>
+                            <p className="price">Price: ${current.price}</p>
                             <div className="st-category-pill">
-                                <p>Category: </p>
+                                <p>Category:</p>
                                 {current.category && current.category.map((cat) => (
-                                    <span key={cat._id}>{cat.name}</span>
+                                    <span key={cat._id || cat.id || cat.slug}>{cat.name}</span>
                                 ))}
                             </div>
 
                             <div className="button-group">
                                 <div className="quantity-box">
-                                    <button onClick={decreaseQty}>-</button>
+                                    <button type="button" onClick={decreaseQty}>-</button>
                                     <input
                                         type="number"
                                         value={quantity}
-                                        onChange={(e) => setQuantity(Number(e.target.value))}
+                                        onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))}
                                         min="1"
                                     />
-                                    <button onClick={increaseQty}>+</button>
+                                    <button type="button" onClick={increaseQty}>+</button>
                                 </div>
                                 <Button
                                     label="Add to Cart"
                                     onClick={() => handleCart(quantity)}
                                 />
                                 <Button label="Buy Now" />
-
                             </div>
                         </div>
                     </div>
@@ -102,7 +177,7 @@ export const ProductSinge = () => {
                     <div className="tab-container">
                         <Tab
                             link={true}
-                            variant='underline'
+                            variant="underline"
                             tabs={[
                                 {
                                     label: 'Description',
@@ -110,7 +185,104 @@ export const ProductSinge = () => {
                                 },
                                 {
                                     label: 'Reviews and Ratings',
-                                    content: <div className="tab-content">No reviews yet.</div>
+                                    content: (
+                                        <div className="tab-content">
+                                            <div className="st-review-section">
+                                                <div className="st-review-summary">
+                                                    <div>
+                                                        <span className="st-review-summary__score">
+                                                            {averageRating ? averageRating.toFixed(1) : '0.0'}
+                                                        </span>
+                                                        {renderStars(averageRating, 'st-review-summary__stars')}
+                                                    </div>
+                                                    <p>
+                                                        {productReviews.length
+                                                            ? `Based on ${productReviews.length} customer review${productReviews.length > 1 ? 's' : ''}`
+                                                            : 'No reviews yet for this product'}
+                                                    </p>
+                                                </div>
+
+                                                <div className="st-review-grid">
+                                                    <div className="st-review-list" aria-live="polite">
+                                                        <div className="st-review-list__header">
+                                                            <h3>Customer Reviews</h3>
+                                                            <span>{productReviews.length} total</span>
+                                                        </div>
+
+                                                        {reviewsLoading && productReviews.length === 0 ? (
+                                                            <div className="st-review-empty">Loading reviews...</div>
+                                                        ) : productReviews.length === 0 ? (
+                                                            <div className="st-review-empty">Be the first customer to share a review.</div>
+                                                        ) : (
+                                                            productReviews.map((review) => (
+                                                                <article className="st-review-card" key={review._id}>
+                                                                    <div className="st-review-card__header">
+                                                                        <div className="st-review-avatar">
+                                                                            {getAuthorName(review.author).charAt(0).toUpperCase()}
+                                                                        </div>
+                                                                        <div>
+                                                                            <h4>{getAuthorName(review.author)}</h4>
+                                                                            {renderStars(review.rating)}
+                                                                        </div>
+                                                                    </div>
+                                                                    {review.title && <h5>{review.title}</h5>}
+                                                                    <p>{review.comment}</p>
+                                                                </article>
+                                                            ))
+                                                        )}
+                                                    </div>
+
+                                                    <div className="st-review-panel">
+                                                        <h3>Write a Review</h3>
+                                                        <p className="st-review-panel__hint">Share what stood out after using this product.</p>
+                                                        <form className="st-review-form" onSubmit={handleReviewSubmit}>
+                                                            <div className="st-review-rating" role="radiogroup" aria-label="Product rating">
+                                                                {[1, 2, 3, 4, 5].map((rating) => (
+                                                                    <label key={rating} className={rating <= reviewForm.rating ? 'active' : ''}>
+                                                                        <input
+                                                                            type="radio"
+                                                                            name="rating"
+                                                                            value={rating}
+                                                                            checked={reviewForm.rating === rating}
+                                                                            onChange={handleReviewChange}
+                                                                        />
+                                                                        <span aria-hidden="true">&#9733;</span>
+                                                                    </label>
+                                                                ))}
+                                                            </div>
+                                                            <input
+                                                                className="st-review-input"
+                                                                type="text"
+                                                                name="title"
+                                                                placeholder="Review title"
+                                                                maxLength="100"
+                                                                value={reviewForm.title}
+                                                                onChange={handleReviewChange}
+                                                            />
+                                                            <textarea
+                                                                className="st-text-area st-review-textarea"
+                                                                name="comment"
+                                                                placeholder="Share your product experience"
+                                                                maxLength="1000"
+                                                                value={reviewForm.comment}
+                                                                onChange={handleReviewChange}
+                                                                required
+                                                            />
+                                                            <Button
+                                                                label={reviewCreating ? 'Submitting...' : 'Submit Review'}
+                                                                type="submit"
+                                                                disabled={reviewCreating || !reviewForm.comment.trim()}
+                                                            />
+                                                        </form>
+                                                        {latestReview && normalizeProductId(latestReview.product) === current._id && (
+                                                            <p className="st-review-success">Your review was submitted.</p>
+                                                        )}
+                                                        {reviewError && <p className="st-review-error">{reviewError}</p>}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
                                 },
                                 {
                                     label: 'Product Q/A',
@@ -139,8 +311,7 @@ export const ProductSinge = () => {
                 </>
             ) : (
                 <div className="loading-message">Product not found.</div>
-            )
-            }
-        </div >
+            )}
+        </div>
     );
 };

@@ -1,5 +1,6 @@
 const Cart = require("../../model/cart");
 const Order = require("../../model/order");
+const ApiResponse = require("../../utils/api_response");
 
 
 class order_controller {
@@ -9,13 +10,13 @@ class order_controller {
             const { shippingAddress } = req.body;
 
             if (!shippingAddress) {
-                return res.status(400).json({ message: "Shipping address is required" });
+                return ApiResponse.error(res, "Shipping address is required", 400);
             }
 
             const cart = await Cart.findOne({ user_id })
 
             if (!cart || cart.items.length === 0) {
-                return res.status(400).json({ message: "Your cart is empty" });
+                return ApiResponse.error(res, "Your cart is empty", 400);
             }
             const orderItems = cart.items.map(item => ({
                 product: item.product_id,
@@ -38,14 +39,13 @@ class order_controller {
             const savedOrder = await newOrder.save();
 
             await Cart.findByIdAndDelete(cart._id);
-            return res.status(201).json({
-                message: "Order placed successfully",
+            return ApiResponse.success(res, "Order placed successfully", {
                 orderId: savedOrder._id,
                 total: savedOrder.totalAmount
-            });
+            }, 201);
 
         } catch (error) {
-            res.status(500).json({ message: "Server Error", error: error.message });
+            return ApiResponse.error(res, "Server Error", 500, error.message);
         }
     }
 
@@ -56,20 +56,19 @@ class order_controller {
                 .sort({ createdAt: -1 });
 
             if (!orders || orders.length === 0) {
-                return res.status(404).json({ message: "No orders found" });
+                return ApiResponse.error(res, "No orders found", 404);
             }
 
             const totalSales = orders.reduce((sum, order) => sum + order.totalAmount, 0);
 
-            return res.status(200).json({
-                success: true,
+            return ApiResponse.success(res, "Orders retrieved successfully", {
                 count: orders.length,
                 totalSales,
                 data: orders
             });
 
         } catch (error) {
-            res.status(500).json({ message: "Server Error", error: error.message });
+            return ApiResponse.error(res, "Server Error", 500, error.message);
         }
     }
 
@@ -85,16 +84,13 @@ class order_controller {
 
 
             if (!order) {
-                return res.status(404).json({ message: "Order not found!" });
+                return ApiResponse.error(res, "Order not found!", 404);
             }
 
-            res.status(200).json({
-                success: true,
-                data: order
-            });
+            return ApiResponse.success(res, "Order retrieved successfully", order);
 
         } catch (error) {
-            res.status(500).json({ message: error.message });
+            return ApiResponse.error(res, error.message, 500);
         }
     }
 
@@ -105,17 +101,13 @@ class order_controller {
             const order = await Order.findById(orderId);
 
             if (!order) {
-                return res.status(404).json({ message: "Order not found!" });
+                return ApiResponse.error(res, "Order not found!", 404);
             }
             order.status = status;
             await order.save();
-            res.status(200).json({
-                success: true,
-                message: "Order status updated successfully",
-                data: order
-            });
+            return ApiResponse.success(res, "Order status updated successfully", order);
         } catch (error) {
-            res.status(500).json({ message: error.message });
+            return ApiResponse.error(res, error.message, 500);
         }
 
     }
@@ -127,15 +119,12 @@ class order_controller {
                 .findByIdAndDelete(orderId);
 
             if (!order) {
-                return res.status(404).json({ message: "Order not found!" });
+                return ApiResponse.error(res, "Order not found!", 404);
             }
-            res.status(200).json({
-                success: true,
-                message: "Order deleted successfully",
-            });
+            return ApiResponse.success(res, "Order deleted successfully");
         }
         catch (error) {
-            res.status(500).json({ message: error.message });
+            return ApiResponse.error(res, error.message, 500);
         }
     }
 
@@ -147,15 +136,14 @@ class order_controller {
                 .sort({ createdAt: -1 });
 
             if (!orders || orders.length === 0) {
-                return res.status(404).json({ message: "No orders found for this user" });
+                return ApiResponse.error(res, "No orders found for this user", 404);
             }
-            res.status(200).json({
-                success: true,
+            return ApiResponse.success(res, "User orders retrieved successfully", {
                 count: orders.length,
                 data: orders
             });
         } catch (error) {
-            res.status(500).json({ message: error.message });
+            return ApiResponse.error(res, error.message, 500);
         }
     }
 }

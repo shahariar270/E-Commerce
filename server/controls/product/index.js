@@ -1,13 +1,10 @@
 const Category = require("../../model/category");
 const Product = require("../../model/product");
 const { uploadImage } = require('../../utils/cloudniry');
+const ApiResponse = require('../../utils/api_response');
 
 
 class product_controller {
-    constructor() {
-
-    }
-
     async create_product(req, res) {
         try {
             const { category_ids, ...data } = req.body;
@@ -25,17 +22,10 @@ class product_controller {
 
             let new_product = await Product.create(schema_merge);
 
-            return res.status(201).json({
-                success: true,
-                message: "Product Created successfully",
-                data: new_product
-            });
+            return ApiResponse.success(res, "Product Created successfully", new_product, 201);
 
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                message: error.message,
-            });
+            return ApiResponse.error(res, error.message, 500);
         }
     }
 
@@ -46,25 +36,15 @@ class product_controller {
             const get_product = await Product.findById(id);
 
             if (!get_product || !id) {
-                return res.status(404).json({
-                    success: false,
-                    message: "Product not founded",
-                })
+                return ApiResponse.error(res, "Product not founded", 404);
             };
 
             const updated_data = await Product.findByIdAndUpdate(id, data, { new: true })
 
-            return res.status(200).json({
-                success: true,
-                message: "Product updated Successfully",
-                data: updated_data,
-            });
+            return ApiResponse.success(res, "Product updated Successfully", updated_data);
 
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                message: error.message,
-            })
+            return ApiResponse.error(res, error.message, 500);
         }
     };
 
@@ -74,23 +54,13 @@ class product_controller {
             const single_product = await Product.findById(id);
 
             if (!id) {
-                return res.status(404).json({
-                    success: false,
-                    message: "Product not founded",
-                })
+                return ApiResponse.error(res, "Product not founded", 404);
             };
 
-            return res.status(200).json({
-                success: true,
-                message: "Product data Successfully",
-                data: single_product,
-            });
+            return ApiResponse.success(res, "Product data Successfully", single_product);
 
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                message: error.message,
-            });
+            return ApiResponse.error(res, error.message, 500);
         }
     }
 
@@ -114,17 +84,12 @@ class product_controller {
                 .sort({ createdAt: -1 });
             const total = await Product.countDocuments();
 
-            return res.status(200).json({
-                success: true,
-                message: "Product fetched",
-                data: get_all_products,
+            return ApiResponse.success(res, "Product fetched", {
+                products: get_all_products,
                 total,
-            })
-        } catch (error) {
-            return res.status(500).json({
-                success: false,
-                message: error.message,
             });
+        } catch (error) {
+            return ApiResponse.error(res, error.message, 500);
         }
 
     };
@@ -133,24 +98,15 @@ class product_controller {
         try {
             const { id } = req.params;
             if (!id) {
-                return res.status(404).json({
-                    success: true,
-                    message: "Product not founded",
-                });
+                return ApiResponse.error(res, "Product not founded", 404);
             }
             await Product.findByIdAndDelete(id);
 
-            return res.status(200).json({
-                success: true,
-                message: "Product Deleted Successfully",
-            })
+            return ApiResponse.success(res, "Product Deleted Successfully");
 
 
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                message: error.message,
-            });
+            return ApiResponse.error(res, error.message, 500);
         }
     }
 
@@ -159,10 +115,7 @@ class product_controller {
             const files = req.files;
             const product_id = req.query.product_id;
             if (!files || files.length === 0) {
-                return res.status(400).json({
-                    success: false,
-                    message: "No files uploaded",
-                });
+                return ApiResponse.error(res, "No files uploaded", 400);
             }
             const image_urls = [];
 
@@ -170,16 +123,9 @@ class product_controller {
                 const url = await uploadImage(file.path);
                 image_urls.push(url);
             }
-            return res.status(201).json({
-                message: "Image Upload successfully",
-                success: true,
-                data: image_urls,
-            })
+            return ApiResponse.success(res, "Image Upload successfully", image_urls, 201);
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                message: error.message,
-            });
+            return ApiResponse.error(res, error.message, 500);
         }
     }
 

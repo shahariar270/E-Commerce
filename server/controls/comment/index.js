@@ -1,4 +1,5 @@
 const Comment = require("../../model/conmment");
+const ApiResponse = require("../../utils/api_response");
 
 
 class comment_controls {
@@ -15,17 +16,10 @@ class comment_controls {
                 parent,
             })
 
-            return res.status(201).json({
-                success: true,
-                data: new_comment,
-                message: "comment created successfully"
-            })
+            return ApiResponse.success(res, "comment created successfully", new_comment, 201)
 
         } catch (error) {
-            return res.status(500).json({
-                message: error.message,
-                success: false,
-            })
+            return ApiResponse.error(res, error.message, 500);
         }
     }
     async update_comment(req, res) {
@@ -36,37 +30,24 @@ class comment_controls {
             const comment = await Comment.findById(comment_id);
 
             if (!comment) {
-                return res.status(404).json({
-                    success: false,
-                    message: "Comment not Found",
-                });
+                return ApiResponse.error(res, "Comment not Found", 404);
             }
 
             // Check if the user is the author
             if (comment.author.toString() !== req.user.id) {
-                return res.status(403).json({
-                    success: false,
-                    message: "You are not authorized to update this comment"
-                });
+                return ApiResponse.error(res, "You are not authorized to update this comment", 403);
             }
 
             const updated_comment = await Comment.findByIdAndUpdate(
-                comment_id, 
-                { content }, 
+                comment_id,
+                { content },
                 { new: true }
             ).populate('author', 'user_name first_name last_name image');
 
-            return res.status(200).json({
-                success: true,
-                data: updated_comment,
-                message: "Comment Updated Successfully"
-            });
+            return ApiResponse.success(res, "Comment Updated Successfully", updated_comment);
 
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                message: error.message
-            });
+            return ApiResponse.error(res, error.message, 500);
         }
     }
 
@@ -97,16 +78,9 @@ class comment_controls {
             // For the frontend, it might be easier if we sort the final list to show newest threads first
             nestedComments.reverse();
 
-            return res.status(200).json({
-                success: true,
-                data: nestedComments,
-                message: "Comments fetched successfully"
-            })
+            return ApiResponse.success(res, "Comments fetched successfully", nestedComments);
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                message: error.message
-            })
+            return ApiResponse.error(res, error.message, 500);
         }
     }
 
@@ -115,42 +89,26 @@ class comment_controls {
             const comment_id = req.params.id;
 
             if (!comment_id) {
-                return res.status(404).json({
-                    success: false,
-                    message: "Comment not Found"
-                });
+                return ApiResponse.error(res, "Comment not Found", 404);
             };
 
             const comment = await Comment.findById(comment_id);
             if (!comment) {
-                return res.status(404).json({
-                    success: false,
-                    message: "Comment not Found"
-                });
+                return ApiResponse.error(res, "Comment not Found", 404);
             }
 
             // Check if the user is the author or an admin
             if (comment.author.toString() !== req.user.id && req.user.user_role !== 'admin') {
-                return res.status(403).json({
-                    success: false,
-                    message: "You are not authorized to delete this comment"
-                });
+                return ApiResponse.error(res, "You are not authorized to delete this comment", 403);
             }
 
             const deleted_comment = await Comment.findByIdAndDelete(comment_id);
 
             await Comment.deleteMany({ parent: comment_id });
 
-            return res.status(200).json({
-                success: true,
-                message: "Comment Deleted Successfully",
-                data: deleted_comment,
-            })
+            return ApiResponse.success(res, "Comment Deleted Successfully", deleted_comment);
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                message: error.message
-            })
+            return ApiResponse.error(res, error.message, 500);
 
         }
     }

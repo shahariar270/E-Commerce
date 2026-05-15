@@ -1,42 +1,24 @@
-import Button from '@Component/Buttons'
-import { Topbar } from '@Component/Topbar'
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { apiClient } from '@utils/api'
+import { useDispatch, useSelector } from 'react-redux'
+import { getProducts } from '@Store/slices/productSlice'
 import ProductCard from '@Component/ProductCard'
 import './styles.scss'
-import { getCookie } from '@utils/helper'
 
 export const PublicProduct = () => {
-    const navigate = useNavigate()
-    const [products, setProducts] = useState([])
-    const [loading, setLoading] = useState(true)
+    const dispatch = useDispatch()
+    const { data: products, loading, pagination } = useSelector((state) => state.product)
+    
     const [searchQuery, setSearchQuery] = useState('')
     const [currentPage, setCurrentPage] = useState(1)
-    const [total, setTotal] = useState(0)
     const perPage = 12
 
-    const fetchProducts = async () => {
-        try {
-            setLoading(true)
-            const params = new URLSearchParams()
-            if (searchQuery) params.append('search', searchQuery)
-            params.append('page', currentPage)
-            params.append('per_page', perPage)
-
-            const response = await apiClient(`/products?${params.toString()}`)
-            setProducts(response.data || [])
-            setTotal(response.total || 0)
-        } catch (error) {
-            console.error('Failed to fetch products:', error)
-        } finally {
-            setLoading(false)
-        }
-    }
-
     useEffect(() => {
-        fetchProducts()
-    }, [currentPage, searchQuery])
+        dispatch(getProducts({ 
+            search: searchQuery, 
+            page: currentPage, 
+            per_page: perPage 
+        }))
+    }, [currentPage, searchQuery, dispatch])
 
     useEffect(() => {
         const timeoutId = setTimeout(() => {
@@ -45,7 +27,7 @@ export const PublicProduct = () => {
         return () => clearTimeout(timeoutId)
     }, [searchQuery])
 
-    const totalPages = Math.ceil(total / perPage);
+    const totalPages = Math.ceil((pagination?.total || 0) / perPage);
 
     return (
         <div className="public-product-page">

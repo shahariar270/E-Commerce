@@ -99,7 +99,7 @@ const productSlice = createSlice({
       .addCase(getProducts.pending, handlePending)
       .addCase(getProducts.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload.data;
+        state.data = action.payload.data.products;
         state.pagination.total = action.payload.total;
       })
       .addCase(getProducts.rejected, handleRejected)
