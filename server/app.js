@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('./config/env');
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -7,7 +7,7 @@ const router = require('./router');
 const ApiResponse = require('./utils/api_response');
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
     credentials: true,
 }));
 app.use(express.json());
