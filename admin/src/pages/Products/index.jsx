@@ -31,6 +31,11 @@ const Products = () => {
     navigate('/admin/product/new');
   };
 
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    setCurrentPage(1);
+  };
+
   const columns = [
     {
       key: "product_name",
@@ -44,8 +49,8 @@ const Products = () => {
       render: (row) => (
         <div className="st-category-item">
           {
-            row.map(i => (
-              <span>{i.name}</span>
+            row?.map((i, index) => (
+              <span key={index}>{i.name}</span>
             ))
           }
         </div>
@@ -123,7 +128,7 @@ const Products = () => {
           searchable={true}
           searchPlaceholder="Search products..."
           searchQuery={searchQuery}
-          onSearch={setSearchQuery}
+          onSearch={handleSearch}
           pagination={true}
           defaultPageSize={10}
           pageSizeOptions={[5, 10, 25, 50]}

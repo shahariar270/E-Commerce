@@ -63,4 +63,8 @@
         &--completed { color: green; }
         &--cancelled { color: red; }
     }
+
+    &__pagination {
+        margin-top: 32px;
+    }
 }

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getProducts } from '@Store/slices/productSlice'
 import ProductCard from '@Component/ProductCard'
+import Pagination from '@Component/Pagination'
 import './styles.scss'
 
 export const PublicProduct = () => {
@@ -10,15 +11,15 @@ export const PublicProduct = () => {
     
     const [searchQuery, setSearchQuery] = useState('')
     const [currentPage, setCurrentPage] = useState(1)
-    const perPage = 12
+    const [pageSize, setPageSize] = useState(12)
 
     useEffect(() => {
         dispatch(getProducts({ 
             search: searchQuery, 
             page: currentPage, 
-            per_page: perPage 
+            per_page: pageSize 
         }))
-    }, [currentPage, searchQuery, dispatch])
+    }, [currentPage, searchQuery, pageSize, dispatch])
 
     useEffect(() => {
         const timeoutId = setTimeout(() => {
@@ -26,8 +27,6 @@ export const PublicProduct = () => {
         }, 300)
         return () => clearTimeout(timeoutId)
     }, [searchQuery])
-
-    const totalPages = Math.ceil((pagination?.total || 0) / perPage);
 
     return (
         <div className="public-product-page">
@@ -64,27 +63,19 @@ export const PublicProduct = () => {
                             ))}
                         </div>
 
-                        {totalPages > 1 && (
-                            <div className="public-product-page__pagination">
-                                <button
-                                    className="pagination-btn"
-                                    onClick={() => setCurrentPage(p => p - 1)}
-                                    disabled={currentPage === 1}
-                                >
-                                    Previous
-                                </button>
-                                <span className="pagination-info">
-                                    Page {currentPage} of {totalPages}
-                                </span>
-                                <button
-                                    className="pagination-btn"
-                                    onClick={() => setCurrentPage(p => p + 1)}
-                                    disabled={currentPage === totalPages}
-                                >
-                                    Next
-                                </button>
-                            </div>
-                        )}
+                        <div className="public-product-page__pagination">
+                            <Pagination
+                                currentPage={currentPage}
+                                total={pagination.total}
+                                pageSize={pageSize}
+                                onPageChange={setCurrentPage}
+                                onPageSizeChange={(size) => {
+                                    setPageSize(size);
+                                    setCurrentPage(1);
+                                }}
+                                pageSizeOptions={[12, 24, 48]}
+                            />
+                        </div>
                     </>
                 )}
             </div>

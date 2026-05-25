@@ -20,13 +20,11 @@ const Orders = () => {
   const [pageSize, setPageSize] = useState(10);
   const dispatch = useDispatch();
 
-  const { orders } = useSelector((state) => state.order);
+  const { orders, pagination } = useSelector((state) => state.order);
 
   useEffect(() => {
-    // if (orders?.length) {
-    dispatch(getAllOrder())
-    // }
-  }, [])
+    dispatch(getAllOrder({ page: currentPage, limit: pageSize }))
+  }, [dispatch, currentPage, pageSize])
 
 
   const columns = [
@@ -138,6 +136,7 @@ const Orders = () => {
           onPageChange={setCurrentPage}
           pageSize={pageSize}
           onPageSizeChange={setPageSize}
+          total={pagination.total}
           striped={true}
           sortable={true}
           emptyMessage="No orders found"

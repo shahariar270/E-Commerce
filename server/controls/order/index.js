@@ -171,19 +171,25 @@ class order_controller {
 
     async admin_all_order(req, res) {
         try {
+            const { page = 1, limit = 10 } = req.query;
+            const skip = (parseInt(page) - 1) * parseInt(limit);
+
             const orders = await Order.find()
                 .populate('user', 'name email')
+                .skip(skip)
+                .limit(parseInt(limit))
                 .sort({ createdAt: -1 });
 
-            if (!orders || orders.length === 0) {
-                return ApiResponse.error(res, "No orders found", 404);
-            }
-
-            const totalSales = orders.reduce((sum, order) => sum + order.totalAmount, 0);
+            const total = await Order.countDocuments();
+            const totalSalesResult = await Order.aggregate([
+                { $group: { _id: null, totalSales: { $sum: "$totalAmount" } } }
+            ]);
+            const totalSales = totalSalesResult.length > 0 ? totalSalesResult[0].totalSales : 0;
 
             return ApiResponse.success(res, "Orders retrieved successfully", {
                 count: orders.length,
                 totalSales,
+                total,
                 data: orders
             });
 
@@ -251,15 +257,20 @@ class order_controller {
     async single_user_orders(req, res) {
         try {
             const userId = req.user.id;
+            const { page = 1, limit = 10 } = req.query;
+            const skip = (parseInt(page) - 1) * parseInt(limit);
+
             const orders = await Order.find({ user: userId })
                 .populate('items.product', 'name image price')
+                .skip(skip)
+                .limit(parseInt(limit))
                 .sort({ createdAt: -1 });
 
-            if (!orders || orders.length === 0) {
-                return ApiResponse.error(res, "No orders found for this user", 404);
-            }
+            const total = await Order.countDocuments({ user: userId });
+
             return ApiResponse.success(res, "User orders retrieved successfully", {
                 count: orders.length,
+                total,
                 data: orders
             });
         } catch (error) {

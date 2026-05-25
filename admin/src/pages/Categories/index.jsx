@@ -106,7 +106,7 @@ const Categories = () => {
                 pagination={true}
                 currentPage={currentPage}
                 pageSize={pageSize}
-                totalItems={pagination?.total}
+                total={pagination?.total}
                 onPageChange={setCurrentPage}
                 onPageSizeChange={(size) => { setPageSize(size); setCurrentPage(1); }}
                 emptyMessage="No categories found"

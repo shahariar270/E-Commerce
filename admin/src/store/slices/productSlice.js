@@ -100,7 +100,7 @@ const productSlice = createSlice({
       .addCase(getProducts.fulfilled, (state, action) => {
         state.loading = false;
         state.data = action.payload.data.products;
-        state.pagination.total = action.payload.total;
+        state.pagination.total = action.payload.data.total;
       })
       .addCase(getProducts.rejected, handleRejected)
 

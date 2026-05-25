@@ -1,17 +1,20 @@
 import { getUserOrders } from "@Store/slices/orderSlice";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Pagination from "@Component/Pagination";
 import "./styles.scss"
 
 const Order = () => {
     const dispatch = useDispatch();
-    const { orders } = useSelector(state => state.order);
+    const { orders, pagination } = useSelector(state => state.order);
 
     const [openId, setOpenId] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
 
     useEffect(() => {
-        dispatch(getUserOrders());
-    }, [dispatch]);
+        dispatch(getUserOrders({ page: currentPage, limit: pageSize }));
+    }, [dispatch, currentPage, pageSize]);
 
     const toggleCard = (id) => {
         setOpenId(prev => (prev === id ? null : id));
@@ -90,6 +93,19 @@ const Order = () => {
                             </div>
                         );
                     })}
+                </div>
+
+                <div className="st-order__pagination">
+                    <Pagination
+                        currentPage={currentPage}
+                        total={pagination.total}
+                        pageSize={pageSize}
+                        onPageChange={setCurrentPage}
+                        onPageSizeChange={(size) => {
+                            setPageSize(size);
+                            setCurrentPage(1);
+                        }}
+                    />
                 </div>
             </div>
         </div>

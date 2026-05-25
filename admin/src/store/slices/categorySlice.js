@@ -183,8 +183,8 @@ const categorySlice = createSlice({
             })
             .addCase(getCategories.fulfilled, (state, action) => {
                 state.loading = false;
-                state.categories = action.payload.data;
-                state.pagination.total = action.payload.data.length;
+                state.categories = action.payload.data.data;
+                state.pagination.total = action.payload.data.total;
             })
             .addCase(getCategories.rejected, (state, action) => {
                 state.loading = false;
