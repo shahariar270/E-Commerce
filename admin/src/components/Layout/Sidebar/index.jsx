@@ -1,7 +1,7 @@
 import { getCookie } from '@utils/helper'
 import { jwtDecode } from 'jwt-decode'
 import React, { useEffect, useState } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate, useLocation } from 'react-router-dom'
 import './styles.scss'
 
 const NAV_CONFIG = {
@@ -44,20 +44,29 @@ const UserAvatar = ({ name, email }) => {
     )
 }
 
-const NavItem = ({ label, icon, link, isOpen }) => (
-    <NavLink
-        to={link}
-        end
-        className={({ isActive }) =>
-            `st-sidebar__nav-item ${isActive ? 'st-sidebar__nav-item--active' : ''}`
-        }
-    >
-        <span className={`st-icon--${icon} st-sidebar__nav-icon`} />
-        <span className={`st-sidebar__nav-label ${!isOpen ? 'st-sidebar__nav-label--hidden' : ''}`}>
-            {label}
-        </span>
-    </NavLink>
-)
+const NavItem = ({ label, icon, link, isOpen }) => {
+    const location = useLocation();
+    return (
+        <NavLink
+            to={link}
+            end={link === '/' || link === '/admin'}
+            className={({ isActive }) => {
+                const isProductActive = (link === '/admin/products' && location.pathname.startsWith('/admin/product')) ||
+                                       (link === '/' && location.pathname.startsWith('/product'));
+                const isOrderActive = (link === '/admin/orders' && location.pathname.startsWith('/admin/order')) ||
+                                     (link === '/orders' && location.pathname.startsWith('/order'));
+                const activeClass = (isActive || isProductActive || isOrderActive) ? 'st-sidebar__nav-item--active' : '';
+                return `st-sidebar__nav-item ${activeClass}`;
+            }}
+        >
+            <span className={`st-icon--${icon} st-sidebar__nav-icon`} />
+            <span className={`st-sidebar__nav-label ${!isOpen ? 'st-sidebar__nav-label--hidden' : ''}`}>
+                {label}
+            </span>
+        </NavLink>
+    )
+}
+
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
     const [user, setUser] = useState(null)
