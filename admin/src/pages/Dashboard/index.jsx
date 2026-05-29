@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getCardData } from "@Store/slices/dashboardSlice";
 import './Styles.scss'
+import AreaChart from "@Component/AreaChart";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -201,6 +202,7 @@ const Dashboard = () => {
           </a>
         </div>
       </div>
+      <AreaChart />
     </div>
   );
 };
