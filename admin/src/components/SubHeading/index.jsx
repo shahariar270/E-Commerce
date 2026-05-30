@@ -1,4 +1,6 @@
 
+import React from 'react';
+import './styles.scss';
 
 const SubHeading = ({ title, subtitle, rightContent }) => {
 
