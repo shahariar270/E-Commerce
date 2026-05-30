@@ -200,7 +200,7 @@ const Dashboard = () => {
           </a>
         </div>
       </div>
-      <AreaChart />
+      {/* <AreaChart /> */}
     </div>
   );
 };
