@@ -76,15 +76,17 @@ const ProductEdit = () => {
                 {({ setFieldValue, values, isSubmitting, dirty }) => (
                     <Form className='st-form-inner--container'>
                         <SubHeading
-                            // title={id ? "Edit Product" : "Create New Product"}
-                            leftContent={
-                                <div className="st-align-center st-gap-2">
-                                    <span className="st-icon st-icon--clipboard" />
-                                    <h2 className="st-subHeading__title">{id ? "Edit Product" : "Create New Product"}</h2>
-                                </div>
-                            }
+                            title={id ? "Edit Product" : "Create New Product"}
                             rightContent={
                                 <div className="form-actions">
+                                    {id && (
+                                        <Button
+                                            label="View on site"
+                                            variant="secondary"
+                                            onClick={() => window.open(`/product/${id}`, '_blank')}
+                                            type="button"
+                                        />
+                                    )}
                                     <Button
                                         label="Cancel"
                                         variant="secondary"
