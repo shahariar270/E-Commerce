@@ -67,9 +67,6 @@ const ProductEdit = () => {
 
     return (
         <div className="st-form-inner st-gap-4">
-            <SubHeading
-                title={id ? "Edit Product" : "Create New Product"}
-            />
             <Formik
                 enableReinitialize
                 onSubmit={handleSubmit}
@@ -78,6 +75,25 @@ const ProductEdit = () => {
             >
                 {({ setFieldValue, values, isSubmitting, dirty }) => (
                     <Form className='st-form-inner--container'>
+                        <SubHeading
+                            title={id ? "Edit Product" : "Create New Product"}
+                            rightContent={
+                                <div className="form-actions">
+                                    <Button
+                                        label="Cancel"
+                                        variant="secondary"
+                                        onClick={handleCancel}
+                                        type="button"
+                                    />
+                                    <Button
+                                        label={id ? "Updated product" : "Create Product"}
+                                        variant="primary"
+                                        type="submit"
+                                        disabled={!dirty || isSubmitting}
+                                    />
+                                </div>
+                            }
+                        />
                         <Input
                             id="product_name"
                             name="product_name"
@@ -112,21 +128,6 @@ const ProductEdit = () => {
                         {values?._id && (
                             <ProductImages productId={values?._id} data={values} />
                         )}
-
-                        <div className="form-actions">
-                            <Button
-                                label="Cancel"
-                                variant="secondary"
-                                onClick={handleCancel}
-                                type="button"
-                            />
-                            <Button
-                                label={id ? "Updated product" : "Create Product"}
-                                variant="primary"
-                                type="submit"
-                                disabled={!dirty || isSubmitting}
-                            />
-                        </div>
                     </Form>
                 )}
             </Formik>
