@@ -6,6 +6,15 @@
     justify-content: center;
     align-items: center;
 }
+.st-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.st-align-center {
+    display: flex;
+    align-items: center;
+}
 
 .st-gap-2 {
     gap: 8px;

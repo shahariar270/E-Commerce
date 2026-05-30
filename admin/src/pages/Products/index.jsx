@@ -91,9 +91,16 @@ const Products = () => {
     {
       key: "actions",
       title: "Actions",
-      width: "120px",
+      width: "150px",
       render: (row, value) => (
         <div className="table-actions">
+          <button
+            className="action-btn action-btn--view"
+            onClick={() => window.open(`/product/${value._id}`, '_blank')}
+            title="View on site"
+          >
+            👁️
+          </button>
           <button
             className="action-btn action-btn--edit"
             onClick={() => handleEdit(value)}

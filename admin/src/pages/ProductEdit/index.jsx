@@ -76,7 +76,13 @@ const ProductEdit = () => {
                 {({ setFieldValue, values, isSubmitting, dirty }) => (
                     <Form className='st-form-inner--container'>
                         <SubHeading
-                            title={id ? "Edit Product" : "Create New Product"}
+                            // title={id ? "Edit Product" : "Create New Product"}
+                            leftContent={
+                                <div className="st-align-center st-gap-2">
+                                    <span className="st-icon st-icon--clipboard" />
+                                    <h2 className="st-subHeading__title">{id ? "Edit Product" : "Create New Product"}</h2>
+                                </div>
+                            }
                             rightContent={
                                 <div className="form-actions">
                                     <Button
