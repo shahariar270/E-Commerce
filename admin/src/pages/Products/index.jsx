@@ -46,7 +46,7 @@ const Products = () => {
       sortable: true,
       render: (value) => (
         <Tooltip content={value}>
-          <span className="st-text-capitalize">{sliceString(value, 20)}</span>
+          <span  style={{ cursor: 'pointer' }} onClick={() => navigate(`/admin/product/${value._id}`)} className="st-text-capitalize">{sliceString(value, 20)}</span>
         </Tooltip>
       ),
     },
