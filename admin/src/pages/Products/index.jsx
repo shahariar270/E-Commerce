@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteProduct, getProducts } from "@Store/slices/productSlice";
 import SubHeading from "@Component/SubHeading";
 import { sliceString } from "@utils/helper";
+import Tooltip from "@Component/Tooltip";
 
 
 const Products = () => {
@@ -43,7 +44,11 @@ const Products = () => {
       key: "product_name",
       title: "Product Name",
       sortable: true,
-      render: (value) => <span className="st-text-capitalize">{sliceString(value, 20)}</span>,
+      render: (value) => (
+        <Tooltip content={value}>
+          <span className="st-text-capitalize">{sliceString(value, 20)}</span>
+        </Tooltip>
+      ),
     },
     {
       key: "category",

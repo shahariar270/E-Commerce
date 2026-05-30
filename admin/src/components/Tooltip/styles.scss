@@ -1,6 +1,5 @@
 .st-tooltip-wrapper {
     display: inline-block;
-    position: relative;
 }
 
 .st-tooltip-tip {
@@ -12,7 +11,7 @@
     font-size: 12px;
     font-family: sans-serif;
     line-height: 1;
-    z-index: 100;
+    z-index: 10000;
     white-space: nowrap;
     pointer-events: none;
 
@@ -28,11 +27,8 @@
         margin-left: -6px;
     }
 
-    /* Absolute Center */
     &.top {
-        top: calc(100% * -1);
-        left: 50%;
-        transform: translateX(-50%);
+        transform: translate(calc(var(--trigger-width) / 2 - 50%), -100%);
         margin-top: -10px;
 
         &::before {
@@ -42,10 +38,8 @@
     }
 
     &.bottom {
-        bottom: calc(100% * -1);
-        left: 50%;
-        transform: translateX(-50%);
-        margin-bottom: -10px;
+        transform: translate(calc(var(--trigger-width) / 2 - 50%), var(--trigger-height));
+        margin-top: 10px;
 
         &::before {
             bottom: 100%;
@@ -54,30 +48,28 @@
     }
 
     &.left {
-        left: auto;
-        right: calc(100% + 10px);
-        top: 50%;
-        transform: translateY(-50%);
+        transform: translate(-100%, calc(var(--trigger-height) / 2 - 50%));
+        margin-left: -10px;
 
         &::before {
-            left: auto;
-            right: -12px;
+            left: 100%;
             top: 50%;
             transform: translateY(-50%);
             border-left-color: #333;
+            margin-left: 0;
         }
     }
 
     &.right {
-        left: calc(100% + 10px);
-        top: 50%;
-        transform: translateY(-50%);
+        transform: translate(var(--trigger-width), calc(var(--trigger-height) / 2 - 50%));
+        margin-left: 10px;
 
         &::before {
-            left: -6px;
+            right: 100%;
             top: 50%;
             transform: translateY(-50%);
             border-right-color: #333;
+            left: auto;
         }
     }
 }

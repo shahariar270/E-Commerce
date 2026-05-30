@@ -7,6 +7,7 @@ import { getProfile, updateProfile } from "@Store/slices/auth/authSlice";
 import { Form, Formik } from "formik";
 import "./styles.scss"
 import SubHeading from "@Component/SubHeading";
+import Tooltip from "@Component/Tooltip";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -69,7 +70,9 @@ const Profile = () => {
               title="Profile"
               subtitle="Manage your personal information and account settings"
               rightContent={
-                <Button label="Save Changes" type="submit" disabled={!dirty || isSubmitting} />
+                <Tooltip content="Save all changes made to your profile" position="bottom">
+                  <Button label="Save Changes" type="submit" disabled={!dirty || isSubmitting} />
+                </Tooltip>
               }
             />
             <div className="st-profile__top">
