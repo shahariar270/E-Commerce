@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCardData } from "@Store/slices/dashboardSlice";
 import './Styles.scss'
 import AreaChart from "@Component/AreaChart";
+import SubHeading from "@Component/SubHeading";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -87,13 +88,10 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-page st-page">
-      <div className="dashboard-page__header st-page__header">
-        <div className="dashboard-page__title st-page__title">
-          <h2>Dashboard</h2>
-          <p>Welcome back! Here's what's happening with your store.</p>
-        </div>
-      </div>
-
+      <SubHeading
+        title={"Dashboard"}
+        subtitle={"Welcome back! Here's what's happening with your store."}
+      />
       {/* Stats Cards */}
       <div className="dashboard-stats">
         {statsData.map((stat) => (

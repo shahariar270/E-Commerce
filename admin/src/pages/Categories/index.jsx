@@ -4,6 +4,7 @@ import Table from '@Component/Table';
 import CategoryFormInner from './CategoryFormInner';
 import { getCategories, deleteCategory } from '@Store/slices/categorySlice';
 import Button from '@Component/Buttons';
+import SubHeading from '@Component/SubHeading';
 
 const Categories = () => {
     const dispatch = useDispatch();
@@ -85,13 +86,14 @@ const Categories = () => {
     return (
         <div className="categories-page st-page">
 
-            <div className="st-page__header">
-                <div className="st-page__title">
-                    <h1>Categories</h1>
-                </div>
-                <Button variant="primary" onClick={() => handleOpenModal()} label='Add New Category'>
-                </Button>
-            </div>
+            <SubHeading
+                title={"Categories"}
+                subtitle={"Manage your product categories."}
+                rightContent={
+                    <Button variant="primary" onClick={() => handleOpenModal()} label='Add New Category'>
+                    </Button>
+                }
+            />
 
             {error && <div className="alert alert--error">{error}</div>}
             {message && <div className="alert alert--success">{message}</div>}
