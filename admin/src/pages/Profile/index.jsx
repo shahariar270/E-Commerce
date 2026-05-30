@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getProfile, updateProfile } from "@Store/slices/auth/authSlice";
 import { Form, Formik } from "formik";
 import "./styles.scss"
+import SubHeading from "@Component/SubHeading";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -64,15 +65,13 @@ const Profile = () => {
 
         return (
           <Form className="st-profile">
-            <div className="st-page__header">
-              <div className="st-page__title">
-                <h2>Profile</h2>
-                <p>Manage your personal information and account settings</p>
-              </div>
-              <div className="">
+            <SubHeading
+              title="Profile"
+              subtitle="Manage your personal information and account settings"
+              rightContent={
                 <Button label="Save Changes" type="submit" disabled={!dirty || isSubmitting} />
-              </div>
-            </div>
+              }
+            />
             <div className="st-profile__top">
               <div className="st-profile__upload">
                 <ImageUpload

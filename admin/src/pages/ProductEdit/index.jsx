@@ -11,6 +11,7 @@ import { getCategories } from "@Store/slices/categorySlice";
 import { useSelectPagination } from "@utils/Hooks/SelectPagination";
 import { productSchema } from "@utils/validationSchemas";
 import ProductImages from "./ProductImage";
+import SubHeading from "@Component/SubHeading";
 
 const ProductEdit = () => {
     const navigate = useNavigate();
@@ -66,9 +67,9 @@ const ProductEdit = () => {
 
     return (
         <div className="st-form-inner st-gap-4">
-            <div className="product-edit__header">
-                <h2>{id ? "Edit Product" : "Create New Product"}</h2>
-            </div>
+            <SubHeading
+                title={id ? "Edit Product" : "Create New Product"}
+            />
             <Formik
                 enableReinitialize
                 onSubmit={handleSubmit}

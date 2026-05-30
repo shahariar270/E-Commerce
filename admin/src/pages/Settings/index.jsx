@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Button from "../../components/Buttons";
 import Input from "../../components/Input";
+import SubHeading from "@Component/SubHeading";
 
 const Settings = () => {
   const [settings, setSettings] = useState({
@@ -38,12 +39,10 @@ const Settings = () => {
 
   return (
     <div className="settings-page st-page">
-      <div className="settings-page__header st-page__header">
-        <div className="settings-page__title st-page__title">
-          <h2>Settings</h2>
-          <p>Configure your application preferences</p>
-        </div>
-      </div>
+      <SubHeading
+        title="Settings"
+        subtitle="Configure your application preferences"
+      />
 
       {/* <form onSubmit={handleSubmit} className="settings-form">
         <div className="settings-section">

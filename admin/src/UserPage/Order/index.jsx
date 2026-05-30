@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Pagination from "@Component/Pagination";
 import "./styles.scss"
+import SubHeading from "@Component/SubHeading";
 
 const Order = () => {
     const dispatch = useDispatch();
@@ -22,12 +23,10 @@ const Order = () => {
 
     return (
         <div className="st-page">
-            <div className="st-page__header">
-                <div className="st-page__title">
-                    <h2>Your Orders</h2>
-                    <p>Manage customer orders and track deliveries</p>
-                </div>
-            </div>
+            <SubHeading
+                title="Your Orders"
+                subtitle="Manage customer orders and track deliveries"
+            />
 
             <div className="st-order">
                 <div className="st-order__list">

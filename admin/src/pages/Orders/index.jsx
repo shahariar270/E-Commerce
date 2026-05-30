@@ -4,6 +4,7 @@ import Button from "../../components/Buttons";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllOrder, updateOrder } from "@Store/slices/orderSlice";
 import Select from "@Component/Select";
+import SubHeading from "@Component/SubHeading";
 
 const statusOption = [
   'Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'
@@ -108,18 +109,18 @@ const Orders = () => {
 
   return (
     <div className="orders-page st-page">
-      <div className="orders-page__header st-page__header">
-        <div className="orders-page__title st-page__title">
-          <h2>Orders</h2>
-          <p>Manage customer orders and track deliveries</p>
-        </div>
-        <Button
-          label="+ New Order"
-          variant="primary"
-          size="md"
-          onClick={handleAddOrder}
-        />
-      </div>
+      <SubHeading
+        title="Orders"
+        subtitle="Manage customer orders and track deliveries"
+        rightContent={
+          <Button
+            label="+ New Order"
+            variant="primary"
+            size="md"
+            onClick={handleAddOrder}
+          />
+        }
+      />
 
       <div className="table-container">
         <Table

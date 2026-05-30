@@ -7,6 +7,7 @@ import './styles.scss'
 import { getCart } from '@Store/slices/cartSlice'
 import Button from '@Component/Buttons'
 import { useNavigate } from 'react-router-dom'
+import SubHeading from '@Component/SubHeading'
 
 export const Checkout = () => {
   const dispatch = useDispatch();
@@ -41,10 +42,10 @@ export const Checkout = () => {
       initialValues={initialValues}
     >
       <div className="st-layout__content">
-        <div className="st-page__header">
-          <h2>Checkout</h2>
-          <span>Complete your purchase</span>
-        </div>
+        <SubHeading
+          title="Checkout"
+          subtitle="Complete your purchase"
+        />
         <Form className="st-checkout__form">
           <div className="st-checkout__field">
             <h3>Shipping Information</h3>

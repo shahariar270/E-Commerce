@@ -4,6 +4,7 @@ import { getProducts } from '@Store/slices/productSlice'
 import ProductCard from '@Component/ProductCard'
 import Pagination from '@Component/Pagination'
 import './styles.scss'
+import SubHeading from '@Component/SubHeading'
 
 export const PublicProduct = () => {
     const dispatch = useDispatch()
@@ -31,10 +32,10 @@ export const PublicProduct = () => {
     return (
         <div className="public-product-page">
             <div className="public-product-page__content">
-                <div className="public-product-page__header">
-                    <h1>Our Products</h1>
-                    <p>Browse our collection of quality products</p>
-                </div>
+                <SubHeading
+                    title="Our Products"
+                    subtitle="Browse our collection of quality products"
+                />
 
                 <div className="public-product-page__search">
                     <input

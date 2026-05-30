@@ -5,6 +5,7 @@ import Button from "../../components/Buttons";
 import './styles.scss';
 import { useDispatch, useSelector } from "react-redux";
 import { deleteProduct, getProducts } from "@Store/slices/productSlice";
+import SubHeading from "@Component/SubHeading";
 
 
 const Products = () => {
@@ -108,18 +109,18 @@ const Products = () => {
 
   return (
     <div className="products-page st-page">
-      <div className="products-page__header st-page__header">
-        <div className="products-page__title st-page__title">
-          <h2>Products</h2>
-          <p>Manage your product inventory</p>
-        </div>
-        <Button
-          label="+ Add New Product"
-          variant="primary"
-          size="md"
-          onClick={handleAddProduct}
-        />
-      </div>
+      <SubHeading
+        title="Products"
+        subtitle="Manage your product inventory"
+        rightContent={
+          <Button
+            label="+ Add New Product"
+            variant="primary"
+            size="md"
+            onClick={handleAddProduct}
+          />
+        }
+      />
 
       <div className="table-container">
         <Table
