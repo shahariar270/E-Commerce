@@ -20,7 +20,12 @@ const Products = () => {
   const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
-    dispatch(getProducts({ search: searchQuery, page: currentPage, per_page: pageSize }));
+    const fetchProducts = () => {
+      dispatch(getProducts({ search: searchQuery, page: currentPage, per_page: pageSize }));
+    }
+
+    const timeoutId = setTimeout(fetchProducts, 300);
+    return () => clearTimeout(timeoutId);
   }, [searchQuery, currentPage, pageSize, dispatch])
 
   const handleDelete = (id) => {
@@ -150,7 +155,10 @@ const Products = () => {
           currentPage={currentPage}
           onPageChange={setCurrentPage}
           pageSize={pageSize}
-          onPageSizeChange={setPageSize}
+          onPageSizeChange={(size) => {
+            setPageSize(size);
+            setCurrentPage(1);
+          }}
           total={total}
           striped={true}
           sortable={true}

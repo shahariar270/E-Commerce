@@ -12,22 +12,20 @@ export const PublicProduct = () => {
 
     const [searchQuery, setSearchQuery] = useState('')
     const [currentPage, setCurrentPage] = useState(1)
-    const [pageSize, setPageSize] = useState(12)
+    const [pageSize, setPageSize] = useState(10)
 
     useEffect(() => {
-        dispatch(getProducts({
-            search: searchQuery,
-            page: currentPage,
-            per_page: pageSize
-        }))
-    }, [currentPage, searchQuery, pageSize, dispatch])
+        const fetchProducts = () => {
+            dispatch(getProducts({
+                search: searchQuery,
+                page: currentPage,
+                per_page: pageSize
+            }))
+        }
 
-    useEffect(() => {
-        const timeoutId = setTimeout(() => {
-            setCurrentPage(1)
-        }, 300)
+        const timeoutId = setTimeout(fetchProducts, 300)
         return () => clearTimeout(timeoutId)
-    }, [searchQuery])
+    }, [dispatch, searchQuery, currentPage, pageSize])
 
     return (
         <div className="public-product-page">
