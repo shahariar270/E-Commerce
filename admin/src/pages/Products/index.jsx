@@ -44,9 +44,9 @@ const Products = () => {
       key: "product_name",
       title: "Product Name",
       sortable: true,
-      render: (value) => (
+      render: (value, row) => (
         <Tooltip content={value}>
-          <span  style={{ cursor: 'pointer' }} onClick={() => navigate(`/admin/product/${value._id}`)} className="st-text-capitalize">{sliceString(value, 20)}</span>
+          <span  style={{ cursor: 'pointer' }} onClick={() => navigate(`/admin/product/${row._id}`)} className="st-text-capitalize">{sliceString(value, 20)}</span>
         </Tooltip>
       ),
     },
