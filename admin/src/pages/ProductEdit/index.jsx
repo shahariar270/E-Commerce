@@ -32,9 +32,10 @@ const ProductEdit = () => {
             if (id) {
                 await dispatch(updateProduct({ id, data: values })).unwrap();
             } else {
-                await dispatch(createProduct(values)).unwrap();
+                await dispatch(createProduct(values)).unwrap().then((res) => {
+                    navigate(`/admin/product/${res.data?._id}`);
+                });
             }
-            // navigate("/admin/products");
         } catch (error) {
             console.error("Failed to save product:", error);
         }
