@@ -9,16 +9,16 @@ import SubHeading from '@Component/SubHeading'
 export const PublicProduct = () => {
     const dispatch = useDispatch()
     const { data: products, loading, pagination } = useSelector((state) => state.product)
-    
+
     const [searchQuery, setSearchQuery] = useState('')
     const [currentPage, setCurrentPage] = useState(1)
     const [pageSize, setPageSize] = useState(12)
 
     useEffect(() => {
-        dispatch(getProducts({ 
-            search: searchQuery, 
-            page: currentPage, 
-            per_page: pageSize 
+        dispatch(getProducts({
+            search: searchQuery,
+            page: currentPage,
+            per_page: pageSize
         }))
     }, [currentPage, searchQuery, pageSize, dispatch])
 
@@ -74,7 +74,7 @@ export const PublicProduct = () => {
                                     setPageSize(size);
                                     setCurrentPage(1);
                                 }}
-                                pageSizeOptions={[12, 24, 48]}
+                                pageSizeOptions={[10, 20, 50]}
                             />
                         </div>
                     </>
