@@ -123,7 +123,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
 
                     <div className="st-sidebar__divider" />
 
-                    <div
+                    {/* <div
                         className="st-sidebar__user"
                         onClick={() => navigate('/admin/profile')}
                         title={!isOpen ? (user?.name || user?.email || 'Profile') : undefined}
@@ -137,7 +137,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                                 {user?.email || ''}
                             </div>
                         </div>
-                    </div>
+                    </div> */}
 
                     <button
                         className="st-sidebar__logout"
