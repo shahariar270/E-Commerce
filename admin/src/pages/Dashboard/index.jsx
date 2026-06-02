@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
-  const { card: stats = {}, loading , topProducts} = useSelector(state => state?.dashboard);
+  const { card: stats = {}, loading, topProducts } = useSelector(state => state?.dashboard);
 
   useEffect(() => {
     if (Object.keys(stats).length === 0 && !loading) {
@@ -19,7 +19,6 @@ const Dashboard = () => {
     }
   }, []);
 
-  console.log({topProducts});
 
   const formatMetric = (value, type) => {
     if (loading) return "Loading...";
@@ -76,15 +75,6 @@ const Dashboard = () => {
   ];
 
 
-  const recentOrders = [
-    { id: "ORD-001", customer: "John Smith", total: 299.99, status: "Pending" },
-    { id: "ORD-002", customer: "Sarah Johnson", total: 149.99, status: "Processing" },
-    { id: "ORD-003", customer: "Mike Brown", total: 599.99, status: "Shipped" },
-    { id: "ORD-004", customer: "Emily Davis", total: 89.99, status: "Delivered" },
-    { id: "ORD-005", customer: "David Wilson", total: 449.99, status: "Cancelled" },
-  ];
-
-
   return (
     <div className="dashboard-page st-page">
       <SubHeading
@@ -113,7 +103,7 @@ const Dashboard = () => {
       {/* Charts and Tables */}
       <div className="dashboard-grid">
         {/* Recent Orders */}
-        
+
 
         {/* Top Products */}
         <div className="dashboard-card">
@@ -131,6 +121,14 @@ const Dashboard = () => {
                 </tr>
               </thead>
               <tbody>
+                {topProducts.length === 0 && !loading &&
+                 (
+                  <tr>
+                    <td colSpan="3" className="no-data">No sales data available</td>
+                  </tr>
+                )
+                }
+
                 {topProducts.map((product, index) => (
                   <tr key={index}>
                     <td>{product.name}</td>
