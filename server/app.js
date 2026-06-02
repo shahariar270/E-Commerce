@@ -5,6 +5,24 @@ const cors = require('cors');
 const { default: mongoose } = require('mongoose');
 const router = require('./router');
 const ApiResponse = require('./utils/api_response');
+const http = require('http');
+const { Server } = require('socket.io');
+
+const server = http.createServer(app);
+
+const io = new Server(server, {
+    cors: {
+        origin: "*"
+    }
+});
+
+io.on('connection', (socket) => {
+    console.log('User connected:', socket.id);
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected');
+    });
+});
 
 app.use(cors({
     origin: process.env.FRONTEND_URL || 'http://localhost:5173',
@@ -23,7 +41,7 @@ const port = process.env.PORT || 10000;
 mongoose.connect(process.env.DB_URL)
     .then(() => {
         console.log('Database connected successfully');
-        app.listen(port, '0.0.0.0', () => {
+        server.listen(port, '0.0.0.0', () => {
             console.log('Server is running on', port);
         });
     })
