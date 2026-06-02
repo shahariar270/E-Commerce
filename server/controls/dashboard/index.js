@@ -38,6 +38,30 @@ class dashboard {
             return ApiResponse.error(res, error.message, 500);
         }
     }
+    async total_data(req, res) {
+        try {
+            const topProducts = await Order.aggregate([
+                { $unwind: "$items" },
+                { $match: { paymentStatus: "paid" } },
+
+                {
+                    $group: {
+                        _id: "$items.product",
+                        totalSold: { $sum: "$items.quantity" },
+                        name: { $first: "$items.name" },
+                        revenue: { $sum: { $multiply: ["$items.quantity", "$items.price"] } },
+                        
+                    }
+                },
+
+                { $sort: { totalSold: -1 } },
+                { $limit: 10 }
+            ]);
+            return ApiResponse.success(res, "Top products retrieved successfully", { topProducts });
+        } catch (error) {
+            return ApiResponse.error(res, error.message, 500);
+        }
+    }
 }
 
 module.exports = new dashboard

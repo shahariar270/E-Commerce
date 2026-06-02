@@ -1,19 +1,25 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getCardData } from "@Store/slices/dashboardSlice";
+import { getCardData, getTopProducts } from "@Store/slices/dashboardSlice";
 import './Styles.scss'
 import AreaChart from "@Component/AreaChart";
 import SubHeading from "@Component/SubHeading";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
-  const { card: stats = {}, loading } = useSelector(state => state?.dashboard)
+  const { card: stats = {}, loading , topProducts} = useSelector(state => state?.dashboard);
 
   useEffect(() => {
     if (Object.keys(stats).length === 0 && !loading) {
       dispatch(getCardData())
     }
-  }, [stats, loading, dispatch]);
+    if(!topProducts.length){
+      dispatch(getTopProducts())
+    }
+  }, []);
+
+  console.log({topProducts});
 
   const formatMetric = (value, type) => {
     if (loading) return "Loading...";
@@ -78,13 +84,6 @@ const Dashboard = () => {
     { id: "ORD-005", customer: "David Wilson", total: 449.99, status: "Cancelled" },
   ];
 
-  const topProducts = [
-    { name: "Wireless Headphones", sales: 145, revenue: 14498 },
-    { name: "Smart Watch", sales: 98, revenue: 19599 },
-    { name: "Running Shoes", sales: 87, revenue: 6959 },
-    { name: "Bluetooth Speaker", sales: 76, revenue: 4559 },
-    { name: "Laptop Stand", sales: 54, revenue: 1619 },
-  ];
 
   return (
     <div className="dashboard-page st-page">
@@ -114,46 +113,13 @@ const Dashboard = () => {
       {/* Charts and Tables */}
       <div className="dashboard-grid">
         {/* Recent Orders */}
-        <div className="dashboard-card">
-          <div className="dashboard-card__header">
-            <h3>Recent Orders</h3>
-            <a href="/orders" className="dashboard-card__link">View All</a>
-          </div>
-          <div className="dashboard-card__content">
-            <table className="dashboard-table">
-              <thead>
-                <tr>
-                  <th>Order ID</th>
-                  <th>Customer</th>
-                  <th>Total</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentOrders.map((order) => (
-                  <tr key={order.id}>
-                    <td>
-                      <span className="order-id">{order.id}</span>
-                    </td>
-                    <td>{order.customer}</td>
-                    <td className="order-total">${order.total.toFixed(2)}</td>
-                    <td>
-                      <span className={`status status--${order.status.toLowerCase()}`}>
-                        {order.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        
 
         {/* Top Products */}
         <div className="dashboard-card">
           <div className="dashboard-card__header">
             <h3>Top Products</h3>
-            <a href="/products" className="dashboard-card__link">View All</a>
+            <Link to="/" className="dashboard-card__link">View All</Link>
           </div>
           <div className="dashboard-card__content">
             <table className="dashboard-table">
@@ -168,7 +134,7 @@ const Dashboard = () => {
                 {topProducts.map((product, index) => (
                   <tr key={index}>
                     <td>{product.name}</td>
-                    <td>{product.sales}</td>
+                    <td>{product.totalSold}</td>
                     <td className="revenue">${product.revenue.toLocaleString()}</td>
                   </tr>
                 ))}
