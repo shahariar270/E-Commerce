@@ -11,11 +11,13 @@ const Dashboard = () => {
   const { card: stats = {}, loading, topProducts } = useSelector(state => state?.dashboard);
 
   useEffect(() => {
-    if (Object.keys(stats).length === 0 && !loading) {
-      dispatch(getCardData())
+    if (loading) return;
+
+    if (Object.keys(stats).length === 0) {
+      dispatch(getCardData());
     }
-    if(!topProducts.length){
-      dispatch(getTopProducts())
+    if (topProducts.length === 0) {
+      dispatch(getTopProducts());
     }
   }, []);
 
