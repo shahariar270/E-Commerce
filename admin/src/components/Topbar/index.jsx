@@ -1,6 +1,7 @@
 import React from "react";
 import logo from "../../assets/images/logo.svg";
 import Breadcrumb from "../Breadcrumb";
+import { NotificationPopover } from "./NotificationPopover";
 
 export const Topbar = ({
     leftContent,
@@ -32,6 +33,10 @@ export const Topbar = ({
                         <Breadcrumb />
                     </>
                 )}
+            </div>
+
+            <div className="st-topbar__actions">
+                <NotificationPopover />
                 {rightContent && (
                     <div className="st-topbar--right">
                         {rightContent}
@@ -43,3 +48,4 @@ export const Topbar = ({
         </div>
     );
 };
+
