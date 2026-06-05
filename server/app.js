@@ -16,13 +16,13 @@ const io = new Server(server, {
     }
 });
 
-io.on('connection', (socket) => {
-    console.log('User connected:', socket.id);
+// io.on('connection', (socket) => {
+//     console.log('User connected:', socket.id);
 
-    socket.on('disconnect', () => {
-        console.log('User disconnected');
-    });
-});
+//     socket.on('disconnect', () => {
+//         console.log('User disconnected');
+//     });
+// });
 
 app.use(cors({
     origin: process.env.FRONTEND_URL || 'http://localhost:5173',
