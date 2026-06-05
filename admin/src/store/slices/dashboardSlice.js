@@ -7,8 +7,14 @@ export const getCardData = createAsyncThunk(
     async (_, thunkApi) => apiClient('/dashboard/cards')
 );
 
+export const getTopProducts = createAsyncThunk(
+    "dashboard/getTopProducts",
+    async (_, thunkApi) => apiClient('/dashboard/total_data')
+);
+
 const initialState = {
     card: {},
+    topProducts: [],
     loading: false,
     error: null
 }
@@ -29,6 +35,18 @@ const dashboardSlices = createSlice({
                 state.card = action.payload.data || action.payload;
             })
             .addCase(getCardData.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
+            })
+            .addCase(getTopProducts.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(getTopProducts.fulfilled, (state, action) => {
+                state.loading = false;
+                state.topProducts = action.payload.data?.topProducts;
+            })
+            .addCase(getTopProducts.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message;
             })

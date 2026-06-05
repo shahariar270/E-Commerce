@@ -1,17 +1,21 @@
 import { getUserOrders } from "@Store/slices/orderSlice";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Pagination from "@Component/Pagination";
 import "./styles.scss"
+import SubHeading from "@Component/SubHeading";
 
 const Order = () => {
     const dispatch = useDispatch();
-    const { orders } = useSelector(state => state.order);
+    const { orders, pagination } = useSelector(state => state.order);
 
     const [openId, setOpenId] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
 
     useEffect(() => {
-        dispatch(getUserOrders());
-    }, [dispatch]);
+        dispatch(getUserOrders({ page: currentPage, limit: pageSize }));
+    }, [dispatch, currentPage, pageSize]);
 
     const toggleCard = (id) => {
         setOpenId(prev => (prev === id ? null : id));
@@ -19,12 +23,10 @@ const Order = () => {
 
     return (
         <div className="st-page">
-            <div className="st-page__header">
-                <div className="st-page__title">
-                    <h2>Your Orders</h2>
-                    <p>Manage customer orders and track deliveries</p>
-                </div>
-            </div>
+            <SubHeading
+                title="Your Orders"
+                subtitle="Manage customer orders and track deliveries"
+            />
 
             <div className="st-order">
                 <div className="st-order__list">
@@ -90,6 +92,19 @@ const Order = () => {
                             </div>
                         );
                     })}
+                </div>
+
+                <div className="st-order__pagination">
+                    <Pagination
+                        currentPage={currentPage}
+                        total={pagination.total}
+                        pageSize={pageSize}
+                        onPageChange={setCurrentPage}
+                        onPageSizeChange={(size) => {
+                            setPageSize(size);
+                            setCurrentPage(1);
+                        }}
+                    />
                 </div>
             </div>
         </div>

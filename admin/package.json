@@ -20,6 +20,7 @@
     "react-router-dom": "^7.13.2",
     "react-select": "^5.10.2",
     "redux-logger": "^3.0.6",
+    "socket.io-client": "^4.8.3",
     "yup": "^1.7.1"
   },
   "devDependencies": {

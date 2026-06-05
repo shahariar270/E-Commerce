@@ -6,6 +6,15 @@
     justify-content: center;
     align-items: center;
 }
+.st-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.st-align-center {
+    display: flex;
+    align-items: center;
+}
 
 .st-gap-2 {
     gap: 8px;
@@ -16,20 +25,6 @@
 
 .st-link {
     text-decoration: none;
-}
-
-.st-title {
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 6px;
-    text-align: center;
-}
-
-.st-subtitle {
-    font-size: 14px;
-    color: #6b7280;
-    text-align: center;
-    margin-bottom: 25px;
 }
 
 .st-form {

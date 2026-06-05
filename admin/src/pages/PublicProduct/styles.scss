@@ -8,24 +8,6 @@
         padding: 24px;
     }
 
-    &__header {
-        text-align: center;
-        margin-bottom: 32px;
-
-        h1 {
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--st-text-primary, #313a45);
-            margin: 0 0 8px;
-        }
-
-        p {
-            font-size: 16px;
-            color: #6b7280;
-            margin: 0;
-        }
-    }
-
     &__search {
         max-width: 500px;
         margin: 0 auto 32px;
@@ -77,40 +59,9 @@
     }
 
     &__pagination {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 16px;
         margin-top: 40px;
         padding-top: 24px;
         border-top: 1px solid var(--st-border, #e3e7ec);
-
-        .pagination-btn {
-            padding: 10px 20px;
-            background: var(--st-text-white, #fff);
-            border: 1px solid var(--st-border, #e3e7ec);
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--st-text-primary, #313a45);
-            cursor: pointer;
-            transition: all 0.2s;
-
-            &:hover:not(:disabled) {
-                border-color: var(--st-primary, #6200ee);
-                color: var(--st-primary, #6200ee);
-            }
-
-            &:disabled {
-                opacity: 0.5;
-                cursor: not-allowed;
-            }
-        }
-
-        .pagination-info {
-            font-size: 14px;
-            color: #6b7280;
-        }
     }
 }
 

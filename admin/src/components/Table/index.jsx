@@ -46,6 +46,8 @@ const Table = ({
     const searchQuery = externalSearch ?? internalSearch;
     const filters = externalFilters ?? internalFilters;
 
+    const isServerSide = total !== undefined;
+
     // Handle page change
     const handlePageChange = (newPage) => {
         if (onPageChange) {
@@ -97,8 +99,8 @@ const Table = ({
     const processedData = useMemo(() => {
         let result = [...data];
 
-        // Apply search
-        if (searchable && searchQuery) {
+        // Apply search locally only if NOT server-side
+        if (searchable && searchQuery && !onSearch) {
             const searchLower = searchQuery.toLowerCase();
             result = result.filter(row => {
                 return columns.some(col => {
@@ -123,7 +125,7 @@ const Table = ({
             });
         }
 
-        // Apply sorting
+        // Apply sorting locally
         if (sortConfig.key) {
             result.sort((a, b) => {
                 const aValue = a[sortConfig.key];
@@ -143,16 +145,16 @@ const Table = ({
         }
 
         return result;
-    }, [data, searchQuery, filters, sortConfig, columns, searchable, showFilters]);
+    }, [data, searchQuery, filters, sortConfig, columns, searchable, showFilters, onSearch]);
 
     // Get paginated data
     const paginatedData = useMemo(() => {
-        if (!pagination) return processedData;
+        if (!pagination || isServerSide) return processedData;
 
         const startIndex = (currentPage - 1) * pageSize;
         const endIndex = startIndex + pageSize;
         return processedData.slice(startIndex, endIndex);
-    }, [processedData, currentPage, pageSize, pagination]);
+    }, [processedData, currentPage, pageSize, pagination, isServerSide]);
 
     // Calculate total pages
     const totalPages = Math.ceil((total ?? processedData.length) / pageSize);

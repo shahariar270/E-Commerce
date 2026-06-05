@@ -66,23 +66,25 @@ class product_controller {
 
     async get_products(req, res) {
         try {
-            const { category, stock, search, page, per_page } = req.query;
+            const { category, stock, search, page = 1, per_page = 10 } = req.query;
             let query = {};
 
             if (search) {
-                query.name = { $regex: search, $options: "i" };
+                query.product_name = { $regex: search, $options: "i" };
             }
 
             if (category) {
                 query.category = category;
             }
 
-            const skip = (parseInt(page) - 1) * per_page;
-            const get_all_products = await Product.find().
-                limit(parseInt(per_page))
+            const limit = parseInt(per_page);
+            const skip = (parseInt(page) - 1) * limit;
+
+            const get_all_products = await Product.find(query)
+                .limit(limit)
                 .skip(skip)
                 .sort({ createdAt: -1 });
-            const total = await Product.countDocuments();
+            const total = await Product.countDocuments(query);
 
             return ApiResponse.success(res, "Product fetched", {
                 products: get_all_products,

@@ -17,7 +17,9 @@ export const Layout = () => {
 
   return (
     <div className={`st-layout ${sidebarOpen ? 'st-layout--sidebar-open' : 'st-layout--sidebar-collapsed'}`}>
-      {token && <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />}
+      <div className="st-layout__sidebar-container">
+        {token && <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />}
+      </div>
 
       <div className="st-layout__body">
         <Topbar

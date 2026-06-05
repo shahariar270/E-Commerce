@@ -1,17 +1,6 @@
 .st-cart {
   padding: 20px;
 
-  &__header {
-    margin-bottom: 20px;
-
-    h2 {
-      font-size: 20px;
-      font-weight: 600;
-      color: var(--st-text-primary);
-      margin: 0;
-    }
-  }
-
   &__layout {
     display: flex;
     gap: 24px;

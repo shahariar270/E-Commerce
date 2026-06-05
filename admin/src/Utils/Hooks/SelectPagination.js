@@ -13,8 +13,12 @@ export const useSelectPagination = (action, selectedValues, extraParams = {}) =>
         try {
             const res = await dispatch(action({ page: currentPage, ...extraParams }));
 
-            const apiItems = res.payload?.data || [];
-            const apiTotalPages = res.payload?.pages || 1;
+            // Handle both simple array and nested data object with total
+            const responseData = res.payload?.data;
+            const apiItems = Array.isArray(responseData) ? responseData : (responseData?.data || responseData?.products || []);
+            const total = responseData?.total || apiItems.length;
+            const limit = extraParams.limit || extraParams.per_page || 10;
+            const apiTotalPages = Math.ceil(total / limit);
 
             setOptions(prevItems => {
                 if (isFirstLoad) return apiItems;

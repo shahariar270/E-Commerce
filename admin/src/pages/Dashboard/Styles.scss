@@ -2,23 +2,6 @@
     color: var(--st-text-primary);
 }
 
-.dashboard-page__header {
-    margin-bottom: 24px;
-}
-
-.dashboard-page__title h2 {
-    margin: 0;
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--st-text-primary);
-}
-
-.dashboard-page__title p {
-    margin: 6px 0 0;
-    font-size: 14px;
-    color: #667085;
-}
-
 .dashboard-stats {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));

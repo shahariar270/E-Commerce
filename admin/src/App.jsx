@@ -16,10 +16,28 @@ import ErrorPage from "./pages/ErrorPage";
 import Cart from "./UserPage/Cart";
 import { Checkout } from "./UserPage/Checkout";
 import Order from "./UserPage/Order";
+import { useEffect } from "react";
+import { io } from "socket.io-client";
 
 
 function App() {
+  useEffect(() => {
+    const socket = io("http://localhost:5000");
+
+    socket.on("connect", () => {
+      console.log("✅ Connected:", socket.id);
+    });
+
+    socket.on("connect_error", (err) => {
+      console.log("❌ Error:", err.message);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
   return (
+
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />

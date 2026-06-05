@@ -2,40 +2,38 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getProducts } from '@Store/slices/productSlice'
 import ProductCard from '@Component/ProductCard'
+import Pagination from '@Component/Pagination'
 import './styles.scss'
+import SubHeading from '@Component/SubHeading'
 
 export const PublicProduct = () => {
     const dispatch = useDispatch()
     const { data: products, loading, pagination } = useSelector((state) => state.product)
-    
+
     const [searchQuery, setSearchQuery] = useState('')
     const [currentPage, setCurrentPage] = useState(1)
-    const perPage = 12
+    const [pageSize, setPageSize] = useState(10)
 
     useEffect(() => {
-        dispatch(getProducts({ 
-            search: searchQuery, 
-            page: currentPage, 
-            per_page: perPage 
-        }))
-    }, [currentPage, searchQuery, dispatch])
+        const fetchProducts = () => {
+            dispatch(getProducts({
+                search: searchQuery,
+                page: currentPage,
+                per_page: pageSize
+            }))
+        }
 
-    useEffect(() => {
-        const timeoutId = setTimeout(() => {
-            setCurrentPage(1)
-        }, 300)
+        const timeoutId = setTimeout(fetchProducts, 300)
         return () => clearTimeout(timeoutId)
-    }, [searchQuery])
-
-    const totalPages = Math.ceil((pagination?.total || 0) / perPage);
+    }, [dispatch, searchQuery, currentPage, pageSize])
 
     return (
         <div className="public-product-page">
             <div className="public-product-page__content">
-                <div className="public-product-page__header">
-                    <h1>Our Products</h1>
-                    <p>Browse our collection of quality products</p>
-                </div>
+                <SubHeading
+                    title="Our Products"
+                    subtitle="Browse our collection of quality products"
+                />
 
                 <div className="public-product-page__search">
                     <input
@@ -64,27 +62,19 @@ export const PublicProduct = () => {
                             ))}
                         </div>
 
-                        {totalPages > 1 && (
-                            <div className="public-product-page__pagination">
-                                <button
-                                    className="pagination-btn"
-                                    onClick={() => setCurrentPage(p => p - 1)}
-                                    disabled={currentPage === 1}
-                                >
-                                    Previous
-                                </button>
-                                <span className="pagination-info">
-                                    Page {currentPage} of {totalPages}
-                                </span>
-                                <button
-                                    className="pagination-btn"
-                                    onClick={() => setCurrentPage(p => p + 1)}
-                                    disabled={currentPage === totalPages}
-                                >
-                                    Next
-                                </button>
-                            </div>
-                        )}
+                        <div className="public-product-page__pagination">
+                            <Pagination
+                                currentPage={currentPage}
+                                total={pagination.total}
+                                pageSize={pageSize}
+                                onPageChange={setCurrentPage}
+                                onPageSizeChange={(size) => {
+                                    setPageSize(size);
+                                    setCurrentPage(1);
+                                }}
+                                pageSizeOptions={[10, 20, 50]}
+                            />
+                        </div>
                     </>
                 )}
             </div>

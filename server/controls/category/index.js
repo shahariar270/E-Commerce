@@ -27,9 +27,13 @@ class category_controller {
     async get_categories(req, res) {
         try {
             const { page = 1, limit = 10 } = req.query;
-            const skip = (page - 1) * limit;
+            const skip = (parseInt(page) - 1) * parseInt(limit);
             const categories = await Category.find().skip(skip).limit(parseInt(limit));
-            return ApiResponse.success(res, 'Categories retrieved successfully', categories);
+            const total = await Category.countDocuments();
+            return ApiResponse.success(res, 'Categories retrieved successfully', {
+                data: categories,
+                total
+            });
         } catch (error) {
             return ApiResponse.error(res, 'Error retrieving categories', 500, error.message);
         };

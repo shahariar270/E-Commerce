@@ -1,17 +1,26 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getCardData } from "@Store/slices/dashboardSlice";
+import { getCardData, getTopProducts } from "@Store/slices/dashboardSlice";
 import './Styles.scss'
+import AreaChart from "@Component/AreaChart";
+import SubHeading from "@Component/SubHeading";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
-  const { card: stats = {}, loading } = useSelector(state => state?.dashboard)
+  const { card: stats = {}, loading, topProducts } = useSelector(state => state?.dashboard);
 
   useEffect(() => {
-    if (Object.keys(stats).length === 0 && !loading) {
-      dispatch(getCardData())
+    if (loading) return;
+
+    if (Object.keys(stats).length === 0) {
+      dispatch(getCardData());
     }
-  }, [stats, loading, dispatch]);
+    if (topProducts.length === 0) {
+      dispatch(getTopProducts());
+    }
+  }, []);
+
 
   const formatMetric = (value, type) => {
     if (loading) return "Loading...";
@@ -68,31 +77,12 @@ const Dashboard = () => {
   ];
 
 
-  const recentOrders = [
-    { id: "ORD-001", customer: "John Smith", total: 299.99, status: "Pending" },
-    { id: "ORD-002", customer: "Sarah Johnson", total: 149.99, status: "Processing" },
-    { id: "ORD-003", customer: "Mike Brown", total: 599.99, status: "Shipped" },
-    { id: "ORD-004", customer: "Emily Davis", total: 89.99, status: "Delivered" },
-    { id: "ORD-005", customer: "David Wilson", total: 449.99, status: "Cancelled" },
-  ];
-
-  const topProducts = [
-    { name: "Wireless Headphones", sales: 145, revenue: 14498 },
-    { name: "Smart Watch", sales: 98, revenue: 19599 },
-    { name: "Running Shoes", sales: 87, revenue: 6959 },
-    { name: "Bluetooth Speaker", sales: 76, revenue: 4559 },
-    { name: "Laptop Stand", sales: 54, revenue: 1619 },
-  ];
-
   return (
     <div className="dashboard-page st-page">
-      <div className="dashboard-page__header st-page__header">
-        <div className="dashboard-page__title st-page__title">
-          <h2>Dashboard</h2>
-          <p>Welcome back! Here's what's happening with your store.</p>
-        </div>
-      </div>
-
+      <SubHeading
+        title={"Dashboard"}
+        subtitle={"Welcome back! Here's what's happening with your store."}
+      />
       {/* Stats Cards */}
       <div className="dashboard-stats">
         {statsData.map((stat) => (
@@ -115,46 +105,13 @@ const Dashboard = () => {
       {/* Charts and Tables */}
       <div className="dashboard-grid">
         {/* Recent Orders */}
-        <div className="dashboard-card">
-          <div className="dashboard-card__header">
-            <h3>Recent Orders</h3>
-            <a href="/orders" className="dashboard-card__link">View All</a>
-          </div>
-          <div className="dashboard-card__content">
-            <table className="dashboard-table">
-              <thead>
-                <tr>
-                  <th>Order ID</th>
-                  <th>Customer</th>
-                  <th>Total</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentOrders.map((order) => (
-                  <tr key={order.id}>
-                    <td>
-                      <span className="order-id">{order.id}</span>
-                    </td>
-                    <td>{order.customer}</td>
-                    <td className="order-total">${order.total.toFixed(2)}</td>
-                    <td>
-                      <span className={`status status--${order.status.toLowerCase()}`}>
-                        {order.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+
 
         {/* Top Products */}
         <div className="dashboard-card">
           <div className="dashboard-card__header">
             <h3>Top Products</h3>
-            <a href="/products" className="dashboard-card__link">View All</a>
+            <Link to="/" className="dashboard-card__link">View All</Link>
           </div>
           <div className="dashboard-card__content">
             <table className="dashboard-table">
@@ -166,10 +123,18 @@ const Dashboard = () => {
                 </tr>
               </thead>
               <tbody>
+                {topProducts.length === 0 && !loading &&
+                 (
+                  <tr>
+                    <td colSpan="3" className="no-data">No sales data available</td>
+                  </tr>
+                )
+                }
+
                 {topProducts.map((product, index) => (
                   <tr key={index}>
                     <td>{product.name}</td>
-                    <td>{product.sales}</td>
+                    <td>{product.totalSold}</td>
                     <td className="revenue">${product.revenue.toLocaleString()}</td>
                   </tr>
                 ))}
@@ -201,6 +166,7 @@ const Dashboard = () => {
           </a>
         </div>
       </div>
+      {/* <AreaChart /> */}
     </div>
   );
 };

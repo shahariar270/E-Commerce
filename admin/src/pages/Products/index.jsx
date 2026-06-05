@@ -5,6 +5,9 @@ import Button from "../../components/Buttons";
 import './styles.scss';
 import { useDispatch, useSelector } from "react-redux";
 import { deleteProduct, getProducts } from "@Store/slices/productSlice";
+import SubHeading from "@Component/SubHeading";
+import { sliceString } from "@utils/helper";
+import Tooltip from "@Component/Tooltip";
 
 
 const Products = () => {
@@ -17,7 +20,12 @@ const Products = () => {
   const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
-    dispatch(getProducts({ search: searchQuery, page: currentPage, per_page: pageSize }));
+    const fetchProducts = () => {
+      dispatch(getProducts({ search: searchQuery, page: currentPage, per_page: pageSize }));
+    }
+
+    const timeoutId = setTimeout(fetchProducts, 300);
+    return () => clearTimeout(timeoutId);
   }, [searchQuery, currentPage, pageSize, dispatch])
 
   const handleDelete = (id) => {
@@ -31,11 +39,21 @@ const Products = () => {
     navigate('/admin/product/new');
   };
 
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    setCurrentPage(1);
+  };
+
   const columns = [
     {
       key: "product_name",
       title: "Product Name",
       sortable: true,
+      render: (value, row) => (
+        <Tooltip content={value}>
+          <span  style={{ cursor: 'pointer' }} onClick={() => navigate(`/admin/product/${row._id}`)} className="st-text-capitalize">{sliceString(value, 20)}</span>
+        </Tooltip>
+      ),
     },
     {
       key: "category",
@@ -44,8 +62,8 @@ const Products = () => {
       render: (row) => (
         <div className="st-category-item">
           {
-            row.map(i => (
-              <span>{i.name}</span>
+            row?.map((i, index) => (
+              <span key={index}>{i.name}</span>
             ))
           }
         </div>
@@ -78,9 +96,16 @@ const Products = () => {
     {
       key: "actions",
       title: "Actions",
-      width: "120px",
+      width: "150px",
       render: (row, value) => (
         <div className="table-actions">
+          <button
+            className="action-btn action-btn--view"
+            onClick={() => window.open(`/product/${value._id}`, '_blank')}
+            title="View on site"
+          >
+            👁️
+          </button>
           <button
             className="action-btn action-btn--edit"
             onClick={() => handleEdit(value)}
@@ -103,18 +128,18 @@ const Products = () => {
 
   return (
     <div className="products-page st-page">
-      <div className="products-page__header st-page__header">
-        <div className="products-page__title st-page__title">
-          <h2>Products</h2>
-          <p>Manage your product inventory</p>
-        </div>
-        <Button
-          label="+ Add New Product"
-          variant="primary"
-          size="md"
-          onClick={handleAddProduct}
-        />
-      </div>
+      <SubHeading
+        title="Products"
+        subtitle="Manage your product inventory"
+        rightContent={
+          <Button
+            label="+ Add New Product"
+            variant="primary"
+            size="md"
+            onClick={handleAddProduct}
+          />
+        }
+      />
 
       <div className="table-container">
         <Table
@@ -123,14 +148,17 @@ const Products = () => {
           searchable={true}
           searchPlaceholder="Search products..."
           searchQuery={searchQuery}
-          onSearch={setSearchQuery}
+          onSearch={handleSearch}
           pagination={true}
           defaultPageSize={10}
           pageSizeOptions={[5, 10, 25, 50]}
           currentPage={currentPage}
           onPageChange={setCurrentPage}
           pageSize={pageSize}
-          onPageSizeChange={setPageSize}
+          onPageSizeChange={(size) => {
+            setPageSize(size);
+            setCurrentPage(1);
+          }}
           total={total}
           striped={true}
           sortable={true}

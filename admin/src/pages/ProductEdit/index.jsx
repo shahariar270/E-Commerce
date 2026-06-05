@@ -11,6 +11,7 @@ import { getCategories } from "@Store/slices/categorySlice";
 import { useSelectPagination } from "@utils/Hooks/SelectPagination";
 import { productSchema } from "@utils/validationSchemas";
 import ProductImages from "./ProductImage";
+import SubHeading from "@Component/SubHeading";
 
 const ProductEdit = () => {
     const navigate = useNavigate();
@@ -31,9 +32,10 @@ const ProductEdit = () => {
             if (id) {
                 await dispatch(updateProduct({ id, data: values })).unwrap();
             } else {
-                await dispatch(createProduct(values)).unwrap();
+                await dispatch(createProduct(values)).unwrap().then((res) => {
+                    navigate(`/admin/product/${res.data?._id}`);
+                });
             }
-            // navigate("/admin/products");
         } catch (error) {
             console.error("Failed to save product:", error);
         }
@@ -66,9 +68,6 @@ const ProductEdit = () => {
 
     return (
         <div className="st-form-inner st-gap-4">
-            <div className="product-edit__header">
-                <h2>{id ? "Edit Product" : "Create New Product"}</h2>
-            </div>
             <Formik
                 enableReinitialize
                 onSubmit={handleSubmit}
@@ -77,6 +76,38 @@ const ProductEdit = () => {
             >
                 {({ setFieldValue, values, isSubmitting, dirty }) => (
                     <Form className='st-form-inner--container'>
+                        <SubHeading
+                            // title={id ? "Edit Product" : "Create New Product"}
+                            leftContent={
+                                <div className="st-align-center st-gap-2">
+                                    <Button
+                                        label={`🔙`}
+                                        variant="secondary"
+                                        onClick={handleCancel}
+                                        type="button"
+                                    />
+                                    <h2 className="st-subHeading__title">{id ? "Edit Product" : "Create New Product"}</h2>
+                                </div>
+                            }
+                            rightContent={
+                                <div className="form-actions">
+                                    {id && (
+                                        <Button
+                                            label="View on site"
+                                            variant="secondary"
+                                            onClick={() => window.open(`/product/${id}`, '_blank')}
+                                            type="button"
+                                        />
+                                    )}
+                                    <Button
+                                        label={id ? "Updated product" : "Create Product"}
+                                        variant="primary"
+                                        type="submit"
+                                        disabled={!dirty || isSubmitting}
+                                    />
+                                </div>
+                            }
+                        />
                         <Input
                             id="product_name"
                             name="product_name"
@@ -111,21 +142,6 @@ const ProductEdit = () => {
                         {values?._id && (
                             <ProductImages productId={values?._id} data={values} />
                         )}
-
-                        <div className="form-actions">
-                            <Button
-                                label="Cancel"
-                                variant="secondary"
-                                onClick={handleCancel}
-                                type="button"
-                            />
-                            <Button
-                                label={id ? "Updated product" : "Create Product"}
-                                variant="primary"
-                                type="submit"
-                                disabled={!dirty || isSubmitting}
-                            />
-                        </div>
                     </Form>
                 )}
             </Formik>

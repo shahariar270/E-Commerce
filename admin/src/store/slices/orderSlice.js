@@ -3,7 +3,13 @@ import { apiClient } from '@utils/api';
 
 export const getAllOrder = createAsyncThunk(
     "order/getAllOrder",
-    async (_, thunApi) => apiClient('/admin/order')
+    async (params = {}, thunApi) => {
+        const query = new URLSearchParams();
+        if (params.page) query.append('page', params.page);
+        if (params.limit) query.append('limit', params.limit);
+        const queryString = query.toString();
+        return apiClient(`/admin/order${queryString ? `?${queryString}` : ''}`);
+    }
 );
 
 export const createOrder = createAsyncThunk(
@@ -13,7 +19,13 @@ export const createOrder = createAsyncThunk(
 
 export const getUserOrders = createAsyncThunk(
     "order/getUserOrders",
-    async (thunkApi) => apiClient(`/orders`)
+    async (params = {}, thunkApi) => {
+        const query = new URLSearchParams();
+        if (params.page) query.append('page', params.page);
+        if (params.limit) query.append('limit', params.limit);
+        const queryString = query.toString();
+        return apiClient(`/orders${queryString ? `?${queryString}` : ''}`);
+    }
 );
 
 export const updateOrder = createAsyncThunk(
@@ -25,11 +37,16 @@ const initialState = {
     orders: [],
     loading: false,
     error: null,
+    pagination: { page: 1, limit: 10, total: 0 },
 }
 
 const getOrderList = (payload) => {
     const orders = payload?.data?.data ?? payload?.data;
     return Array.isArray(orders) ? orders : [];
+};
+
+const getOrderTotal = (payload) => {
+    return payload?.data?.total ?? 0;
 };
 
 const OrderSlices = createSlice({
@@ -48,12 +65,14 @@ const OrderSlices = createSlice({
             .addCase(getAllOrder.fulfilled, (state, action) => {
                 state.loading = false;
                 state.orders = getOrderList(action.payload);
+                state.pagination.total = getOrderTotal(action.payload);
             })
             .addCase(getAllOrder.rejected, handleRejected)
             .addCase(getUserOrders.pending, handlePending)
             .addCase(getUserOrders.fulfilled, (state, action) => {
                 state.loading = false;
                 state.orders = getOrderList(action.payload);
+                state.pagination.total = getOrderTotal(action.payload);
             })
             .addCase(getUserOrders.rejected, handleRejected)
             .addCase(updateOrder.fulfilled, (state, action) => {
