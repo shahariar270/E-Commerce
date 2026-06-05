@@ -36,7 +36,7 @@ export const Topbar = ({
             </div>
 
             <div className="st-topbar__actions">
-                <NotificationPopover />
+                {/* <NotificationPopover /> */}
                 {rightContent && (
                     <div className="st-topbar--right">
                         {rightContent}
