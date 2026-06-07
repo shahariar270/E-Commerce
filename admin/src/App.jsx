@@ -21,21 +21,21 @@ import { io } from "socket.io-client";
 
 
 function App() {
-  useEffect(() => {
-    const socket = io("http://localhost:5000");
+  // useEffect(() => {
+  //   const socket = io("http://localhost:5000");
 
-    socket.on("connect", () => {
-      console.log("✅ Connected:", socket.id);
-    });
+  //   socket.on("connect", () => {
+  //     console.log("✅ Connected:", socket.id);
+  //   });
 
-    socket.on("connect_error", (err) => {
-      console.log("❌ Error:", err.message);
-    });
+  //   socket.on("connect_error", (err) => {
+  //     console.log("❌ Error:", err.message);
+  //   });
 
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
+  //   return () => {
+  //     socket.disconnect();
+  //   };
+  // }, []);
   return (
 
     <Router>
