@@ -7,6 +7,7 @@ export const getAllOrder = createAsyncThunk(
         const query = new URLSearchParams();
         if (params.page) query.append('page', params.page);
         if (params.limit) query.append('limit', params.limit);
+        if (params.search) query.append('search', params.search);
         const queryString = query.toString();
         return apiClient(`/admin/order${queryString ? `?${queryString}` : ''}`);
     }

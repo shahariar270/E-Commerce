@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Table from "../../components/Table";
+import TableContainer from "../../components/Table/TableContainer";
 import Button from "../../components/Buttons";
 import './styles.scss';
 import { useDispatch, useSelector } from "react-redux";
@@ -15,6 +15,7 @@ const Products = () => {
   const navigate = useNavigate();
   const products = useSelector(state => state.product.data);
   const total = useSelector(state => state.product.pagination.total);
+  const loading = useSelector(state => state.product.loading);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -29,7 +30,9 @@ const Products = () => {
   }, [searchQuery, currentPage, pageSize, dispatch])
 
   const handleDelete = (id) => {
-    dispatch(deleteProduct(id))
+    if (window.confirm("Are you sure you want to delete this product?")) {
+      dispatch(deleteProduct(id));
+    }
   };
   const handleEdit = (product) => {
     navigate(`/admin/product/${product._id}`);
@@ -50,22 +53,28 @@ const Products = () => {
       title: "Product Name",
       sortable: true,
       render: (value, row) => (
-        <Tooltip content={value}>
-          <span  style={{ cursor: 'pointer' }} onClick={() => navigate(`/admin/product/${row._id}`)} className="st-text-capitalize">{sliceString(value, 20)}</span>
-        </Tooltip>
+        <div className="product-info">
+          <Tooltip content={value}>
+            <span 
+              style={{ cursor: 'pointer', fontWeight: 500 }} 
+              onClick={() => navigate(`/admin/product/${row._id}`)} 
+              className="st-text-capitalize"
+            >
+              {sliceString(value, 30)}
+            </span>
+          </Tooltip>
+        </div>
       ),
     },
     {
       key: "category",
       title: "Category",
       sortable: true,
-      render: (row) => (
-        <div className="st-category-item">
-          {
-            row?.map((i, index) => (
-              <span key={index}>{i.name}</span>
-            ))
-          }
+      render: (value) => (
+        <div className="st-category-list">
+          {value?.map((cat, index) => (
+            <span key={index} className="category-tag">{cat.name}</span>
+          ))}
         </div>
       )
     },
@@ -74,49 +83,51 @@ const Products = () => {
       title: "Price",
       sortable: true,
       align: "right",
-      // render: (value) => `$${value.toFixed(2)}`,
+      render: (value) => (
+        <span style={{ fontWeight: 600 }}>${Number(value || 0).toFixed(2)}</span>
+      ),
     },
     {
       key: "stock",
       title: "Stock",
       sortable: true,
       align: "center",
-      render: (value, row) => (
-        <span
-          style={{
-            color: value === 0 ? "#b00020" : value < 20 ? "#ff9800" : "#4caf50",
-            fontWeight: 500,
-          }}
-          className="st-text-capitalize"
-        >
-          {value && value.replace("_", " ")}
-        </span>
-      ),
+      render: (value) => {
+        let statusClass = 'stock-badge--in';
+        if (value === 0) statusClass = 'stock-badge--out';
+        else if (value < 20) statusClass = 'stock-badge--low';
+
+        return (
+          <span className={`stock-badge ${statusClass}`}>
+            {value === 0 ? 'Out of Stock' : value < 20 ? `Low Stock (${value})` : `In Stock (${value})`}
+          </span>
+        );
+      },
     },
     {
       key: "actions",
       title: "Actions",
       width: "150px",
-      render: (row, value) => (
+      align: "center",
+      render: (_, row) => (
         <div className="table-actions">
           <button
             className="action-btn action-btn--view"
-            onClick={() => window.open(`/product/${value._id}`, '_blank')}
+            onClick={() => window.open(`/product/${row._id}`, '_blank')}
             title="View on site"
           >
             👁️
           </button>
           <button
             className="action-btn action-btn--edit"
-            onClick={() => handleEdit(value)}
+            onClick={() => handleEdit(row)}
             title="Edit"
           >
             ✏️
           </button>
-
           <button
             className="action-btn action-btn--delete"
-            onClick={() => handleDelete(value._id)}
+            onClick={() => handleDelete(row._id)}
             title="Delete"
           >
             🗑️
@@ -141,30 +152,23 @@ const Products = () => {
         }
       />
 
-      <div className="table-container">
-        <Table
-          columns={columns}
-          data={products}
-          searchable={true}
-          searchPlaceholder="Search products..."
-          searchQuery={searchQuery}
-          onSearch={handleSearch}
-          pagination={true}
-          defaultPageSize={10}
-          pageSizeOptions={[5, 10, 25, 50]}
-          currentPage={currentPage}
-          onPageChange={setCurrentPage}
-          pageSize={pageSize}
-          onPageSizeChange={(size) => {
-            setPageSize(size);
-            setCurrentPage(1);
-          }}
-          total={total}
-          striped={true}
-          sortable={true}
-          emptyMessage="No products found"
-        />
-      </div>
+      <TableContainer
+        columns={columns}
+        data={products}
+        totalItems={total}
+        loading={loading}
+        searchable={true}
+        searchPlaceholder="Search products..."
+        searchQuery={searchQuery}
+        onSearch={handleSearch}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+        pageSize={pageSize}
+        onPageSizeChange={setPageSize}
+        striped={true}
+        sortable={true}
+        emptyMessage="No products found"
+      />
     </div>
   );
 };
