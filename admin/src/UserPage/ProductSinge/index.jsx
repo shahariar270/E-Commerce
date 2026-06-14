@@ -62,9 +62,15 @@ export const ProductSinge = () => {
     };
 
     useEffect(() => {
-        dispatch(getProductById(id));
-        dispatch(getReviews());
-    }, [dispatch, id]);
+        // Only fetch if the product ID has changed or if no product is loaded
+        if (current?._id !== id) {
+            dispatch(getProductById(id));
+        }
+        // Only fetch reviews if the list is empty
+        if (reviews.length === 0) {
+            dispatch(getReviews());
+        }
+    }, [dispatch, id, current?._id, reviews.length]);
 
     useEffect(() => {
         if (current?.image_gallery?.length > 0) {
