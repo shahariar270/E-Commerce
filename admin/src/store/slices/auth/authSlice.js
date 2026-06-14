@@ -77,6 +77,10 @@ export const getProfile = createAsyncThunk(
       const data = await response.json();
 
       if (!response.ok) {
+        if (response.status === 401) {
+          removeCookie('token');
+          window.location.href = '/login';
+        }
         return rejectWithValue(data.message || 'Failed to fetch profile');
       }
 
@@ -118,6 +122,10 @@ export const updateProfile = createAsyncThunk(
       const data = await response.json();
 
       if (!response.ok) {
+        if (response.status === 401) {
+          removeCookie('token');
+          window.location.href = '/login';
+        }
         return rejectWithValue(data.message || 'Failed to update profile');
       }
 

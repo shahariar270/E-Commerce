@@ -23,11 +23,29 @@ export const getCookie = (name) => {
     let cookie = cookies[i].trim();
     if (cookie.indexOf(nameEQ) === 0) {
       const value = cookie.substring(nameEQ.length);
+      let decodedValue;
       try {
-        return decodeURIComponent(value);
+        decodedValue = decodeURIComponent(value);
       } catch (e) {
-        return value;
+        decodedValue = value;
       }
+
+      // If checking for token, verify it's not expired
+      if (name === 'token' && decodedValue) {
+        try {
+          const decoded = jwtDecode(decodedValue);
+          if (decoded.exp && decoded.exp * 1000 < Date.now()) {
+            removeCookie('token');
+            return null;
+          }
+        } catch (e) {
+          // If token is invalid/malformed, remove it
+          removeCookie('token');
+          return null;
+        }
+      }
+
+      return decodedValue;
     }
   }
   return null;
