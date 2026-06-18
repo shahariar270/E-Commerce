@@ -1,5 +1,6 @@
 .st-tooltip-wrapper {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
 }
 
 .st-tooltip-tip {
@@ -7,69 +8,81 @@
     border-radius: 4px;
     padding: 6px 10px;
     color: #fff;
-    background: #333;
+    background: rgba(0, 0, 0, 0.85);
     font-size: 12px;
-    font-family: sans-serif;
-    line-height: 1;
-    z-index: 10000;
-    white-space: nowrap;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.4;
+    z-index: 99999;
+    white-space: pre-wrap;
+    max-width: 250px;
     pointer-events: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    animation: st-tooltip-fade 0.2s ease-in-out;
 
     &::before {
         content: " ";
-        left: 50%;
         border: solid transparent;
         height: 0;
         width: 0;
         position: absolute;
         pointer-events: none;
-        border-width: 6px;
-        margin-left: -6px;
+        border-width: 5px;
     }
 
     &.top {
-        transform: translate(calc(var(--trigger-width) / 2 - 50%), -100%);
-        margin-top: -10px;
+        transform: translate(-50%, -100%);
+        margin-top: -8px;
 
         &::before {
             top: 100%;
-            border-top-color: #333;
+            left: 50%;
+            transform: translateX(-50%);
+            border-top-color: rgba(0, 0, 0, 0.85);
         }
     }
 
     &.bottom {
-        transform: translate(calc(var(--trigger-width) / 2 - 50%), var(--trigger-height));
-        margin-top: 10px;
+        transform: translate(-50%, 0);
+        margin-top: 8px;
 
         &::before {
             bottom: 100%;
-            border-bottom-color: #333;
+            left: 50%;
+            transform: translateX(-50%);
+            border-bottom-color: rgba(0, 0, 0, 0.85);
         }
     }
 
     &.left {
-        transform: translate(-100%, calc(var(--trigger-height) / 2 - 50%));
-        margin-left: -10px;
+        transform: translate(-100%, -50%);
+        margin-left: -8px;
 
         &::before {
             left: 100%;
             top: 50%;
             transform: translateY(-50%);
-            border-left-color: #333;
-            margin-left: 0;
+            border-left-color: rgba(0, 0, 0, 0.85);
         }
     }
 
     &.right {
-        transform: translate(var(--trigger-width), calc(var(--trigger-height) / 2 - 50%));
-        margin-left: 10px;
+        transform: translate(0, -50%);
+        margin-left: 8px;
 
         &::before {
             right: 100%;
             top: 50%;
             transform: translateY(-50%);
-            border-right-color: #333;
-            left: auto;
+            border-right-color: rgba(0, 0, 0, 0.85);
         }
+    }
+}
+
+@keyframes st-tooltip-fade {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
     }
 }

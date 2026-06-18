@@ -1,4 +1,4 @@
-import { getCookie } from './helper';
+import { getCookie, removeCookie } from './helper';
 
 const getAuthHeader = () => {
   const token = getCookie('token');
@@ -16,6 +16,7 @@ export const apiClient = async (endpoint, options = {}) => {
   });
 
   if (response.status === 401) {
+    removeCookie('token');
     window.location.href = '/login';
     return;
   }

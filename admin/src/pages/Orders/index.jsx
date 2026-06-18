@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import Table from "../../components/Table";
+import TableContainer from "../../components/Table/TableContainer";
 import Button from "../../components/Buttons";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllOrder, updateOrder } from "@Store/slices/orderSlice";
 import Select from "@Component/Select";
 import SubHeading from "@Component/SubHeading";
+import './styles.scss';
 
 const statusOption = [
   'Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'
@@ -21,11 +22,11 @@ const Orders = () => {
   const [pageSize, setPageSize] = useState(10);
   const dispatch = useDispatch();
 
-  const { orders, pagination } = useSelector((state) => state.order);
+  const { orders, pagination, loading } = useSelector((state) => state.order);
 
   useEffect(() => {
-    dispatch(getAllOrder({ page: currentPage, limit: pageSize }))
-  }, [dispatch, currentPage, pageSize])
+    dispatch(getAllOrder({ page: currentPage, limit: pageSize, search: searchQuery }))
+  }, [dispatch, currentPage, pageSize, searchQuery])
 
 
   const columns = [
@@ -33,74 +34,66 @@ const Orders = () => {
       key: "_id",
       title: "Order ID",
       sortable: true,
-      // render: (value) => (
-      //   <span style={{ fontWeight: 600, color: "#1976d2" }}>{value}</span>
-      // ),
+      render: (value) => (
+        <span className="order-id">#{value.slice(-6).toUpperCase()}</span>
+      ),
     },
     {
       key: "shippingAddress.name",
-      title: "Customer Name",
-      render: (value, row)=>(
-        <span>{row?.shippingAddress?.name}</span>
-      )
-    },
-    {
-      key: "shippingAddress.name",
-      title: "Customer Phone",
-      render: (value, row)=>(
-        <span>{row?.shippingAddress?.phone}</span>
+      title: "Customer",
+      render: (_, row) => (
+        <div className="customer-info">
+          <div className="customer-name">{row?.shippingAddress?.name}</div>
+          <div className="customer-phone">{row?.shippingAddress?.phone}</div>
+        </div>
       )
     },
     {
       key: "totalAmount",
-      title: "Customer Name",
-      // render: (value, row)=>(
-      //   <span>{row?.shippingAddress?.phone}</span>
-      // )
+      title: "Amount",
+      sortable: true,
+      align: "right",
+      render: (value) => (
+        <span className="order-amount">${Number(value || 0).toFixed(2)}</span>
+      )
     },
     {
       key: 'status',
       title: "Status",
       render: (value, row) => {
         return (
-          <Select
-            options={formattedOption}
-            value={formattedOption.find((item) => item.value === value)}
-            onChange={(option) => dispatch(updateOrder({ ...row, status: option.value })).then(() => dispatch(getAllOrder()))}
-          />
+          <div className={`status-select status-select--${value.toLowerCase()}`}>
+            <Select
+              options={formattedOption}
+              value={formattedOption.find((item) => item.value === value.toLowerCase())}
+              onChange={(option) => dispatch(updateOrder({ ...row, status: option.value })).then(() => dispatch(getAllOrder({ page: currentPage, limit: pageSize })))}
+            />
+          </div>
         );
       }
     },
-    // {
-    //   key: "actions",
-    //   title: "Actions",
-    //   width: "120px",
-    //   render: (_, row) => (
-    //     <div className="table-actions">
-    //       <button
-    //         className="action-btn action-btn--view"
-    //         onClick={() => handleView(row)}
-    //         title="View Details"
-    //       >
-    //         👁️
-    //       </button>
-    //       <button
-    //         className="action-btn action-btn--edit"
-    //         onClick={() => handleEdit(row)}
-    //         title="Edit"
-    //       >
-    //         ✏️
-    //       </button>
-    //     </div>
-    //   ),
-    // },
+    {
+      key: "actions",
+      title: "Actions",
+      width: "100px",
+      align: "center",
+      render: (_, row) => (
+        <div className="table-actions">
+          <button
+            className="action-btn action-btn--view"
+            onClick={() => handleView(row)}
+            title="View Details"
+          >
+            👁️
+          </button>
+        </div>
+      ),
+    },
   ];
+
   const handleView = (order) => {
     // Add view logic here
-  };
-
-  const handleEdit = (order) => {
-    // Add edit logic here
+    console.log("View order", order);
   };
 
   const handleAddOrder = () => {
@@ -122,27 +115,23 @@ const Orders = () => {
         }
       />
 
-      <div className="table-container">
-        <Table
-          columns={columns}
-          data={orders}
-          searchable={true}
-          searchPlaceholder="Search orders..."
-          searchQuery={searchQuery}
-          onSearch={setSearchQuery}
-          pagination={true}
-          defaultPageSize={10}
-          pageSizeOptions={[5, 10, 25, 50]}
-          currentPage={currentPage}
-          onPageChange={setCurrentPage}
-          pageSize={pageSize}
-          onPageSizeChange={setPageSize}
-          total={pagination.total}
-          striped={true}
-          sortable={true}
-          emptyMessage="No orders found"
-        />
-      </div>
+      <TableContainer
+        columns={columns}
+        data={orders}
+        totalItems={pagination.total}
+        loading={loading}
+        searchable={true}
+        searchPlaceholder="Search orders..."
+        searchQuery={searchQuery}
+        onSearch={setSearchQuery}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+        pageSize={pageSize}
+        onPageSizeChange={setPageSize}
+        striped={true}
+        sortable={true}
+        emptyMessage="No orders found"
+      />
     </div>
   );
 };

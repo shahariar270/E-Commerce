@@ -4,9 +4,9 @@ import './styles.scss';
 
 const Tooltip = ({ children, content, position = 'top', delay = 200 }) => {
     const [active, setActive] = useState(false);
-    const [coords, setCoords] = useState({ top: 0, left: 0 });
+    const [coords, setCoords] = useState({ top: 0, left: 0, width: 0, height: 0 });
     const triggerRef = useRef(null);
-    let timeout;
+    const timeoutRef = useRef(null);
 
     const updateCoords = () => {
         if (triggerRef.current) {
@@ -22,34 +22,54 @@ const Tooltip = ({ children, content, position = 'top', delay = 200 }) => {
 
     const showTip = () => {
         updateCoords();
-        timeout = setTimeout(() => {
+        timeoutRef.current = setTimeout(() => {
             setActive(true);
         }, delay);
     };
 
     const hideTip = () => {
-        if (timeout) clearTimeout(timeout);
+        if (timeoutRef.current) clearTimeout(timeoutRef.current);
         setActive(false);
     };
 
     useEffect(() => {
         if (active) {
-            window.addEventListener('scroll', updateCoords);
+            window.addEventListener('scroll', updateCoords, true);
             window.addEventListener('resize', updateCoords);
         }
         return () => {
-            window.removeEventListener('scroll', updateCoords);
+            window.removeEventListener('scroll', updateCoords, true);
             window.removeEventListener('resize', updateCoords);
         };
     }, [active]);
 
-    const getTipStyle = () => {
-        if (!coords) return {};
-
-        const style = {
-            position: 'absolute',
-            zIndex: 9999,
+    useEffect(() => {
+        return () => {
+            if (timeoutRef.current) clearTimeout(timeoutRef.current);
         };
+    }, []);
+
+    if (!content) return <>{children}</>;
+
+    const getTipStyle = () => {
+        const style = {
+            top: coords.top,
+            left: coords.left,
+            '--trigger-width': `${coords.width}px`,
+            '--trigger-height': `${coords.height}px`
+        };
+
+        if (position === 'top') {
+            style.left = coords.left + coords.width / 2;
+        } else if (position === 'bottom') {
+            style.left = coords.left + coords.width / 2;
+            style.top = coords.top + coords.height;
+        } else if (position === 'left') {
+            style.top = coords.top + coords.height / 2;
+        } else if (position === 'right') {
+            style.left = coords.left + coords.width;
+            style.top = coords.top + coords.height / 2;
+        }
 
         return style;
     };
@@ -65,12 +85,7 @@ const Tooltip = ({ children, content, position = 'top', delay = 200 }) => {
             {active && createPortal(
                 <div 
                     className={`st-tooltip-tip ${position}`}
-                    style={{
-                        top: coords.top,
-                        left: coords.left,
-                        '--trigger-width': `${coords.width}px`,
-                        '--trigger-height': `${coords.height}px`
-                    }}
+                    style={getTipStyle()}
                 >
                     {content}
                 </div>,
