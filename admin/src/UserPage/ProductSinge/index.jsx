@@ -122,7 +122,7 @@ export const ProductSinge = () => {
                 title: '',
                 comment: '',
             });
-        }).catch(() => {});
+        }).catch(() => { });
     };
 
     return (
