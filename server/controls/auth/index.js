@@ -9,6 +9,9 @@ const {
 const { uploadImage } = require('../../utils/cloudniry');
 const ApiResponse = require('../../utils/api_response');
 const jwt_token = process.env.JWT_TOKEN;
+if (!jwt_token) {
+    throw new Error('FATAL: JWT_TOKEN environment variable is not set');
+}
 
 
 module.exports = {
@@ -19,7 +22,7 @@ module.exports = {
                 return ApiResponse.error(res, validate.error.issues[0].message, 400);
             }
 
-            const { user_name, email, password, first_name, last_name, user_role } = req.body;
+            const { user_name, email, password, first_name, last_name } = req.body;
 
             const existUser = await User.findOne({ email });
             if (existUser)
@@ -33,7 +36,6 @@ module.exports = {
                 password: hashedPass,
                 first_name,
                 last_name,
-                user_role,
             });
 
             return ApiResponse.success(res, "User created successfully", null, 201);

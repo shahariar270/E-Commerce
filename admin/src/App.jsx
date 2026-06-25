@@ -1,4 +1,6 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -16,8 +18,23 @@ import ErrorPage from "./pages/ErrorPage";
 import Cart from "./UserPage/Cart";
 import { Checkout } from "./UserPage/Checkout";
 import Order from "./UserPage/Order";
-import { useEffect } from "react";
-import { io } from "socket.io-client";
+import { getCookie } from "@utils/helper";
+
+const ProtectedAdmin = ({ children }) => {
+    const location = useLocation();
+    const token = getCookie('token');
+    let isAdmin = false;
+    if (token) {
+        try {
+            const decoded = jwtDecode(token);
+            isAdmin = decoded?.user_role === 'admin';
+        } catch (e) { /* invalid token */ }
+    }
+    if (!isAdmin) {
+        return <Navigate to="/login" state={{ from: location }} replace />;
+    }
+    return children;
+};
 
 
 function App() {
@@ -55,7 +72,7 @@ function App() {
           <Route path="checkout" element={<Checkout />} />
         </Route>
 
-        <Route path="/admin" element={<Layout />}>
+        <Route path="/admin" element={<ProtectedAdmin><Layout /></ProtectedAdmin>}>
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="products" element={<Products />} />
