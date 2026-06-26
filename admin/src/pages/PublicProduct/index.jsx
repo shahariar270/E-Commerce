@@ -15,6 +15,7 @@ export const PublicProduct = () => {
     const [pageSize, setPageSize] = useState(10)
 
     useEffect(() => {
+        if (products.length > 0) return;
         const fetchProducts = () => {
             dispatch(getProducts({
                 search: searchQuery,
@@ -25,7 +26,7 @@ export const PublicProduct = () => {
 
         const timeoutId = setTimeout(fetchProducts, 300)
         return () => clearTimeout(timeoutId)
-    }, [dispatch, searchQuery, currentPage, pageSize])
+    }, [dispatch, searchQuery, currentPage, pageSize, products])
 
     return (
         <div className="public-product-page">
