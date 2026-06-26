@@ -21,11 +21,19 @@ export const PublicProduct = () => {
     const [searchQuery, setSearchQuery] = useState('')
     const [currentPage, setCurrentPage] = useState(1)
     const [pageSize, setPageSize] = useState(10)
+    const [hasInitialFetch, setHasInitialFetch] = useState(false)
     const [selectedFilter, setSelectedFilter] = useState(() => {
         const params = new URLSearchParams(window.location.search)
         return params.get('filter') || null
     })
+
     useEffect(() => {
+        // Skip API call if we already have products and no filters/search/pagination changes
+        // Only skip on initial page load without search or filter
+        if (hasInitialFetch && products.length > 0 && !searchQuery && !selectedFilter && currentPage === 1 && pageSize === 10) {
+            return;
+        }
+
         const fetchProducts = () => {
             dispatch(getProducts({
                 search: searchQuery,
@@ -37,7 +45,7 @@ export const PublicProduct = () => {
 
         const timeoutId = setTimeout(fetchProducts, 300)
         return () => clearTimeout(timeoutId)
-    }, [dispatch, searchQuery, currentPage, pageSize, selectedFilter])
+    }, [dispatch, searchQuery, currentPage, pageSize, selectedFilter, hasInitialFetch, products.length])
 
     const handleFilterChange = (option) => {
         const value = option?.value || null
