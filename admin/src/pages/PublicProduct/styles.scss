@@ -1,6 +1,7 @@
 .public-product-page {
     min-height: 100vh;
     background: var(--st-background, #f6f9fb);
+    gap: 30px;
 
     &__content {
         max-width: 1200px;
