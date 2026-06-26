@@ -19,7 +19,7 @@ const Dashboard = () => {
     if (topProducts.length === 0) {
       dispatch(getTopProducts());
     }
-  }, [loading, stats, topProducts]);
+  }, []);
 
 
   const formatMetric = (value, type) => {
