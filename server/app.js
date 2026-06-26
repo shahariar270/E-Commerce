@@ -2,6 +2,9 @@ require('./config/env');
 const express = require('express');
 const app = express();
 const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const mongoSanitize = require('express-mongo-sanitize');
 const { default: mongoose } = require('mongoose');
 const router = require('./router');
 const ApiResponse = require('./utils/api_response');
@@ -12,7 +15,8 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
     cors: {
-        origin: "*"
+        origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+        methods: ["GET", "POST"]
     }
 });
 
@@ -32,6 +36,8 @@ const allowedOrigins = [
     'http://localhost:4173',
 ].filter(Boolean);
 
+app.use(helmet());
+
 app.use(cors({
     origin(origin, callback) {
         if (!origin || allowedOrigins.includes(origin)) {
@@ -43,12 +49,30 @@ app.use(cors({
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
-    optionsSuccessStatus: 200
+    optionsSuccessStatus: 200,
+    vary: 'Origin'
 }));
 
-app.use(express.json());
+app.use(express.json({ limit: '100kb' }));
 
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true, limit: '100kb' }));
+
+app.use(mongoSanitize({
+    replaceWith: '_',
+    onSanitize: ({ req, key }) => {
+        console.warn(`Sanitized key "${key}" in request from ${req.ip}`);
+    }
+}));
+
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 20,
+    message: { success: false, message: 'Too many attempts, please try again later' },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+app.use('/api/auth', authLimiter);
 
 app.use(router);
 

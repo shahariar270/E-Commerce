@@ -16,11 +16,17 @@ const Categories = () => {
     const [pageSize, setPageSize] = useState(10);
     const [searchQuery, setSearchQuery] = useState('');
     const [modalState, setModalState] = useState({ open: false, editId: null });
+    const [hasInitialFetch, setHasInitialFetch] = useState(false);
 
     useEffect(() => {
-        if (categories.length > 0) return;
+        // Skip API call if we already have categories and user hasn't changed pagination
+        // Only skip on initial page load
+        if (hasInitialFetch && categories.length > 0 && currentPage === 1 && pageSize === 10) {
+            return;
+        }
         dispatch(getCategories({ page: currentPage, limit: pageSize }));
-    }, [dispatch, currentPage, pageSize, categories]);
+        setHasInitialFetch(true);
+    }, [dispatch, currentPage, pageSize, hasInitialFetch, categories.length]);
 
     const handleOpenModal = useCallback((id = null) => setModalState({ open: true, editId: id }), []);
     const handleCloseModal = useCallback(() => setModalState({ open: false, editId: null }), []);
