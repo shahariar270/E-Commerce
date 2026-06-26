@@ -69,6 +69,7 @@ class product_controller {
             const { category, stock, search, filter, page = 1, per_page = 10 } = req.query;
             let query = {};
             let sort = { createdAt: -1 };
+            let priceSort = null;
 
             if (search) {
                 query.product_name = { $regex: search, $options: "i" };
@@ -81,10 +82,10 @@ class product_controller {
             if (filter) {
                 switch (filter) {
                     case 'hig_to_lo':
-                        sort = { price: -1 };
+                        priceSort = -1;
                         break;
                     case 'lo_to_hig':
-                        sort = { price: 1 };
+                        priceSort = 1;
                         break;
                     case 'a_to_z':
                         sort = { product_name: 1 };
@@ -100,10 +101,25 @@ class product_controller {
             const limit = parseInt(per_page);
             const skip = (parseInt(page) - 1) * limit;
 
-            const get_all_products = await Product.find(query)
-                .limit(limit)
-                .skip(skip)
-                .sort(sort);
+            let get_all_products;
+
+            if (priceSort !== null) {
+                // price is stored as String, so use $toInt to sort numerically
+                get_all_products = await Product.aggregate([
+                    { $match: query },
+                    { $addFields: { priceNum: { $toInt: '$price' } } },
+                    { $sort: { priceNum: priceSort } },
+                    { $skip: skip },
+                    { $limit: limit },
+                    { $project: { priceNum: 0 } },
+                ]);
+            } else {
+                get_all_products = await Product.find(query)
+                    .limit(limit)
+                    .skip(skip)
+                    .sort(sort);
+            }
+
             const total = await Product.countDocuments(query);
 
             return ApiResponse.success(res, "Product fetched", {
