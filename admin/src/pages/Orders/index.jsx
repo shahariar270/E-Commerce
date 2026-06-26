@@ -25,8 +25,9 @@ const Orders = () => {
   const { orders, pagination, loading } = useSelector((state) => state.order);
 
   useEffect(() => {
+    if (orders.length > 0) return;
     dispatch(getAllOrder({ page: currentPage, limit: pageSize, search: searchQuery }))
-  }, [dispatch, currentPage, pageSize, searchQuery])
+  }, [dispatch, currentPage, pageSize, searchQuery, orders])
 
 
   const columns = [
