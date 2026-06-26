@@ -18,8 +18,9 @@ const Categories = () => {
     const [modalState, setModalState] = useState({ open: false, editId: null });
 
     useEffect(() => {
+        if (categories.length > 0) return;
         dispatch(getCategories({ page: currentPage, limit: pageSize }));
-    }, [dispatch, currentPage, pageSize]);
+    }, [dispatch, currentPage, pageSize, categories]);
 
     const handleOpenModal = useCallback((id = null) => setModalState({ open: true, editId: id }), []);
     const handleCloseModal = useCallback(() => setModalState({ open: false, editId: null }), []);
