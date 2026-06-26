@@ -6,6 +6,7 @@ import Pagination from '@Component/Pagination'
 import Select from '@Component/Select'
 import './styles.scss'
 import SubHeading from '@Component/SubHeading'
+import SEO from '@Component/SEO'
 
 const filterOptions = [
     { label: 'Price: High to Low', value: 'hig_to_lo' },
@@ -62,8 +63,31 @@ export const PublicProduct = () => {
 
     const activeFilterOption = filterOptions.find(o => o.value === selectedFilter) || null
 
+    // Build a dynamic listing title reflecting search/filter state
+    const listingTitle = searchQuery
+      ? `Search: ${searchQuery}`
+      : selectedFilter
+      ? `Products — ${activeFilterOption?.label || "Sorted"}`
+      : "All Products"
+
+    const listingDescription = searchQuery
+      ? `Search results for "${searchQuery}". Shop quality products on a trusted Bangladeshi ecommerce platform and the best ecommerce CMS for your bangladeshi ecommerce business.`
+      : "Browse our full catalog of quality products. A complete bangladeshi ecommerce solution built on the best ecommerce CMS to support your bangladeshi ecommerce business."
+
     return (
         <div className="public-product-page">
+            {/* Product listing SEO — title-wise dynamic */}
+            <SEO
+              title={listingTitle}
+              description={listingDescription}
+              keywords={[
+                searchQuery ? `buy ${searchQuery} online` : "shop online Bangladesh",
+                searchQuery ? `${searchQuery} price in Bangladesh` : "best products Bangladesh",
+                "ecommerce CMS",
+                "bangladeshi ecommerce solution",
+              ]}
+              type="website"
+            />
             <div className="public-product-page__content">
                 <SubHeading
                     title="Our Products"
