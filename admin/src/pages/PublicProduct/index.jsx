@@ -25,10 +25,7 @@ export const PublicProduct = () => {
         const params = new URLSearchParams(window.location.search)
         return params.get('filter') || null
     })
-    const [hasFetched, setHasFetched] = useState(false)
-
     useEffect(() => {
-        if (hasFetched && products.length > 0) return;
         const fetchProducts = () => {
             dispatch(getProducts({
                 search: searchQuery,
@@ -36,12 +33,11 @@ export const PublicProduct = () => {
                 page: currentPage,
                 per_page: pageSize
             }))
-            setHasFetched(true)
         }
 
         const timeoutId = setTimeout(fetchProducts, 300)
         return () => clearTimeout(timeoutId)
-    }, [dispatch, searchQuery, currentPage, pageSize, products, selectedFilter, hasFetched])
+    }, [dispatch, searchQuery, currentPage, pageSize, selectedFilter])
 
     const handleFilterChange = (option) => {
         const value = option?.value || null
@@ -67,6 +63,15 @@ export const PublicProduct = () => {
                 />
 
                 <div className="public-product-page__filters">
+                    <div className="public-product-page__search">
+                        <input
+                            type="text"
+                            placeholder="Search products..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="st-input"
+                        />
+                    </div>
                     <Select
                         options={filterOptions}
                         value={activeFilterOption}
