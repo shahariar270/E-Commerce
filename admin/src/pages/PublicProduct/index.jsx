@@ -60,26 +60,25 @@ export const PublicProduct = () => {
                 <SubHeading
                     title="Our Products"
                     subtitle="Browse our collection of quality products"
-                />
-
-                <div className="public-product-page__filters">
-                    <div className="public-product-page__search">
-                        <input
+                    rightContent={
+                        <div className='st-flex st-gap-2'>
+                            <input
                             type="text"
                             placeholder="Search products..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             className="st-input"
                         />
-                    </div>
-                    <Select
-                        options={filterOptions}
-                        value={activeFilterOption}
-                        onChange={handleFilterChange}
-                        label="Sort by"
-                        isClearable={true}
-                    />
-                </div>
+                            <Select
+                                options={filterOptions}
+                                value={activeFilterOption}
+                                onChange={handleFilterChange}
+                                // label="Sort by"
+                                isClearable={true}
+                            />
+                        </div>
+                    }
+                />
 
                 {loading ? (
                     <div className="public-product-page__loading">

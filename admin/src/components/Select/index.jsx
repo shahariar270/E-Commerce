@@ -14,7 +14,9 @@ const Select = ({
 
     return (
         <div className="st-select-container">
-            <label className='st-label' htmlFor="type">{label}</label>
+            {label &&
+                <label className='st-label' htmlFor="type">{label}</label>
+            }
             <ReactSelect
                 options={options}
                 name={name}
