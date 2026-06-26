@@ -181,7 +181,7 @@ export const ProductSinge = () => {
                     </div>
 
                     <div className="tab-container">
-                        <Tab
+                        <Tab  
                             link={true}
                             variant="underline"
                             tabs={[
