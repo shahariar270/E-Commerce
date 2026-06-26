@@ -14,8 +14,9 @@ const Profile = () => {
   const profile = useSelector((state) => state.auth?.user);
 
   useEffect(() => {
+    if (profile?.email) return;
     dispatch(getProfile())
-  }, [])
+  }, [profile])
 
   const handleSubmit = (values, action) => {
     dispatch(updateProfile(values)).then(() => {
