@@ -30,7 +30,6 @@
   border-radius: 10px;
 
   color: #fff;
-  background: #1f2937;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18), 0 2px 8px rgba(0, 0, 0, 0.12);
   overflow: hidden; // clip the progress bar to the border-radius
 
@@ -40,21 +39,26 @@
     animation: toastSlideOut 0.22s cubic-bezier(0.06, 0.71, 0.55, 1) forwards;
   }
 
-  /* Per-type accent (left border + icon color) */
+  /* Per-type background + accent (left border + icon color) */
   &--success {
-    border-left: 4px solid #22c55e;
-    .st-toast__icon { color: #22c55e; }
-    .st-toast__progress { background: #22c55e; }
+    background: #16a34a;
+    border-left: 4px solid #bbf7d0;
+    .st-toast__icon { color: #ffffff; }
+    .st-toast__progress { background: #bbf7d0; }
   }
   &--warning {
-    border-left: 4px solid #f59e0b;
-    .st-toast__icon { color: #f59e0b; }
-    .st-toast__progress { background: #f59e0b; }
+    background: #f59e0b;
+    color: #1f2937;
+    border-left: 4px solid #fef3c7;
+    .st-toast__icon { color: #7c2d12; }
+    .st-toast__progress { background: #fef3c7; }
+    .st-toast__message { color: rgba(31, 41, 55, 0.9); }
   }
   &--error {
-    border-left: 4px solid #ef4444;
-    .st-toast__icon { color: #ef4444; }
-    .st-toast__progress { background: #ef4444; }
+    background: #dc2626;
+    border-left: 4px solid #fecaca;
+    .st-toast__icon { color: #ffffff; }
+    .st-toast__progress { background: #fecaca; }
   }
 }
 
