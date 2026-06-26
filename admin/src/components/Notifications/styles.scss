@@ -29,7 +29,6 @@
   padding: 14px 14px 14px 14px;
   border-radius: 10px;
 
-  color: #fff;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18), 0 2px 8px rgba(0, 0, 0, 0.12);
   overflow: hidden; // clip the progress bar to the border-radius
 
@@ -41,24 +40,28 @@
 
   /* Per-type background + accent (left border + icon color) */
   &--success {
-    background: #16a34a;
-    border-left: 4px solid #bbf7d0;
-    .st-toast__icon { color: #ffffff; }
-    .st-toast__progress { background: #bbf7d0; }
+    background: #dcfce7;
+    color: #166534;
+    border-left: 4px solid #22c55e;
+    .st-toast__icon { color: #16a34a; }
+    .st-toast__progress { background: #22c55e; }
+    .st-toast__message { color: rgba(22, 101, 52, 0.85); }
   }
   &--warning {
-    background: #f59e0b;
-    color: #1f2937;
-    border-left: 4px solid #fef3c7;
-    .st-toast__icon { color: #7c2d12; }
-    .st-toast__progress { background: #fef3c7; }
-    .st-toast__message { color: rgba(31, 41, 55, 0.9); }
+    background: #fffbeb;
+    color: #92400e;
+    border-left: 4px solid #f59e0b;
+    .st-toast__icon { color: #d97706; }
+    .st-toast__progress { background: #f59e0b; }
+    .st-toast__message { color: rgba(146, 64, 14, 0.85); }
   }
   &--error {
-    background: #dc2626;
-    border-left: 4px solid #fecaca;
-    .st-toast__icon { color: #ffffff; }
-    .st-toast__progress { background: #fecaca; }
+    background: #fee2e2;
+    color: #991b1b;
+    border-left: 4px solid #ef4444;
+    .st-toast__icon { color: #dc2626; }
+    .st-toast__progress { background: #ef4444; }
+    .st-toast__message { color: rgba(153, 27, 27, 0.85); }
   }
 }
 
