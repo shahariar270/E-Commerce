@@ -101,26 +101,43 @@
 .st-toast__close {
   flex-shrink: 0;
   margin-left: 4px;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 0;
   border: none;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.85);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.12);
+  color: inherit;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
 
-  svg { width: 14px; height: 14px; }
+  svg { width: 16px; height: 16px; }
 
   &:hover {
-    background: rgba(255, 255, 255, 0.18);
-    color: #fff;
+    background: rgba(0, 0, 0, 0.28);
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.08);
   }
-  &:active { transform: scale(0.92); }
+  &:active { transform: scale(0.9); }
+}
+
+// Highlight the close button with a stronger look on the light backgrounds
+.st-toast--success .st-toast__close {
+  background: #22c55e;
+  color: #fff;
+  &:hover { background: #16a34a; box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.3); }
+}
+.st-toast--warning .st-toast__close {
+  background: #f59e0b;
+  color: #fff;
+  &:hover { background: #d97706; box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.3); }
+}
+.st-toast--error .st-toast__close {
+  background: #ef4444;
+  color: #fff;
+  &:hover { background: #dc2626; box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.3); }
 }
 
 /* Progress bar — sits on the very bottom edge, depletes with timeout */
