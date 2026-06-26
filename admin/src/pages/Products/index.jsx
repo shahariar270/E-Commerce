@@ -21,10 +21,8 @@ const Products = () => {
   const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
-    // Skip API call if products already exist and we are on the default first page without search
-    if (products.length > 0 && !searchQuery && currentPage === 1 && pageSize === 10) {
-      return;
-    }
+    // Skip API call if products already exist in state
+    if (products.length > 0) return;
 
     const fetchProducts = () => {
       dispatch(getProducts({ search: searchQuery, page: currentPage, per_page: pageSize }));
@@ -32,7 +30,7 @@ const Products = () => {
 
     const timeoutId = setTimeout(fetchProducts, 300);
     return () => clearTimeout(timeoutId);
-  }, [searchQuery, currentPage, pageSize, dispatch]);
+  }, [searchQuery, currentPage, pageSize, dispatch, products]);
 
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
