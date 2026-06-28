@@ -8,6 +8,13 @@ import './styles.scss';
 import { createCart } from '@Store/slices/cartSlice';
 import { Comments } from '@Component/Comments';
 import { createReview, getReviews } from '@Store/slices/reviewSlice';
+import SEO from '@Component/SEO';
+import {
+  productDescription,
+  productKeywords,
+  productJsonLd,
+  productBreadcrumbJsonLd,
+} from '@utils/seo';
 
 const normalizeProductId = (product) => {
     if (!product) return null;
@@ -129,6 +136,19 @@ export const ProductSinge = () => {
         <div className="product-single-container">
             {current ? (
                 <>
+                    {/* Per-product title-wise SEO with structured data */}
+                    <SEO
+                      title={current.product_name}
+                      description={productDescription(current)}
+                      keywords={productKeywords(current)}
+                      image={current.image_gallery?.[0]}
+                      url={typeof window !== "undefined" ? `${window.location.origin}/product/${current._id}` : undefined}
+                      type="product"
+                      jsonLd={[
+                        productJsonLd(current, { reviews: productReviews, averageRating }),
+                        productBreadcrumbJsonLd(current),
+                      ]}
+                    />
                     <div className="st-single-product">
                         <div className="product-image-wrapper">
                             <img

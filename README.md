@@ -1,8 +1,8 @@
 # MERN E-commerce Platform
 
-A full-stack e-commerce application built to demonstrate practical MERN development, end-to-end feature ownership, and consistent learning through a real product workflow. I chose e-commerce because it forces both frontend and backend depth: authentication, role-based access, product management, cart totals, checkout, order status, file uploads, validation, reusable UI, and connected database relationships.
+A full-stack e-commerce application built to demonstrate practical MERN development, end-to-end feature ownership, and consistent learning through a real product workflow. Positioned as a **bangladeshi ecommerce solution** and one of the **best ecommerce CMS** options for launching a **bangladeshi ecommerce business**, it ships with global SEO and per-product, title-wise SEO out of the box.
 
-This project is not only a UI demo. It is a working application structure with an admin experience, customer shopping flow, REST API, MongoDB models, JWT authentication, Redux Toolkit state management, and shared response handling.
+This project is not only a UI demo. It is a working application structure with an admin experience, customer shopping flow, REST API, MongoDB models, JWT authentication, Redux Toolkit state management, shared response handling, and SEO-friendly metadata with JSON-LD structured data.
 
 ## Why I Built This
 
@@ -15,6 +15,7 @@ The main purpose of this project is to preview my skill, dedication, and growth 
 - React Router for public, user, and admin routes
 - Redux Toolkit for async data flow and centralized state
 - Formik and Yup for forms and validation
+- react-helmet-async for SEO metadata and JSON-LD structured data
 - SCSS component styling
 - Vitest for frontend test support
 
@@ -46,6 +47,14 @@ The main purpose of this project is to preview my skill, dedication, and growth 
 - Order management with status updates
 - Protected admin-only API access
 
+**SEO**
+- Global SEO with the target keywords: `best ecommerce cms`, `bangladeshi ecommerce solution`, `bangladeshi ecommerce business`
+- Per-product, title-wise SEO on every product detail page (dynamic title, description, keywords, canonical URL)
+- Open Graph and Twitter Card meta tags for rich social sharing
+- JSON-LD structured data: `Product` schema (offers, aggregate rating, reviews) and `BreadcrumbList`
+- Reusable `<SEO>` component and centralized helpers in `admin/src/Utils/seo.js`
+- Keyword-rich, descriptive `alt` text on product images
+
 **System behavior**
 - JWT token authentication stored client-side
 - Role-based backend middleware for admin actions
@@ -60,11 +69,11 @@ The main purpose of this project is to preview my skill, dedication, and growth 
 E-commerce/
   admin/                 React + Vite frontend
     src/
-      components/        Reusable UI components
+      components/        Reusable UI components (includes SEO)
       pages/             Admin and auth pages
       UserPage/          Customer shopping pages
       store/             Redux store, slices, middleware
-      Utils/             API client, helpers, validation schemas
+      Utils/             API client, helpers, validation schemas, seo.js
 
   server/                Express + MongoDB backend
     controls/            Request handlers / business logic

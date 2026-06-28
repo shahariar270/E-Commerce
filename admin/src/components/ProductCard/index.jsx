@@ -4,6 +4,11 @@ import { useNavigate } from 'react-router-dom';
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
+
+  // Keyword-rich, descriptive alt text for product images (SEO + accessibility)
+  const categoryName = product.category?.[0]?.name?.trim();
+  const productAlt = `Buy ${product.product_name}${categoryName ? ` — ${categoryName}` : ""} online in Bangladesh`;
+
   const getStockStatus = (stock) => {
     const statusMap = {
       in_stock: { label: 'In Stock', class: 'in-stock' },
@@ -19,7 +24,12 @@ const ProductCard = ({ product }) => {
     <div className="product-card">
       <div className="product-card__image">
         <div className="product-card__placeholder">
-          <img height={'120px'} src={product.image_gallery?.[0] || "https://dummyimage.com/600x600/eee/999&text=No+Image"} />
+          <img
+            height={'120px'}
+            src={product.image_gallery?.[0] || "https://dummyimage.com/600x600/eee/999&text=No+Image"}
+            alt={productAlt}
+            loading="lazy"
+          />
         </div>
         <span className={`product-card__stock product-card__stock--${stockInfo.class}`}>
           {stockInfo.label}

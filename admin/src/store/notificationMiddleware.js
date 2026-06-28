@@ -8,7 +8,7 @@ export const notificationMiddleware = store => next => action => {
     const message = action.payload?.message || 'Operation successful!';
     store.dispatch(showNotification({
       message,
-      delay: 2000,
+      timeout: 4000,
       type: 'success'
     }));
   }
@@ -17,7 +17,7 @@ export const notificationMiddleware = store => next => action => {
     const message = action.error?.message || 'Something went wrong!';
     store.dispatch(showNotification({
       message,
-      delay: 3000,
+      timeout: 4000,
       type: 'error'
     }));
   }
