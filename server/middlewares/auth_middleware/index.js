@@ -4,7 +4,10 @@ const ApiResponse = require('../../utils/api_response');
 
 class auth_middleware {
     constructor() {
-        this.secret = process.env.JWT_TOKEN || 'default_secret_key';
+        this.secret = process.env.JWT_TOKEN;
+        if (!this.secret) {
+            throw new Error('FATAL: JWT_TOKEN environment variable is not set');
+        }
 
         this.verify_token = this.verify_token.bind(this);
         this.verify_role = this.verify_role.bind(this);
