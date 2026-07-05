@@ -17,6 +17,7 @@ export const getProducts = createAsyncThunk(
   async (params = {}) => {
     const query = new URLSearchParams();
     if (params.search) query.append('search', params.search);
+    if (params.filter) query.append('filter', params.filter);
     if (params.page) query.append('page', params.page);
     if (params.per_page) query.append('per_page', params.per_page);
     const queryString = query.toString();

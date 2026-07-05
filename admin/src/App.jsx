@@ -18,6 +18,9 @@ import ErrorPage from "./pages/ErrorPage";
 import Cart from "./UserPage/Cart";
 import { Checkout } from "./UserPage/Checkout";
 import Order from "./UserPage/Order";
+import { useEffect } from "react";
+import { io } from "socket.io-client";
+import SEO from "./components/SEO";
 import { getCookie } from "@utils/helper";
 
 const ProtectedAdmin = ({ children }) => {
@@ -35,7 +38,6 @@ const ProtectedAdmin = ({ children }) => {
     }
     return children;
 };
-
 
 function App() {
   // useEffect(() => {
@@ -56,6 +58,16 @@ function App() {
   return (
 
     <Router>
+      {/* Site-wide default SEO — target keywords applied globally */}
+      <SEO
+        title="Home"
+        description="Launch and manage your online store with the best ecommerce CMS. A complete bangladeshi ecommerce solution built to grow your bangladeshi ecommerce business."
+        keywords={[
+          "best ecommerce CMS Bangladesh",
+          "bangladeshi ecommerce platform",
+          "start ecommerce business Bangladesh",
+        ]}
+      />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

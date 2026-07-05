@@ -12,10 +12,14 @@ import Tooltip from "@Component/Tooltip";
 const Profile = () => {
   const dispatch = useDispatch();
   const profile = useSelector((state) => state.auth?.user);
+  const [hasProfileFetched, setHasProfileFetched] = useState(false);
 
   useEffect(() => {
-    dispatch(getProfile())
-  }, [])
+    // Only fetch profile if we haven't fetched it yet
+    if (!hasProfileFetched) {
+      dispatch(getProfile()).then(() => setHasProfileFetched(true));
+    }
+  }, [dispatch, hasProfileFetched])
 
   const handleSubmit = (values, action) => {
     dispatch(updateProfile(values)).then(() => {
@@ -176,8 +180,7 @@ const Profile = () => {
 
           </Form>
         )
-      }
-      }
+      }}
 
     </Formik>
   );

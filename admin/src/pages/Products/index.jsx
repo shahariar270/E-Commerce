@@ -19,20 +19,23 @@ const Products = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [hasInitialFetch, setHasInitialFetch] = useState(false);
 
   useEffect(() => {
-    // Skip API call if products already exist and we are on the default first page without search
-    if (products.length > 0 && !searchQuery && currentPage === 1 && pageSize === 10) {
+    // Skip API call if we already have products and user hasn't changed search/filters
+    // Only skip on initial page load without search
+    if (hasInitialFetch && products.length > 0 && !searchQuery && currentPage === 1 && pageSize === 10) {
       return;
     }
 
     const fetchProducts = () => {
       dispatch(getProducts({ search: searchQuery, page: currentPage, per_page: pageSize }));
+      setHasInitialFetch(true);
     }
 
     const timeoutId = setTimeout(fetchProducts, 300);
     return () => clearTimeout(timeoutId);
-  }, [searchQuery, currentPage, pageSize, dispatch]);
+  }, [searchQuery, currentPage, pageSize, dispatch, hasInitialFetch, products.length]);
 
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this product?")) {

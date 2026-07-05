@@ -20,13 +20,21 @@ const Orders = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [hasInitialFetch, setHasInitialFetch] = useState(false);
   const dispatch = useDispatch();
 
   const { orders, pagination, loading } = useSelector((state) => state.order);
 
   useEffect(() => {
+    // Skip API call if we already have orders and user hasn't changed search/pagination
+    // Only skip on initial page load without search
+    if (hasInitialFetch && orders.length > 0 && !searchQuery && currentPage === 1 && pageSize === 10) {
+      return;
+    }
+    
     dispatch(getAllOrder({ page: currentPage, limit: pageSize, search: searchQuery }))
-  }, [dispatch, currentPage, pageSize, searchQuery])
+    setHasInitialFetch(true);
+  }, [dispatch, currentPage, pageSize, searchQuery, hasInitialFetch, orders.length])
 
 
   const columns = [

@@ -53,9 +53,11 @@ app.use(cors({
     vary: 'Origin'
 }));
 
+app.use(express.json({ limit: '100kb' }));
+
+app.use(express.urlencoded({ extended: true, limit: '100kb' }));
 app.use(express.json({ limit: '10kb' }));
 
-app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
 app.use(mongoSanitize({
     replaceWith: '_',

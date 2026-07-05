@@ -10,13 +10,15 @@ import ErrorMessage from '@Component/ErrorMessage';
 
 export const CategoryFormInner = ({ id, openModalHandler, handleCloseModal }) => {
     const dispatch = useDispatch();
-    const { currentCategory } = useSelector((state) => state.category);
+    const { currentCategory, categories } = useSelector((state) => state.category);
 
     useEffect(() => {
         if (id) {
+            const existingCategory = categories.find(c => c._id === id);
+            if (existingCategory) return;
             dispatch(getCategoryById(id));
         }
-    }, [id]);
+    }, [id, categories]);
 
     const handleSubmit = (values, { setSubmitting, resetForm }) => {
         if (id) {
