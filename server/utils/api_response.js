@@ -13,8 +13,9 @@ class ApiResponse {
     }
 
     static error(res, message = "Error", statusCode = 500, data = null) {
+        const isDev = process.env.NODE_ENV === 'development';
         return res.status(statusCode).json(
-            new ApiResponse(statusCode, message, data, false)
+            new ApiResponse(statusCode, message, isDev ? data : null, false)
         );
     }
 }
