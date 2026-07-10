@@ -38,7 +38,6 @@ const ProtectedAdmin = ({ children }) => {
     return children;
 };
 
-
 function App() {
   // useEffect(() => {
   //   const socket = io("http://localhost:5000");
