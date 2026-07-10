@@ -18,7 +18,6 @@ import ErrorPage from "./pages/ErrorPage";
 import Cart from "./UserPage/Cart";
 import { Checkout } from "./UserPage/Checkout";
 import Order from "./UserPage/Order";
-import { useEffect } from "react";
 import { io } from "socket.io-client";
 import SEO from "./components/SEO";
 import { getCookie } from "@utils/helper";
