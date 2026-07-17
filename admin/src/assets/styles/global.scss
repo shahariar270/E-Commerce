@@ -14,18 +14,19 @@
 @use "common/formInner";
 @use "common/root";
 @use "common/typography";
+@use "eshop/tokens";
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
 
 :root {
-    --st-primary: #6200ee;
-    --st-primary-hover: #3700b3;
-    --st-secondary: #dadfe6;
-    --st-secondary-hover: #c8d0da;
-    --st-error: #b00020;
-    --st-background: #f6f9fb;
-    --st-text-primary: #313a45;
+    --st-primary: #db4444;
+    --st-primary-hover: #b93333;
+    --st-secondary: #f1f5f9;
+    --st-secondary-hover: #e2e8f0;
+    --st-error: #db4444;
+    --st-background: #f8f9fb;
+    --st-text-primary: #111827;
     --st-text-white: #fff;
-    --st-border: #e3e7ec;
+    --st-border: #e2e8f0;
 }
 body {
     margin: 0;
