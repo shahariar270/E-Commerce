@@ -73,8 +73,8 @@ export default function AreaChart({ data = SAMPLE_DATA }) {
         <defs>
           {/* Subtle gradient fill for the area */}
           <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.0" />
+            <stop offset="0%" stopColor="#db4444" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="#db4444" stopOpacity="0.0" />
           </linearGradient>
         </defs>
 
@@ -94,13 +94,13 @@ export default function AreaChart({ data = SAMPLE_DATA }) {
         <path d={areaPath} fill="url(#areaGradient)" />
 
         {/* The Top Line Stroke */}
-        <path d={linePath} fill="none" stroke="#3b82f6" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+        <path d={linePath} fill="none" stroke="#db4444" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
 
         {/* Data Interactive Dots & Bottom Date Labels */}
         {points.map((p, i) => (
           <g key={i}>
             {/* Dots on line junctions */}
-            <circle cx={p.x} cy={p.y} r="5" fill="#3b82f6" stroke="#ffffff" strokeWidth="2" />
+            <circle cx={p.x} cy={p.y} r="5" fill="#db4444" stroke="#ffffff" strokeWidth="2" />
             
             {/* Tooltip value shown right above the dot */}
             <text x={p.x} y={p.y - 10} textAnchor="middle" fontSize="11" fontWeight="600" fill="#1f2937">
