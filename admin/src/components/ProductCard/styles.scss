@@ -1,44 +1,55 @@
 .product-card {
-  background: var(--st-text-white, #fff);
-  border-radius: 12px;
+  background: var(--surface-card, #fff);
+  border: 1px solid var(--border-default, #e2e8f0);
+  border-radius: var(--radius-md, 10px);
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: var(--shadow-card, 0 1px 3px rgba(15, 23, 42, 0.06));
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover, 0 12px 28px rgba(15, 23, 42, 0.12));
   }
 
   &__image {
     position: relative;
-    height: 200px;
-    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+    height: 180px;
+    background: var(--surface-muted, #f1f5f9);
     display: flex;
     align-items: center;
     justify-content: center;
-  }
+    padding: 16px;
 
-  &__placeholder {
-    width: 80px;
-    height: 80px;
-    color: #9ca3af;
-
-    svg {
+    img {
       width: 100%;
       height: 100%;
+      object-fit: contain;
     }
+  }
+
+  &__category-pill {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: var(--surface-card, #fff);
+    color: var(--text-body, #334155);
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: var(--radius-full, 9999px);
+    border: 1px solid var(--border-default, #e2e8f0);
   }
 
   &__stock {
     position: absolute;
-    top: 12px;
-    right: 12px;
+    top: 10px;
+    right: 10px;
     padding: 4px 10px;
-    border-radius: 20px;
+    border-radius: var(--radius-full, 9999px);
     font-size: 11px;
-    font-weight: 600;
+    font-weight: var(--weight-semibold, 600);
     text-transform: uppercase;
     letter-spacing: 0.5px;
 
@@ -59,67 +70,65 @@
   }
 
   &__content {
-    padding: 16px;
-  }
-
-  &__category {
+    padding: 14px;
     display: flex;
+    flex-direction: column;
     gap: 6px;
-    margin-bottom: 8px;
-    flex-wrap: wrap;
-
-    span {
-      font-size: 11px;
-      color: var(--st-primary, #6200ee);
-      background: rgba(98, 0, 238, 0.08);
-      padding: 3px 8px;
-      border-radius: 4px;
-      font-weight: 500;
-    }
+    flex: 1;
   }
 
   &__title {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--st-text-primary, #313a45);
-    margin: 0 0 8px;
+    font-size: 15px;
+    font-weight: var(--weight-semibold, 600);
+    color: var(--text-heading, #111827);
+    margin: 0;
     line-height: 1.4;
   }
 
   &__description {
     font-size: 13px;
-    color: #6b7280;
-    margin: 0 0 16px;
+    color: var(--text-muted, #94a3b8);
+    margin: 0;
     line-height: 1.5;
+    flex: 1;
   }
 
   &__footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-top: 12px;
-    border-top: 1px solid var(--st-border, #e3e7ec);
+    gap: 8px;
+    padding-top: 10px;
+    margin-top: 4px;
+    border-top: 1px solid var(--border-default, #e2e8f0);
   }
 
   &__price {
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--st-text-primary, #313a45);
+    font-size: 16px;
+    font-weight: var(--weight-bold, 700);
+    color: var(--text-brand, #db4444);
   }
 
   &__btn {
-    padding: 8px 16px;
-    background: var(--st-primary, #6200ee);
-    color: var(--st-text-white, #fff);
+    padding: 9px 16px;
+    background: var(--color-gray-900, #111827);
+    color: #fff;
     border: none;
-    border-radius: 6px;
+    border-radius: var(--radius-sm, 6px);
     font-size: 13px;
-    font-weight: 500;
+    font-family: var(--font-sans);
+    font-weight: var(--weight-medium, 500);
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: background 0.15s ease;
+    white-space: nowrap;
 
-    &:hover {
-      background: var(--st-primary-hover, #3700b3);
+    &:hover:not(:disabled) {
+      background: var(--color-primary, #db4444);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
   }
 }

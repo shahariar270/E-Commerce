@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { getProducts } from '@Store/slices/productSlice'
+import { getCategories } from '@Store/slices/categorySlice'
 import ProductCard from '@Component/ProductCard'
 import Pagination from '@Component/Pagination'
 import Select from '@Component/Select'
+import SectionHeading from '@Component/Storefront/SectionHeading'
 import './styles.scss'
-import SubHeading from '@Component/SubHeading'
 import SEO from '@Component/SEO'
 
 const filterOptions = [
@@ -16,10 +18,15 @@ const filterOptions = [
 ]
 
 export const PublicProduct = () => {
+    const navigate = useNavigate()
     const dispatch = useDispatch()
     const { data: products, loading, pagination } = useSelector((state) => state.product)
+    const { categories } = useSelector((state) => state.category)
 
-    const [searchQuery, setSearchQuery] = useState('')
+    const [searchQuery, setSearchQuery] = useState(() => {
+        const params = new URLSearchParams(window.location.search)
+        return params.get('search') || ''
+    })
     const [currentPage, setCurrentPage] = useState(1)
     const [pageSize, setPageSize] = useState(10)
     const [hasInitialFetch, setHasInitialFetch] = useState(false)
@@ -27,11 +34,21 @@ export const PublicProduct = () => {
         const params = new URLSearchParams(window.location.search)
         return params.get('filter') || null
     })
+    const [selectedCategory, setSelectedCategory] = useState(() => {
+        const params = new URLSearchParams(window.location.search)
+        return params.get('category') || null
+    })
+
+    useEffect(() => {
+        if (!categories || categories.length === 0) {
+            dispatch(getCategories({ page: 1, limit: 20 }))
+        }
+    }, [dispatch])
 
     useEffect(() => {
         // Skip API call if we already have products and no filters/search/pagination changes
         // Only skip on initial page load without search or filter
-        if (hasInitialFetch && products.length > 0 && !searchQuery && !selectedFilter && currentPage === 1 && pageSize === 10) {
+        if (hasInitialFetch && products.length > 0 && !searchQuery && !selectedFilter && !selectedCategory && currentPage === 1 && pageSize === 10) {
             return;
         }
 
@@ -39,14 +56,16 @@ export const PublicProduct = () => {
             dispatch(getProducts({
                 search: searchQuery,
                 filter: selectedFilter,
+                category: selectedCategory,
                 page: currentPage,
                 per_page: pageSize
             }))
+            setHasInitialFetch(true)
         }
 
         const timeoutId = setTimeout(fetchProducts, 300)
         return () => clearTimeout(timeoutId)
-    }, [dispatch, searchQuery, currentPage, pageSize, selectedFilter, hasInitialFetch, products.length])
+    }, [dispatch, searchQuery, currentPage, pageSize, selectedFilter, selectedCategory, hasInitialFetch, products.length])
 
     const handleFilterChange = (option) => {
         const value = option?.value || null
@@ -61,13 +80,26 @@ export const PublicProduct = () => {
         window.history.replaceState({}, '', url)
     }
 
+    const handleCategoryChange = (categoryId) => {
+        setSelectedCategory(categoryId)
+        setCurrentPage(1)
+        const url = new URL(window.location)
+        if (categoryId) {
+            url.searchParams.set('category', categoryId)
+        } else {
+            url.searchParams.delete('category')
+        }
+        window.history.replaceState({}, '', url)
+    }
+
     const activeFilterOption = filterOptions.find(o => o.value === selectedFilter) || null
+    const activeCategory = categories?.find(c => c._id === selectedCategory)
 
     // Build a dynamic listing title reflecting search/filter state
     const listingTitle = searchQuery
       ? `Search: ${searchQuery}`
-      : selectedFilter
-      ? `Products — ${activeFilterOption?.label || "Sorted"}`
+      : activeCategory
+      ? activeCategory.name
       : "All Products"
 
     const listingDescription = searchQuery
@@ -88,29 +120,49 @@ export const PublicProduct = () => {
               ]}
               type="website"
             />
-            <div className="public-product-page__content">
-                <SubHeading
-                    title="Our Products"
-                    subtitle="Browse our collection of quality products"
-                    rightContent={
-                        <div className='st-flex st-gap-2'>
-                            <input
+            <div className="eshop-container public-product-page__content">
+                <div className="public-product-page__breadcrumb">
+                    <span onClick={() => navigate('/')}>Home</span> / <span className="is-current">Products</span>
+                </div>
+
+                <SectionHeading eyebrow="Shop" title={listingTitle} />
+                <p className="public-product-page__count">{pagination.total} items</p>
+
+                <div className="public-product-page__toolbar">
+                    <div className="public-product-page__pills">
+                        <button
+                            className={`public-product-page__pill ${!selectedCategory ? 'is-active' : ''}`}
+                            onClick={() => handleCategoryChange(null)}
+                        >
+                            All
+                        </button>
+                        {categories?.map((cat) => (
+                            <button
+                                key={cat._id}
+                                className={`public-product-page__pill ${selectedCategory === cat._id ? 'is-active' : ''}`}
+                                onClick={() => handleCategoryChange(cat._id)}
+                            >
+                                {cat.name}
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="public-product-page__search-sort">
+                        <input
                             type="text"
                             placeholder="Search products..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="st-input"
+                            className="public-product-page__search"
                         />
-                            <Select
-                                options={filterOptions}
-                                value={activeFilterOption}
-                                onChange={handleFilterChange}
-                                // label="Sort by"
-                                isClearable={true}
-                            />
-                        </div>
-                    }
-                />
+                        <Select
+                            options={filterOptions}
+                            value={activeFilterOption}
+                            onChange={handleFilterChange}
+                            isClearable={true}
+                        />
+                    </div>
+                </div>
 
                 {loading ? (
                     <div className="public-product-page__loading">
