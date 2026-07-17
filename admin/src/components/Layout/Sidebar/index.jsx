@@ -2,6 +2,7 @@ import { getCookie } from '@utils/helper'
 import { jwtDecode } from 'jwt-decode'
 import React, { useEffect, useState } from 'react'
 import { NavLink, useNavigate, useLocation } from 'react-router-dom'
+import logo from '../../../assets/images/logo.svg'
 import './styles.scss'
 
 const NAV_CONFIG = {
@@ -14,9 +15,10 @@ const NAV_CONFIG = {
         { label: 'Profile', link: "/admin/profile", icon: "profile" },
     ],
     user: [
-        { label: 'Products', link: "/", icon: "product" },
+        { label: 'Home', link: "/", icon: "product" },
+        { label: 'Products', link: "/products", icon: "product" },
         { label: 'My Orders', link: "/orders", icon: "cart" },
-        { label: 'Wishlist', link: "/wishlist", icon: "wishlist" },
+        { label: 'Cart', link: "/cart", icon: "wishlist" },
         { label: 'Profile', link: "/profile", icon: "profile" },
         { label: 'Settings', link: "/settings", icon: "settings" },
     ],
@@ -52,7 +54,7 @@ const NavItem = ({ label, icon, link, isOpen }) => {
             end={link === '/' || link === '/admin'}
             className={({ isActive }) => {
                 const isProductActive = (link === '/admin/products' && location.pathname.startsWith('/admin/product')) ||
-                                       (link === '/' && location.pathname.startsWith('/product'));
+                                       (link === '/products' && location.pathname.startsWith('/product'));
                 const isOrderActive = (link === '/admin/orders' && location.pathname.startsWith('/admin/order')) ||
                                      (link === '/orders' && location.pathname.startsWith('/order'));
                 const activeClass = (isActive || isProductActive || isOrderActive) ? 'st-sidebar__nav-item--active' : '';
@@ -102,10 +104,11 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                 >
                     <div className="st-sidebar__header">
                         <div className="st-sidebar__logo">
-                            The Curator
+                            <img src={logo} alt="E-commerce" className="st-sidebar__logo-img" />
+                            <span className={`st-sidebar__logo-text ${!isOpen ? 'st-sidebar__logo-text--hidden' : ''}`}>E-commerce</span>
                         </div>
                         <div className="st-sidebar__tagline">
-                            Premium Inventory
+                            Admin Panel
                         </div>
                     </div>
 

@@ -55,13 +55,27 @@
     }
 
     &__logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
         font-size: 16px;
         font-weight: 600;
         color: var(--color-primary);
+    }
+
+    &__logo-img {
+        width: 28px;
+        height: 28px;
+        flex-shrink: 0;
+        object-fit: contain;
+    }
+
+    &__logo-text {
         opacity: 1;
         transition: opacity 0.2s ease;
+        white-space: nowrap;
 
-        .st-sidebar--collapsed & {
+        &--hidden {
             opacity: 0;
         }
     }
@@ -128,10 +142,10 @@
         &--active {
             color: var(--color-primary);
             font-weight: 500;
-            background-color: #ede9fe;
+            background-color: #fdecec;
 
             &:hover {
-                background-color: #ede9fe;
+                background-color: #fdecec;
             }
         }
     }
@@ -177,7 +191,7 @@
         width: 32px;
         height: 32px;
         border-radius: 50%;
-        background: linear-gradient(135deg, var(--color-primary), #a78bfa);
+        background: linear-gradient(135deg, var(--color-primary), #f87171);
         display: flex;
         align-items: center;
         justify-content: center;

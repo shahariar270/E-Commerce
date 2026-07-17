@@ -1,10 +1,27 @@
 .st-login-page {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 16px;
   min-height: 100vh;
   background-color: var(--bg-body);
   padding: 20px;
+}
+
+.st-login-back {
+  margin: 0;
+
+  a {
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--color-primary);
+    }
+  }
 }
 
 .st-login-card {
