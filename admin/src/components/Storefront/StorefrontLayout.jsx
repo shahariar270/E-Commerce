@@ -1,0 +1,33 @@
+import React, { useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCart } from '@Store/slices/cartSlice';
+import Notification from '@Component/Notifications';
+import UtilityBar from './UtilityBar';
+import Nav from './Nav';
+import Footer from './Footer';
+
+const StorefrontLayout = () => {
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(getCart());
+    }
+  }, [dispatch, isAuthenticated]);
+
+  return (
+    <div className="eshop-theme">
+      <UtilityBar />
+      <Nav />
+      <main style={{ flex: 1 }}>
+        <Outlet />
+      </main>
+      <Footer />
+      <Notification />
+    </div>
+  );
+};
+
+export default StorefrontLayout;

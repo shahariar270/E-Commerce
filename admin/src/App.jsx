@@ -14,10 +14,12 @@ import Profile from "./pages/Profile";
 import Categories from "./pages/Categories";
 import { PublicProduct } from "@Pages/PublicProduct";
 import { ProductSinge } from "./UserPage/ProductSinge";
+import Home from "./UserPage/Home";
 import ErrorPage from "./pages/ErrorPage";
 import Cart from "./UserPage/Cart";
 import { Checkout } from "./UserPage/Checkout";
 import Order from "./UserPage/Order";
+import StorefrontLayout from "@Component/Storefront/StorefrontLayout";
 import { io } from "socket.io-client";
 import SEO from "./components/SEO";
 import { getCookie } from "@utils/helper";
@@ -71,16 +73,20 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        <Route path="/" element={<Layout />}>
-          <Route index element={<PublicProduct />} />
+        <Route element={<StorefrontLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="products" element={<PublicProduct />} />
           <Route path="product/:id" element={<ProductSinge />} />
+          <Route path="cart" element={<Cart />} />
+          <Route path="checkout" element={<Checkout />} />
+        </Route>
+
+        <Route element={<Layout />}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="orders" element={<Order />} />
-          <Route path="wishlist" element={<Cart />} />
           <Route path="profile" element={<Profile />} />
           <Route path="settings" element={<Settings />} />
           <Route path="*" element={<ErrorPage />} />
-          <Route path="checkout" element={<Checkout />} />
         </Route>
 
         <Route path="/admin" element={<ProtectedAdmin><Layout /></ProtectedAdmin>}>

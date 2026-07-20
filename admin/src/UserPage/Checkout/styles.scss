@@ -1,43 +1,92 @@
-.st-checkout__form {
-    display: flex;
-    gap: 24px;
-    width: 100%;
-}
-
-.st-checkout__field {
-    width: 50%;
-    display: flex;
-    flex-direction: column;
-}
-
 .st-checkout {
+    padding: 28px 0;
+
+    &__title {
+        font-size: var(--text-2xl);
+        font-weight: var(--weight-semibold);
+        color: var(--text-heading);
+        margin: 0 0 24px;
+    }
+
+    &__form {
+        display: flex;
+        gap: 32px;
+        width: 100%;
+        align-items: flex-start;
+
+        @media (max-width: 768px) {
+            flex-direction: column;
+        }
+    }
+
+    &__field {
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        background: var(--surface-card);
+        border: 1px solid var(--border-default);
+        border-radius: var(--radius-md);
+
+        @media (max-width: 768px) {
+            width: 100%;
+        }
+
+        h3 {
+            padding: 20px 24px 0;
+            margin: 0;
+            font-size: var(--text-lg);
+            color: var(--text-heading);
+        }
+    }
+
     &--input-field {
         padding: 24px;
     }
 }
 
 .st-checkout_box {
-    background: var(--st-secondary);
+    width: 360px;
+    flex-shrink: 0;
+    background: var(--surface-card);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
     display: flex;
     flex-direction: column;
-    gap: 32px;
-    h3 {
-        padding: 12px;
-        margin: 0;
+    gap: 8px;
+
+    @media (max-width: 768px) {
+        width: 100%;
     }
+
+    h3 {
+        padding: 20px 24px 0;
+        margin: 0;
+        font-size: var(--text-lg);
+        color: var(--text-heading);
+    }
+
     &--summary {
+        padding: 0 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
         .st-cart__item {
             background: none;
+            border: none;
+            padding: 0;
             display: flex;
             align-items: center;
         }
     }
+
     &--total {
-        padding: 24px;
+        padding: 16px 24px;
+        border-top: 1px solid var(--border-default);
+        margin-top: 8px;
     }
 }
 
-.st-checkout--button{
-    padding: 12px;
-    
+.st-checkout--button {
+    padding: 0 24px 24px;
 }

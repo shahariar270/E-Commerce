@@ -2,19 +2,19 @@
     width: min(1120px, calc(100% - 32px));
     margin: 0 auto;
     padding: 32px 0 48px;
-    background-color: var(--st-background);
+    background-color: var(--surface-muted);
     min-height: 100vh;
     font-family: "Inter", sans-serif;
-    color: var(--st-text-primary);
+    color: var(--text-heading);
 
     .st-single-product {
         display: grid;
         grid-template-columns: minmax(280px, 420px) 1fr;
         gap: 32px;
-        background: var(--st-text-white);
+        background: var(--surface-card);
         padding: 24px;
         border-radius: 8px;
-        border: 1px solid var(--st-border);
+        border: 1px solid var(--border-default);
         margin-bottom: 24px;
         align-items: start;
 
@@ -28,8 +28,8 @@
                 aspect-ratio: 1;
                 border-radius: 8px;
                 object-fit: contain;
-                background: var(--st-background);
-                border: 1px solid var(--st-border);
+                background: var(--surface-muted);
+                border: 1px solid var(--border-default);
             }
 
             .image-thumbnails {
@@ -43,16 +43,16 @@
                     width: 64px;
                     height: 64px;
                     flex: 0 0 64px;
-                    border: 1px solid var(--st-border);
+                    border: 1px solid var(--border-default);
                     border-radius: 8px;
-                    background: var(--st-text-white);
+                    background: var(--surface-card);
                     padding: 4px;
                     cursor: pointer;
                     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
                     &.active,
                     &:hover {
-                        border-color: var(--st-primary);
+                        border-color: var(--color-primary);
                         box-shadow: 0 0 0 3px rgba(41, 136, 238, 0.12);
                     }
 
@@ -77,13 +77,13 @@
                 font-size: 28px;
                 margin: 0;
                 line-height: 1.25;
-                color: var(--st-text-primary);
+                color: var(--text-heading);
             }
 
             .price {
                 font-size: 18px;
                 font-weight: 700;
-                color: var(--st-primary);
+                color: var(--color-primary);
                 margin: 0;
             }
 
@@ -97,25 +97,25 @@
                 .quantity-box {
                     display: flex;
                     align-items: center;
-                    border: 1px solid var(--st-border);
+                    border: 1px solid var(--border-default);
                     border-radius: 8px;
                     overflow: hidden;
                     height: 38px;
-                    background: var(--st-text-white);
+                    background: var(--surface-card);
 
                     button {
                         width: 38px;
                         height: 100%;
                         border: none;
-                        background: var(--st-background);
-                        color: var(--st-text-primary);
+                        background: var(--surface-muted);
+                        color: var(--text-heading);
                         font-size: 18px;
                         font-weight: 700;
                         cursor: pointer;
                         transition: background 0.2s ease;
 
                         &:hover {
-                            background: var(--st-border);
+                            background: var(--border-default);
                         }
                     }
 
@@ -140,15 +140,15 @@
     }
 
     .tab-container {
-        background: var(--st-text-white);
+        background: var(--surface-card);
         border-radius: 8px;
         padding: 24px;
-        border: 1px solid var(--st-border);
+        border: 1px solid var(--border-default);
         margin-bottom: 32px;
 
         .tab-content {
             line-height: 1.6;
-            color: var(--st-text-secondary);
+            color: var(--text-body);
         }
     }
 
@@ -170,16 +170,16 @@
             }
 
             &::-webkit-scrollbar-thumb {
-                background: var(--st-border);
+                background: var(--border-default);
                 border-radius: 10px;
             }
 
             .related-product-card {
                 min-width: 220px;
-                background: var(--st-text-white);
+                background: var(--surface-card);
                 padding: 16px;
                 border-radius: 8px;
-                border: 1px solid var(--st-border);
+                border: 1px solid var(--border-default);
                 transition: transform 0.2s ease, box-shadow 0.2s ease;
                 cursor: pointer;
 
@@ -207,7 +207,7 @@
                 p {
                     margin: 0;
                     font-weight: 700;
-                    color: var(--st-primary);
+                    color: var(--color-primary);
                 }
             }
         }
@@ -222,14 +222,14 @@
 
     p {
         font-size: 12px;
-        color: var(--st-text-primary);
+        color: var(--text-heading);
         margin: 0;
         font-weight: 700;
     }
 
     span {
         background-color: var(--st-secondary);
-        color: var(--st-text-primary);
+        color: var(--text-heading);
         padding: 5px 10px;
         border-radius: 8px;
         font-size: 12px;
@@ -241,7 +241,7 @@
     display: inline-flex;
     align-items: center;
     gap: 2px;
-    color: var(--st-border);
+    color: var(--border-default);
     font-size: 15px;
     line-height: 1;
 
@@ -263,7 +263,7 @@
     gap: 16px;
     padding: 18px;
     border-radius: 8px;
-    border: 1px solid var(--st-border);
+    border: 1px solid var(--border-default);
     background: linear-gradient(135deg, rgba(41, 136, 238, 0.08), rgba(255, 246, 242, 0.8));
 
     > div {
@@ -276,7 +276,7 @@
         font-size: 34px;
         line-height: 1;
         font-weight: 800;
-        color: var(--st-text-primary);
+        color: var(--text-heading);
     }
 
     &__stars {
@@ -285,7 +285,7 @@
 
     p {
         margin: 0;
-        color: var(--st-text-secondary);
+        color: var(--text-body);
         font-size: 14px;
         font-weight: 600;
     }
@@ -311,12 +311,12 @@
 
         h3 {
             margin: 0;
-            color: var(--st-text-primary);
+            color: var(--text-heading);
             font-size: 18px;
         }
 
         span {
-            color: var(--st-text-secondary);
+            color: var(--text-body);
             font-size: 13px;
             font-weight: 700;
         }
@@ -328,19 +328,19 @@
     align-items: center;
     justify-content: center;
     min-height: 150px;
-    border: 1px dashed var(--st-border);
+    border: 1px dashed var(--border-default);
     border-radius: 8px;
-    color: var(--st-text-secondary);
-    background: var(--st-background);
+    color: var(--text-body);
+    background: var(--surface-muted);
     text-align: center;
     padding: 18px;
 }
 
 .st-review-card,
 .st-review-panel {
-    border: 1px solid var(--st-border);
+    border: 1px solid var(--border-default);
     border-radius: 8px;
-    background: var(--st-text-white);
+    background: var(--surface-card);
 }
 
 .st-review-card {
@@ -360,21 +360,21 @@
     }
 
     h4 {
-        color: var(--st-text-primary);
+        color: var(--text-heading);
         font-size: 14px;
         font-weight: 700;
         margin-bottom: 5px;
     }
 
     h5 {
-        color: var(--st-text-primary);
+        color: var(--text-heading);
         font-size: 15px;
         font-weight: 700;
         margin-bottom: 6px;
     }
 
     p {
-        color: var(--st-text-secondary);
+        color: var(--text-body);
         font-size: 14px;
         line-height: 1.6;
         white-space: pre-wrap;
@@ -388,7 +388,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: var(--st-primary);
+    background: var(--color-primary);
     color: #fff;
     font-weight: 800;
     flex: 0 0 38px;
@@ -404,13 +404,13 @@
 
     h3 {
         margin: 0;
-        color: var(--st-text-primary);
+        color: var(--text-heading);
         font-size: 18px;
     }
 
     &__hint {
         margin: -4px 0 2px;
-        color: var(--st-text-secondary);
+        color: var(--text-body);
         font-size: 13px;
         line-height: 1.5;
     }
@@ -429,7 +429,7 @@
 
     label {
         cursor: pointer;
-        color: var(--st-border);
+        color: var(--border-default);
         font-size: 26px;
         line-height: 1;
         transition: color 0.2s ease, transform 0.2s ease;
@@ -454,16 +454,16 @@
 .st-review-input,
 .st-review-textarea {
     width: 100%;
-    border: 1px solid var(--st-border);
+    border: 1px solid var(--border-default);
     border-radius: 8px;
-    color: var(--st-text-primary);
+    color: var(--text-heading);
     font-family: inherit;
     font-size: 14px;
     outline: none;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
     &:focus {
-        border-color: var(--st-primary);
+        border-color: var(--color-primary);
         box-shadow: 0 0 0 3px rgba(41, 136, 238, 0.12);
     }
 }
@@ -487,7 +487,7 @@
 }
 
 .st-review-success {
-    color: var(--st-primary);
+    color: var(--color-primary);
 }
 
 .st-review-error {

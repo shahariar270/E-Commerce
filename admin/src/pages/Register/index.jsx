@@ -5,6 +5,8 @@ import Button from "../../components/Buttons";
 import { registerUser, clearError } from "../../store/slices/auth/authSlice";
 import { registerSchema } from "../../Utils/validationSchemas";
 import { useNavigate } from "react-router-dom";
+import "../Login/style.scss";
+import logo from '../../assets/images/fulllogo.svg';
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -34,11 +36,11 @@ const Register = () => {
   };
 
   return (
-    <div className="st-login-page">
+    <div className="st-login-page eshop-theme">
       <div className="st-login-card">
         <div className="st-login-header">
           <img
-            src="../../../assets/images/logo.svg"
+            src={logo}
             alt="logo"
             className="st-login-logo"
           />
@@ -142,6 +144,9 @@ const Register = () => {
           </p>
         </div>
       </div>
+      <p className="st-login-back">
+        <a href="/">← Back to store</a>
+      </p>
     </div>
   );
 };

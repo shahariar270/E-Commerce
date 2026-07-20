@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCart, updateCart, removeFromCart } from "@Store/slices/cartSlice";
 import Button from "@Component/Buttons";
 import "./styles.scss";
-import SubHeading from "@Component/SubHeading";
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -26,21 +25,19 @@ const Cart = () => {
   };
 
   return (
-    <div className="st-cart">
-      <SubHeading
-        title={`Shopping Cart (${total_quantity} Items)`}
-      />
+    <div className="st-cart eshop-container">
+      <h1 className="st-cart__title">Shopping Cart ({total_quantity} Items)</h1>
 
       <div className="st-cart__layout">
         <div className="st-cart__items">
           {items?.length === 0 ? (
             <div className="st-cart__empty">
               <p>Your cart is empty.</p>
-              <Button label="Continue Shopping" onClick={() => navigate("/")} />
+              <Button label="Continue Shopping" onClick={() => navigate("/products")} />
             </div>
           ) : (
             items?.map((item) => (
-              <div className="st-cart__item" key={item._id}>
+              <div className="st-cart__item" key={item.product_id?._id}>
                 <div className="st-cart__image">
                   {item.image ? (
                     <img src={item.image} alt={item.name} />

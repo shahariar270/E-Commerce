@@ -14,6 +14,19 @@ const Table = ({
     className = '',
     sortConfig = { key: null, direction: 'asc' },
     onSort,
+    // Search/pagination props belong to TableContainer, not this component.
+    // Destructure (and discard) them here so callers that pass them directly
+    // to Table don't leak them onto the native <table> element below.
+    searchable,
+    searchPlaceholder,
+    onSearch,
+    searchQuery,
+    pagination,
+    currentPage,
+    pageSize,
+    total,
+    onPageChange,
+    onPageSizeChange,
     ...props
 }) => {
     // Table classes

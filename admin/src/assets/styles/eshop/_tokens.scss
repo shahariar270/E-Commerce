@@ -1,0 +1,118 @@
+// E-Shop storefront design tokens — scoped under .eshop-theme so they never
+// collide with the admin panel's --st-* theme (see global.scss / common/_root.scss).
+.eshop-theme {
+  --color-primary: #db4444;
+  --color-primary-dark: #b93333;
+  --color-success: #00b85c;
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --color-gray-900: #111827;
+  --color-gray-700: #334155;
+  --color-gray-600: #475569;
+  --color-gray-400: #94a3b8;
+  --color-gray-200: #e2e8f0;
+  --color-gray-100: #f1f5f9;
+  --color-yellow: #eab308;
+
+  --surface-page: var(--color-white);
+  --surface-inverse: var(--color-black);
+  --surface-card: var(--color-white);
+  --surface-muted: var(--color-gray-100);
+  --surface-pill: var(--color-white);
+
+  --text-heading: var(--color-gray-900);
+  --text-body: var(--color-gray-700);
+  --text-muted: var(--color-gray-400);
+  --text-on-dark: var(--color-white);
+  --text-brand: var(--color-primary);
+  --text-success: var(--color-success);
+
+  --border-default: var(--color-gray-200);
+  --focus-ring: var(--color-primary);
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-14: 56px;
+  --space-16: 64px;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-full: 9999px;
+
+  --container-width: 88%;
+  --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.06);
+  --shadow-hover: 0 12px 28px rgba(15, 23, 42, 0.12);
+
+  --font-sans: "Segoe UI", system-ui, -apple-system, Roboto, Ubuntu, "Helvetica Neue", sans-serif;
+
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 20px;
+  --text-xl: 24px;
+  --text-2xl: 32px;
+  --text-3xl: 40px;
+  --text-4xl: 48px;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  --leading-tight: 1.2;
+  --leading-normal: 1.5;
+
+  font-family: var(--font-sans);
+  color: var(--text-body);
+  background: var(--surface-page);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  a {
+    color: inherit;
+  }
+}
+
+/* Scoped overrides so shared components (Button/Input/Select — used by the
+   admin panel too) pick up the storefront's red brand instead of the
+   admin's purple --st-* theme, without touching their shared stylesheets. */
+.eshop-theme {
+  .btn--primary {
+    background-color: var(--color-primary);
+
+    &::before {
+      background-color: var(--color-primary-dark);
+    }
+  }
+
+  .btn--transparent {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+  }
+
+  .st-input:focus,
+  .st-text-area:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(219, 68, 68, 0.15);
+  }
+
+  .st-select__control--is-focused {
+    border-color: var(--color-primary) !important;
+    box-shadow: 0 0 0 1px var(--color-primary) !important;
+  }
+
+  .st-select__option--is-selected {
+    background-color: var(--color-primary) !important;
+  }
+
+  .st-error {
+    color: var(--color-primary);
+  }
+}

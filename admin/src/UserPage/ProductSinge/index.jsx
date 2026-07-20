@@ -96,7 +96,7 @@ export const ProductSinge = () => {
             price: current.price,
             quantity: cartQuantity
         })).then(() => {
-            navigate('/wishlist');
+            navigate('/cart');
         });
     };
 

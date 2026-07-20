@@ -7,7 +7,6 @@ import './styles.scss'
 import { getCart } from '@Store/slices/cartSlice'
 import Button from '@Component/Buttons'
 import { useNavigate } from 'react-router-dom'
-import SubHeading from '@Component/SubHeading'
 
 export const Checkout = () => {
   const dispatch = useDispatch();
@@ -41,11 +40,8 @@ export const Checkout = () => {
       onSubmit={handleSubmit}
       initialValues={initialValues}
     >
-      <div className="st-layout__content">
-        <SubHeading
-          title="Checkout"
-          subtitle="Complete your purchase"
-        />
+      <div className="eshop-container st-checkout">
+        <h1 className="st-checkout__title">Checkout</h1>
         <Form className="st-checkout__form">
           <div className="st-checkout__field">
             <h3>Shipping Information</h3>
@@ -65,7 +61,7 @@ export const Checkout = () => {
             <h3>Order Summary</h3>
             <div className="st-checkout_box--summary">
               {items.map((item, index) => (
-                <div className="st-cart__item" key={item._id}>
+                <div className="st-cart__item" key={item.product_id?._id}>
                   <div className="st-cart__image">
                     {item.image ? (
                       <img src={item.image} alt={item.name} />

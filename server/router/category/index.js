@@ -5,8 +5,8 @@ const auth_middleware = require('../../middlewares/auth_middleware');
 
 router.post('/category', auth_middleware.verify_token, category_controller.create_category);
 
-router.get('/categories', auth_middleware.verify_token, category_controller.get_categories);
-router.get('/categories/:id', auth_middleware.verify_token, category_controller.get_category_by_id);
+router.get('/categories', category_controller.get_categories);
+router.get('/categories/:id', category_controller.get_category_by_id);
 
 router.put('/category/:id', auth_middleware.verify_token, category_controller.update_category);
 

@@ -76,7 +76,7 @@ class product_controller {
             }
 
             if (category) {
-                query.category = category;
+                query['category._id'] = category;
             }
 
             if (filter) {

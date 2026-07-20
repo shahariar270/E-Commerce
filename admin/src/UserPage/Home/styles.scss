@@ -1,0 +1,108 @@
+.eshop-home {
+  &__hero-row {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: var(--space-8);
+    padding: var(--space-6) 0;
+    border-bottom: 1px solid var(--border-default);
+  }
+
+  &__categories {
+    border-right: 1px solid var(--border-default);
+    padding-right: var(--space-6);
+  }
+
+  &__hero {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--surface-muted);
+
+    img {
+      width: 100%;
+      aspect-ratio: 2.6;
+      object-fit: contain;
+      display: block;
+    }
+  }
+
+  &__section {
+    padding: var(--space-10) 0;
+  }
+
+  &__status {
+    color: var(--text-body);
+    margin-top: var(--space-4);
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--space-5);
+    margin-top: var(--space-6);
+  }
+
+  &__view-all {
+    text-align: center;
+    margin-top: var(--space-8);
+
+    button {
+      background: var(--color-primary);
+      color: var(--color-white);
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 14px 44px;
+      font-size: var(--text-base);
+      font-family: var(--font-sans);
+      font-weight: var(--weight-medium);
+      cursor: pointer;
+
+      &:hover {
+        background: var(--color-primary-dark);
+      }
+    }
+  }
+
+  &__feature-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-5);
+    margin-top: var(--space-6);
+  }
+
+  &__feature-tile {
+    background: var(--color-black);
+    border-radius: var(--radius-md);
+    padding: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+    cursor: pointer;
+
+    img {
+      width: 100%;
+      max-width: 140px;
+      height: 120px;
+      object-fit: contain;
+    }
+
+    span {
+      color: var(--text-on-dark);
+      font-size: var(--text-sm);
+    }
+  }
+
+  @media (max-width: 900px) {
+    &__hero-row {
+      grid-template-columns: 1fr;
+    }
+
+    &__categories {
+      display: none;
+    }
+
+    &__feature-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}
