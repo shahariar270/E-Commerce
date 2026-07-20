@@ -90,6 +90,38 @@ export const cartSchema = Yup.object({
         .required("quantity is required field"),
 });
 
+// COUPON VALIDATIONS
+export const couponSchema = Yup.object({
+    code: Yup.string()
+        .min(3, "code must be at least 3 characters")
+        .max(30, "code must not exceed 30 characters")
+        .required("code is required field"),
+    discount_type: Yup.string()
+        .oneOf(["percentage", "fixed"], "invalid discount type")
+        .required("discount type is required field"),
+    discount_value: Yup.number()
+        .positive("discount value must be a positive number")
+        .when("discount_type", {
+            is: "percentage",
+            then: (schema) => schema.max(100, "percentage discount cannot exceed 100"),
+        })
+        .required("discount value is required field"),
+    max_discount_amount: Yup.number()
+        .positive("max discount amount must be a positive number")
+        .nullable()
+        .optional(),
+    min_purchase_amount: Yup.number()
+        .min(0, "minimum purchase amount cannot be negative")
+        .optional(),
+    usage_limit: Yup.number()
+        .positive("usage limit must be a positive number")
+        .nullable()
+        .optional(),
+    expiry_date: Yup.date()
+        .required("expiry date is required field"),
+    is_active: Yup.boolean().optional(),
+});
+
 // ORDER VALIDATIONS
 export const orderSchema = Yup.object({
     shippingAddress: Yup.object({

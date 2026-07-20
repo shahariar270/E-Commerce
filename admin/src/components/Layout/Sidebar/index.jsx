@@ -11,6 +11,7 @@ const NAV_CONFIG = {
         { label: 'Products', link: "/admin/products", icon: "product" },
         { label: 'All Orders', link: "/admin/orders", icon: "cart" },
         { label: 'Categories', link: "/admin/categories", icon: "filter" },
+        { label: 'Coupons', link: "/admin/coupons", icon: "clipboard" },
         { label: 'Settings', link: "/admin/settings", icon: "settings" },
         { label: 'Profile', link: "/admin/profile", icon: "profile" },
     ],

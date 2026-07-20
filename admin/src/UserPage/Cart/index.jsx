@@ -1,14 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getCart, updateCart, removeFromCart } from "@Store/slices/cartSlice";
+import { getCart, updateCart, removeFromCart, applyCoupon, removeCoupon } from "@Store/slices/cartSlice";
 import Button from "@Component/Buttons";
 import "./styles.scss";
 
 const Cart = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { items, total_quantity, total_price } = useSelector((state) => state.cart);
+  const { items, total_quantity, total_price, coupon, grand_total, loading } = useSelector((state) => state.cart);
+  const [couponCode, setCouponCode] = useState("");
 
   useEffect(() => {
     dispatch(getCart());
@@ -22,6 +23,16 @@ const Cart = () => {
 
   const handleRemove = (id) => {
     dispatch(removeFromCart(id));
+  };
+
+  const handleApplyCoupon = (e) => {
+    e.preventDefault();
+    if (!couponCode.trim()) return;
+    dispatch(applyCoupon(couponCode.trim())).unwrap().then(() => setCouponCode("")).catch(() => {});
+  };
+
+  const handleRemoveCoupon = () => {
+    dispatch(removeCoupon());
   };
 
   return (
@@ -77,9 +88,44 @@ const Cart = () => {
             <span>Items:</span>
             <span>{total_quantity}</span>
           </div>
+          <div className="st-cart__summary-row">
+            <span>Subtotal:</span>
+            <span>${total_price?.toFixed(2)}</span>
+          </div>
+
+          {coupon?.code ? (
+            <>
+              <div className="st-cart__summary-row st-cart__summary-discount">
+                <span>Discount ({coupon.code}):</span>
+                <span>-${coupon.discount_amount?.toFixed(2)}</span>
+              </div>
+              <button
+                type="button"
+                className="st-cart__coupon-remove"
+                onClick={handleRemoveCoupon}
+                disabled={loading}
+              >
+                Remove coupon
+              </button>
+            </>
+          ) : (
+            <form className="st-cart__coupon" onSubmit={handleApplyCoupon}>
+              <input
+                type="text"
+                className="st-cart__coupon-input"
+                placeholder="Coupon code"
+                value={couponCode}
+                onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+              />
+              <button type="submit" className="st-cart__coupon-apply" disabled={loading || !couponCode.trim()}>
+                Apply
+              </button>
+            </form>
+          )}
+
           <div className="st-cart__summary-row st-cart__summary-total">
             <span>Total:</span>
-            <strong>${total_price?.toFixed(2)}</strong>
+            <strong>${(grand_total ?? total_price)?.toFixed(2)}</strong>
           </div>
           <Button
             label="Checkout"

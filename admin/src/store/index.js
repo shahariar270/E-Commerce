@@ -3,6 +3,7 @@ import authReducer from './slices/auth/authSlice';
 import categoryReducer from './slices/categorySlice';
 import productReducer from './slices/productSlice';
 import cartReducer from './slices/cartSlice';
+import couponReducer from './slices/couponSlice';
 import orderReducer from './slices/orderSlice'
 import dashboardReducer from './slices/dashboardSlice'
 import commentReducer from './slices/commentSlice'
@@ -17,6 +18,7 @@ const store = configureStore({
     category: categoryReducer,
     product: productReducer,
     cart: cartReducer,
+    coupon: couponReducer,
     notification: notificationReducer,
     order: orderReducer,
     dashboard: dashboardReducer,

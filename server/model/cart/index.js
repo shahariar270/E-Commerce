@@ -34,6 +34,19 @@ const cartSchema = new mongoose.Schema({
     total_price: {
         type: Number,
         default: 0
+    },
+
+    coupon: {
+        code: { type: String, default: null },
+        discount_type: { type: String, enum: ['percentage', 'fixed'], default: null },
+        discount_value: { type: Number, default: null },
+        max_discount_amount: { type: Number, default: null },
+        discount_amount: { type: Number, default: 0 }
+    },
+
+    grand_total: {
+        type: Number,
+        default: 0
     }
 
 }, { timestamps: true });

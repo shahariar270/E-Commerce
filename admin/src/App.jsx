@@ -12,6 +12,7 @@ import Orders from "./pages/Orders";
 import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
 import Categories from "./pages/Categories";
+import Coupons from "./pages/Coupons";
 import { PublicProduct } from "@Pages/PublicProduct";
 import { ProductSinge } from "./UserPage/ProductSinge";
 import Home from "./UserPage/Home";
@@ -97,6 +98,7 @@ function App() {
           <Route path="product/:id" element={<ProductEdit />} />
           <Route path="orders" element={<Orders />} />
           <Route path="categories" element={<Categories />} />
+          <Route path="coupons" element={<Coupons />} />
           <Route path="settings" element={<Settings />} />
           <Route path="profile" element={<Profile />} />
           <Route path="*" element={<ErrorPage />} />

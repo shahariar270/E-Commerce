@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom'
 export const Checkout = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { items, total_quantity, total_price } = useSelector((state) => state.cart);
+  const { items, total_quantity, total_price, coupon, grand_total } = useSelector((state) => state.cart);
 
   useEffect(() => {
     dispatch(getCart());
@@ -87,9 +87,19 @@ export const Checkout = () => {
                 <span>Items:</span>
                 <span>{total_quantity}</span>
               </div>
+              <div className="st-cart__summary-row">
+                <span>Subtotal:</span>
+                <span>${total_price?.toFixed(2)}</span>
+              </div>
+              {coupon?.code && (
+                <div className="st-cart__summary-row st-cart__summary-discount">
+                  <span>Discount ({coupon.code}):</span>
+                  <span>-${coupon.discount_amount?.toFixed(2)}</span>
+                </div>
+              )}
               <div className="st-cart__summary-row st-cart__summary-total">
                 <span>Total:</span>
-                <strong>${total_price?.toFixed(2)}</strong>
+                <strong>${(grand_total ?? total_price)?.toFixed(2)}</strong>
               </div>
             </div>
             <div className="st-checkout--button">

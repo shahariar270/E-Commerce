@@ -1,5 +1,6 @@
 const Cart = require("../../model/cart");
 const Order = require("../../model/order");
+const Coupon = require("../../model/coupon");
 const ApiResponse = require("../../utils/api_response");
 const sendMail = require("../../config/sender");
 const User = require('../../model/auth');
@@ -26,11 +27,16 @@ class order_controller {
                 price: item.price
             }));
 
-            const totalAmount = orderItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+            const subtotal = orderItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+            const couponCode = cart.coupon?.code || null;
+            const discountAmount = couponCode ? (cart.coupon.discount_amount || 0) : 0;
+            const totalAmount = Math.max(0, subtotal - discountAmount);
 
             const newOrder = new Order({
                 user: user_id,
                 items: orderItems,
+                subtotal,
+                coupon: { code: couponCode, discount_amount: discountAmount },
                 totalAmount,
                 shippingAddress,
                 status: 'pending',
@@ -39,6 +45,10 @@ class order_controller {
 
             const savedOrder = await newOrder.save();
             const user_email = await User.findById(user_id).select('email');
+
+            if (couponCode) {
+                await Coupon.findOneAndUpdate({ code: couponCode }, { $inc: { used_count: 1 } });
+            }
 
             await Cart.findByIdAndDelete(cart._id);
 
@@ -121,6 +131,18 @@ class order_controller {
 
               <!-- Total -->
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:20px;">
+                ${couponCode ? `
+                <tr>
+                  <td align="right" style="padding:6px 0;">
+                    <p style="font-size:14px;color:#6b7280;margin:0;">Subtotal: $${subtotal.toFixed(2)}</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td align="right" style="padding:6px 0;">
+                    <p style="font-size:14px;color:#16a34a;margin:0;">Discount (${couponCode}): -$${discountAmount.toFixed(2)}</p>
+                  </td>
+                </tr>
+                ` : ''}
                 <tr>
                   <td align="right" style="padding:20px 0;border-top:2px solid #f3f4f6;">
                     <p style="font-size:20px;color:#111827;margin:0;">
