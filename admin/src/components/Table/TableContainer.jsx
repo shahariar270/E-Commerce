@@ -26,6 +26,10 @@ const TableContainer = ({
     onSearch: controlledOnSearch,
     searchable = false,
     searchPlaceholder = 'Search...',
+    // Not used by TableContainer/Table; discard so they don't leak through
+    // the ...props spread onto <Table> and then onto the native <table>.
+    pagination,
+    total,
     // Table specific props to pass down
     onRowClick,
     sortable = false,
