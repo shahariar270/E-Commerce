@@ -100,6 +100,17 @@ export const ProductSinge = () => {
         });
     };
 
+    const handleBuyNow = (cartQuantity) => {
+        dispatch(createCart({
+            product_id: current._id,
+            name: current.product_name,
+            price: current.price,
+            quantity: cartQuantity
+        })).then(() => {
+            navigate('/checkout');
+        });
+    };
+
     const handleReviewChange = (event) => {
         const { name, value } = event.target;
         setReviewForm(prev => ({
@@ -195,7 +206,11 @@ export const ProductSinge = () => {
                                     label="Add to Cart"
                                     onClick={() => handleCart(quantity)}
                                 />
-                                <Button label="Buy Now" />
+                                <Button
+                                    label="Buy Now"
+                                    variant="secondary"
+                                    onClick={() => handleBuyNow(quantity)}
+                                />
                             </div>
                         </div>
                     </div>

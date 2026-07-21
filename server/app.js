@@ -8,6 +8,7 @@ const mongoSanitize = require('./middlewares/sanitize');
 const { default: mongoose } = require('mongoose');
 const router = require('./router');
 const ApiResponse = require('./utils/api_response');
+const Cart = require('./model/cart');
 const http = require('http');
 const { Server } = require('socket.io');
 
@@ -81,8 +82,17 @@ app.use(router);
 const port = process.env.PORT || 10000;
 
 mongoose.connect(process.env.DB_URL)
-    .then(() => {
+    .then(async () => {
         console.log('Database connected successfully');
+        // Cart.user_id predates guest carts and was originally a plain unique
+        // index (no sparse). Schema changes don't retroactively alter an
+        // already-existing index, so without this, a live DB still enforces
+        // "at most one cart may ever be missing user_id" — breaking every
+        // guest cart after the first. syncIndexes reconciles the real DB
+        // indexes with the current schema (rebuilding this one as sparse).
+        await Cart.syncIndexes().catch((err) => {
+            console.error('Cart.syncIndexes failed:', err);
+        });
         server.listen(port, '0.0.0.0', () => {
             console.log('Server is running on', port);
         });
