@@ -9,6 +9,7 @@ import "./style.scss";
 import {jwtDecode} from 'jwt-decode';
 import { getCookie } from '@utils/helper';
 import logo from '../../assets/images/logo.svg';
+import SEO from '@Component/SEO';
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -44,6 +45,7 @@ const Login = () => {
 
   return (
     <div className="st-login-page eshop-theme">
+      <SEO title="Sign In" description="Sign in to your E-Commerce account to track orders, manage your cart, and check out faster." noindex />
       <div className="st-login-card">
         <div className="st-login-header">
           <div className="st-login-logo">

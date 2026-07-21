@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import './styles.scss'
 import { getCart } from '@Store/slices/cartSlice'
 import Button from '@Component/Buttons'
+import SEO from '@Component/SEO'
 import { useNavigate } from 'react-router-dom'
 
 export const Checkout = () => {
@@ -59,6 +60,7 @@ export const Checkout = () => {
       initialValues={initialValues}
     >
       <div className="eshop-container st-checkout">
+        <SEO title="Checkout" description="Complete your purchase securely." noindex />
         <h1 className="st-checkout__title">Checkout</h1>
         <Form className="st-checkout__form">
           <div className="st-checkout__field">

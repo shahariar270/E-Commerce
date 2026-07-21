@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getCart, updateCart, removeFromCart, applyCoupon, removeCoupon } from "@Store/slices/cartSlice";
 import Button from "@Component/Buttons";
+import SEO from "@Component/SEO";
 import "./styles.scss";
 
 const Cart = () => {
@@ -37,6 +38,7 @@ const Cart = () => {
 
   return (
     <div className="st-cart eshop-container">
+      <SEO title="Shopping Cart" description="Review the items in your cart before checkout." noindex />
       <h1 className="st-cart__title">Shopping Cart ({total_quantity} Items)</h1>
 
       <div className="st-cart__layout">

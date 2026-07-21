@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Button from "../../components/Buttons";
 import Input from "../../components/Input";
 import SubHeading from "@Component/SubHeading";
+import SEO from "@Component/SEO";
 
 const Settings = () => {
   const [settings, setSettings] = useState({
@@ -39,6 +40,7 @@ const Settings = () => {
 
   return (
     <div className="settings-page st-page">
+      <SEO title="Settings" description="Configure your application preferences." noindex />
       <SubHeading
         title="Settings"
         subtitle="Configure your application preferences"

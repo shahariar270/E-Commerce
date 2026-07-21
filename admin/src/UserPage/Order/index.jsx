@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Pagination from "@Component/Pagination";
 import "./styles.scss"
 import SubHeading from "@Component/SubHeading";
+import SEO from "@Component/SEO";
 
 const Order = () => {
     const dispatch = useDispatch();
@@ -23,6 +24,7 @@ const Order = () => {
 
     return (
         <div className="st-page">
+            <SEO title="My Orders" description="Track and review your order history." noindex />
             <SubHeading
                 title="Your Orders"
                 subtitle="Manage customer orders and track deliveries"

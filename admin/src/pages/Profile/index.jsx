@@ -8,6 +8,7 @@ import { Form, Formik } from "formik";
 import "./styles.scss"
 import SubHeading from "@Component/SubHeading";
 import Tooltip from "@Component/Tooltip";
+import SEO from "@Component/SEO";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -70,6 +71,7 @@ const Profile = () => {
 
         return (
           <Form className="st-profile">
+            <SEO title="My Profile" description="Manage your personal information and account settings." noindex />
             <SubHeading
               title="Profile"
               subtitle="Manage your personal information and account settings"

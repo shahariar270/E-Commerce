@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllOrder, updateOrder } from "@Store/slices/orderSlice";
 import Select from "@Component/Select";
 import SubHeading from "@Component/SubHeading";
+import SEO from "@Component/SEO";
 import './styles.scss';
 
 const statusOption = [
@@ -110,6 +111,7 @@ const Orders = () => {
 
   return (
     <div className="orders-page st-page">
+      <SEO title="Manage Orders" description="Manage customer orders and track deliveries." noindex />
       <SubHeading
         title="Orders"
         subtitle="Manage customer orders and track deliveries"

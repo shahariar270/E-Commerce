@@ -12,6 +12,7 @@ import { useSelectPagination } from "@utils/Hooks/SelectPagination";
 import { productSchema } from "@utils/validationSchemas";
 import ProductImages from "./ProductImage";
 import SubHeading from "@Component/SubHeading";
+import SEO from "@Component/SEO";
 
 const ProductEdit = () => {
     const navigate = useNavigate();
@@ -71,6 +72,7 @@ const ProductEdit = () => {
 
     return (
         <div className="st-form-inner st-gap-4">
+            <SEO title={id ? "Edit Product" : "Add Product"} noindex />
             <Formik
                 enableReinitialize
                 onSubmit={handleSubmit}
