@@ -3,6 +3,11 @@ const Cart = require("../../model/cart");
 const ApiResponse = require("../../utils/api_response");
 const calculateTotals = require("../cart/helper");
 
+// req.user is set by auth_middleware.identify — either a logged-in user
+// (id set) or a guest (guest_id set). Exactly one of the two identifies
+// which cart to operate on.
+const ownerFilter = (req) => req.user.id ? { user_id: req.user.id } : { guest_id: req.user.guest_id };
+
 class coupon_controller {
     async create_coupon(req, res) {
         try {
@@ -140,14 +145,13 @@ class coupon_controller {
 
     async apply_coupon(req, res) {
         try {
-            const { id: user_id } = req.user;
             const { code } = req.body;
 
             if (!code) {
                 return ApiResponse.error(res, "Coupon code is required", 400);
             }
 
-            const cart = await Cart.findOne({ user_id });
+            const cart = await Cart.findOne(ownerFilter(req));
             if (!cart || cart.items.length === 0) {
                 return ApiResponse.error(res, "Your cart is empty", 400);
             }
@@ -191,8 +195,7 @@ class coupon_controller {
 
     async remove_coupon(req, res) {
         try {
-            const { id: user_id } = req.user;
-            const cart = await Cart.findOne({ user_id });
+            const cart = await Cart.findOne(ownerFilter(req));
             if (!cart) {
                 return ApiResponse.error(res, "Cart not found", 404);
             }

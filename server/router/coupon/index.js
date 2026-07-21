@@ -7,13 +7,13 @@ const auth_middleware = require('../../middlewares/auth_middleware');
 // literal "apply" segment isn't swallowed by the :id param on GET/PUT/DELETE.
 router.post(
     '/coupon/apply',
-    auth_middleware.verify_token,
+    auth_middleware.identify,
     coupon_controller.apply_coupon
 );
 
 router.delete(
     '/coupon/apply',
-    auth_middleware.verify_token,
+    auth_middleware.identify,
     coupon_controller.remove_coupon
 );
 
