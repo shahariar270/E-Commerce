@@ -1,7 +1,7 @@
 import { Formik, Form, Field } from 'formik';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCouponInitialValues, getCouponValidationSchema, discountTypeOptions } from './helper';
+import { getCouponInitialValues, getCouponValidationSchema, discountTypeOptions, generateCouponCode } from './helper';
 import { createCoupon, updateCoupon, getCouponById } from '@Store/slices/couponSlice';
 import { Modal } from '@Component/Modal';
 import Input from '@Component/Input';
@@ -75,6 +75,14 @@ export const CouponFormInner = ({ id, handleCloseModal }) => {
                             />
                         </div>
                         <ErrorMessage name="code" />
+                        <Button
+                            type="button"
+                            variant="secondary"
+                            size="small"
+                            label="Generate Coupon Code"
+                            onClick={() => setFieldValue('code', generateCouponCode())}
+                        >
+                        </Button>
 
                         <Select
                             name="discount_type"
