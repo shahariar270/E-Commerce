@@ -34,3 +34,10 @@ body {
     box-sizing: border-box;
     font-family: "Roboto", sans-serif;
 }
+
+// Browsers don't consistently default <button> to a pointer cursor (Firefox
+// in particular uses `default`) — apply it site-wide so every button reads
+// as clickable, without needing to set it per-component.
+button:not(:disabled) {
+    cursor: pointer;
+}
