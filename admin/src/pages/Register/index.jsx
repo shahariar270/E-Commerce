@@ -6,7 +6,7 @@ import { registerUser, clearError } from "../../store/slices/auth/authSlice";
 import { registerSchema } from "../../Utils/validationSchemas";
 import { useNavigate } from "react-router-dom";
 import "../Login/style.scss";
-import logo from '../../assets/images/fulllogo.svg';
+import logo from '../../assets/images/logo.svg';
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -39,11 +39,10 @@ const Register = () => {
     <div className="st-login-page eshop-theme">
       <div className="st-login-card">
         <div className="st-login-header">
-          <img
-            src={logo}
-            alt="logo"
-            className="st-login-logo"
-          />
+          <div className="st-login-logo">
+            <img src={logo} alt="" className="st-login-logo__icon" />
+            <span className="st-login-logo__text">E-commerce</span>
+          </div>
           <h1 className="st-login-title">Create Account</h1>
           <p className="st-login-subtitle">
             Please enter your details to sign up

@@ -39,9 +39,22 @@
 }
 
 .st-login-logo {
-  width: 80px;
-  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   margin-bottom: 20px;
+
+  &__icon {
+    width: 40px;
+    height: auto;
+  }
+
+  &__text {
+    font-size: var(--text-xl, 24px);
+    font-weight: 700;
+    color: var(--text-heading, #111827);
+  }
 }
 
 .st-login-title {

@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from '../../assets/images/fulllogo.svg';
+import logo from '../../assets/images/logo.svg';
 import './styles.scss';
 
 const columns = [
@@ -12,7 +12,10 @@ const Footer = () => (
   <div className="eshop-footer">
     <div className="eshop-container eshop-footer__inner">
       <div>
-        <img src={logo} alt="E-commerce" className="eshop-footer__brand-logo" />
+        <div className="eshop-footer__brand-logo">
+          <img src={logo} alt="" className="eshop-footer__brand-logo-icon" />
+          <span className="eshop-footer__brand-logo-text">E-commerce</span>
+        </div>
         <p className="eshop-footer__brand-copy">
           Everything you need, delivered right. Subscribe for 10% off your first order.
         </p>

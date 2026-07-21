@@ -44,6 +44,21 @@
     height: 36px;
     cursor: pointer;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__logo-icon {
+    height: 100%;
+    width: auto;
+  }
+
+  &__logo-text {
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--text-heading);
+    white-space: nowrap;
   }
 
   &__search {
@@ -153,9 +168,23 @@
   }
 
   &__brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     height: 34px;
-    filter: brightness(0) invert(1);
     margin-bottom: var(--space-4);
+  }
+
+  &__brand-logo-icon {
+    height: 100%;
+    width: auto;
+    filter: brightness(0) invert(1);
+  }
+
+  &__brand-logo-text {
+    font-size: var(--text-lg);
+    font-weight: 700;
+    white-space: nowrap;
   }
 
   &__brand-copy {

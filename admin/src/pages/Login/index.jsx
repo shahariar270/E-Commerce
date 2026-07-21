@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import "./style.scss";
 import {jwtDecode} from 'jwt-decode';
 import { getCookie } from '@utils/helper';
-import logo from '../../assets/images/fulllogo.svg';
+import logo from '../../assets/images/logo.svg';
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -46,11 +46,10 @@ const Login = () => {
     <div className="st-login-page eshop-theme">
       <div className="st-login-card">
         <div className="st-login-header">
-          <img
-            src={logo}
-            alt="logo"
-            className="st-login-logo"
-          />
+          <div className="st-login-logo">
+            <img src={logo} alt="" className="st-login-logo__icon" />
+            <span className="st-login-logo__text">E-commerce</span>
+          </div>
           <h1 className="st-login-title">Welcome Back</h1>
           <p className="st-login-subtitle">
             Please enter your details to sign in
