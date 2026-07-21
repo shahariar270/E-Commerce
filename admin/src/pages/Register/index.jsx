@@ -7,6 +7,7 @@ import { registerSchema } from "../../Utils/validationSchemas";
 import { useNavigate } from "react-router-dom";
 import "../Login/style.scss";
 import logo from '../../assets/images/fulllogo.svg';
+import SEO from '@Component/SEO';
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -37,6 +38,7 @@ const Register = () => {
 
   return (
     <div className="st-login-page eshop-theme">
+      <SEO title="Create Account" description="Create a free E-Commerce account to start shopping, save your cart, and track orders." noindex />
       <div className="st-login-card">
         <div className="st-login-header">
           <img

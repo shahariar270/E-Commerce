@@ -4,6 +4,7 @@ import { getCardData, getTopProducts } from "@Store/slices/dashboardSlice";
 import './Styles.scss'
 import AreaChart from "@Component/AreaChart";
 import SubHeading from "@Component/SubHeading";
+import SEO from "@Component/SEO";
 import { Link } from "react-router-dom";
 
 const Dashboard = () => {
@@ -79,6 +80,7 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-page st-page">
+      <SEO title="Dashboard" description="Overview of your store's performance." noindex />
       <SubHeading
         title={"Dashboard"}
         subtitle={"Welcome back! Here's what's happening with your store."}

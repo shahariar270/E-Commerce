@@ -7,6 +7,7 @@ import ProductCard from '@Component/ProductCard';
 import SectionHeading from '@Component/Storefront/SectionHeading';
 import CategoryList from '@Component/Storefront/CategoryList';
 import PromoBanner from '@Component/Storefront/PromoBanner';
+import SEO from '@Component/SEO';
 import heroImage from '../../assets/images/eshop/hero-slide-1.png';
 import featureGame from '../../assets/images/eshop/feature-game.png';
 import featureGucci from '../../assets/images/eshop/feature-gucci.png';
@@ -38,6 +39,16 @@ const Home = () => {
 
   return (
     <div className="eshop-home">
+      <SEO
+        title="Home"
+        description="Launch and manage your online store with the best ecommerce CMS. A complete bangladeshi ecommerce solution built to grow your bangladeshi ecommerce business."
+        keywords={[
+          "best ecommerce CMS Bangladesh",
+          "bangladeshi ecommerce platform",
+          "start ecommerce business Bangladesh",
+        ]}
+        type="website"
+      />
       <div className="eshop-container eshop-home__hero-row">
         <div className="eshop-home__categories">
           <CategoryList categories={categories} />

@@ -6,6 +6,7 @@ import './styles.scss';
 import { useDispatch, useSelector } from "react-redux";
 import { deleteProduct, getProducts } from "@Store/slices/productSlice";
 import SubHeading from "@Component/SubHeading";
+import SEO from "@Component/SEO";
 import { sliceString } from "@utils/helper";
 import Tooltip from "@Component/Tooltip";
 
@@ -147,6 +148,7 @@ const Products = () => {
 
   return (
     <div className="products-page st-page">
+      <SEO title="Manage Products" description="Manage your product inventory." noindex />
       <SubHeading
         title="Products"
         subtitle="Manage your product inventory"
