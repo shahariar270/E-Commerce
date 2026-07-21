@@ -132,7 +132,7 @@ export const checkoutSchema = Yup.object({
             .min(2, "full name must be at least 2 characters")
             .required("full name is required field"),
         phone: Yup.string()
-            .min(6, "phone number must be at least 6 characters")
+            .matches(/^(?:\+?880|0)1[3-9]\d{8}$/, "enter a valid Bangladeshi phone number (e.g. 01712345678)")
             .required("phone number is required field"),
         address: Yup.string()
             .min(5, "address must be at least 5 characters")

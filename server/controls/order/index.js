@@ -2,8 +2,11 @@ const Cart = require("../../model/cart");
 const Order = require("../../model/order");
 const Coupon = require("../../model/coupon");
 const EmailVerification = require("../../model/emailVerification");
+const Settings = require("../../model/settings");
 const ApiResponse = require("../../utils/api_response");
 const sendMail = require("../../config/sender");
+
+const BD_PHONE_REGEX = /^(?:\+?880|0)1[3-9]\d{8}$/;
 
 class order_controller {
     async create_order(req, res) {
@@ -17,15 +20,23 @@ class order_controller {
             if (!email) {
                 return ApiResponse.error(res, "Email is required", 400);
             }
+            if (!BD_PHONE_REGEX.test(shippingAddress.phone || '')) {
+                return ApiResponse.error(res, "Enter a valid Bangladeshi phone number (e.g. 01712345678)", 400);
+            }
 
             if (!user_id) {
-                const verification = await EmailVerification.findOne({
-                    guest_id,
-                    email: email.trim().toLowerCase(),
-                    verified: true,
-                });
-                if (!verification) {
-                    return ApiResponse.error(res, "Please verify your email before placing an order", 400);
+                const settings = await Settings.findOne();
+                const requireGuestEmailVerification = settings ? settings.require_guest_email_verification : true;
+
+                if (requireGuestEmailVerification) {
+                    const verification = await EmailVerification.findOne({
+                        guest_id,
+                        email: email.trim().toLowerCase(),
+                        verified: true,
+                    });
+                    if (!verification) {
+                        return ApiResponse.error(res, "Please verify your email before placing an order", 400);
+                    }
                 }
             }
 

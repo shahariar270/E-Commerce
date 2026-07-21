@@ -8,6 +8,7 @@ import orderReducer from './slices/orderSlice'
 import dashboardReducer from './slices/dashboardSlice'
 import commentReducer from './slices/commentSlice'
 import reviewReducer from './slices/reviewSlice'
+import settingsReducer from './slices/settingsSlice'
 import { logger } from 'redux-logger';
 import notificationReducer from './slices/notificationSlice';
 import { notificationMiddleware } from './notificationMiddleware';
@@ -23,7 +24,8 @@ const store = configureStore({
     order: orderReducer,
     dashboard: dashboardReducer,
     comment: commentReducer,
-    review: reviewReducer
+    review: reviewReducer,
+    settings: settingsReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(

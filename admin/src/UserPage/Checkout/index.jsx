@@ -27,6 +27,7 @@ export const Checkout = () => {
   const [sendingCode, setSendingCode] = useState(false);
   const [verifying, setVerifying] = useState(false);
   const [verifyMessage, setVerifyMessage] = useState('');
+  const [verifyMessageType, setVerifyMessageType] = useState('info');
 
   useEffect(() => {
     dispatch(getCart());
@@ -39,8 +40,10 @@ export const Checkout = () => {
       const res = await apiClient('/email/send-code', { method: 'POST', body: JSON.stringify({ email }) });
       setCodeSentEmail(email);
       setVerifyCodeInput('');
+      setVerifyMessageType('success');
       setVerifyMessage(res?.message || 'Code sent — check your inbox.');
     } catch (err) {
+      setVerifyMessageType('error');
       setVerifyMessage(err.message || 'Failed to send verification code');
     } finally {
       setSendingCode(false);
@@ -55,6 +58,7 @@ export const Checkout = () => {
       setVerifiedEmail(email);
       setVerifyMessage('');
     } catch (err) {
+      setVerifyMessageType('error');
       setVerifyMessage(err.message || 'Verification failed');
     } finally {
       setVerifying(false);
@@ -145,17 +149,21 @@ export const Checkout = () => {
                   />
 
                   {requiresEmailVerification && !hasCodeSentForThisEmail && verifyMessage && (
-                    <p className="st-checkout__verify-message">{verifyMessage}</p>
+                    <p className={`st-checkout__verify-message st-checkout__verify-message--${verifyMessageType}`}>{verifyMessage}</p>
                   )}
 
                   {requiresEmailVerification && !isEmailVerified && hasCodeSentForThisEmail && (
                     <div className="st-checkout__verify">
+                      <p className="st-checkout__verify-label">
+                        Enter the 6-digit code sent to <strong>{values.email}</strong>
+                      </p>
                       <div className="st-checkout__verify-code">
                         <input
                           type="text"
                           inputMode="numeric"
+                          autoFocus
                           className="st-checkout__verify-input"
-                          placeholder="6-digit code"
+                          placeholder="000000"
                           value={verifyCodeInput}
                           onChange={(e) => setVerifyCodeInput(e.target.value.replace(/\D/g, '').slice(0, 6))}
                         />
@@ -167,16 +175,22 @@ export const Checkout = () => {
                           disabled={verifying || verifyCodeInput.length !== 6}
                           onClick={() => handleVerifyCode(values.email)}
                         />
+                      </div>
+                      <div className="st-checkout__verify-footer">
+                        {verifyMessage && (
+                          <p className={`st-checkout__verify-message st-checkout__verify-message--${verifyMessageType}`}>
+                            {verifyMessage}
+                          </p>
+                        )}
                         <button
                           type="button"
                           className="st-checkout__verify-resend"
                           disabled={sendingCode}
                           onClick={() => handleSendCode(values.email)}
                         >
-                          Resend code
+                          {sendingCode ? 'Resending...' : 'Resend code'}
                         </button>
                       </div>
-                      {verifyMessage && <p className="st-checkout__verify-message">{verifyMessage}</p>}
                     </div>
                   )}
                 </div>
@@ -185,13 +199,11 @@ export const Checkout = () => {
                 <h3>Shipping Information</h3>
                 <div className="st-checkout--input-field">
                   <Input name={'shippingAddress.name'} placeholder={'Johnathan Sterling'} label='Full Name' required />
+                  <Input name={'shippingAddress.phone'} type="tel" placeholder={'01712345678'} label='Phone Number' required />
+                  <Input name={'shippingAddress.address'} as="textarea" placeholder={'House, road, area, thana/upazila'} label='Address' required />
                   <div className="st-form--group">
-                    <Input name={'shippingAddress.phone'} placeholder={'+880123456789'} label='Phone Number' required />
-                    <Input name={'shippingAddress.address'} placeholder={'123 Main Street'} label='Address' required />
-                  </div>
-                  <div className="st-form--group">
-                    <Input name={'shippingAddress.city'} placeholder={'New York'} label='City' required />
-                    <Input name={'shippingAddress.postalCode'} placeholder={'10001'} label='Postal Code' required />
+                    <Input name={'shippingAddress.city'} placeholder={'Dhaka'} label='City' required />
+                    <Input name={'shippingAddress.postalCode'} placeholder={'1207'} label='Postal Code' required />
                   </div>
                 </div>
               </div>

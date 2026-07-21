@@ -1,10 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "../../components/Buttons";
 import Input from "../../components/Input";
 import SubHeading from "@Component/SubHeading";
 import SEO from "@Component/SEO";
+import { getSettings, updateSettings } from "@Store/slices/settingsSlice";
 
 const Settings = () => {
+  const dispatch = useDispatch();
+  const { require_guest_email_verification, loading: settingsLoading } = useSelector((state) => state.settings);
+
+  useEffect(() => {
+    dispatch(getSettings());
+  }, [dispatch]);
+
+  const handleToggleGuestVerification = () => {
+    dispatch(updateSettings({ require_guest_email_verification: !require_guest_email_verification }));
+  };
+
   const [settings, setSettings] = useState({
     siteName: "E-commerce Admin",
     siteEmail: "admin@example.com",
@@ -45,6 +58,30 @@ const Settings = () => {
         title="Settings"
         subtitle="Configure your application preferences"
       />
+
+      <div className="settings-section">
+        <h3 className="settings-section__title">Checkout</h3>
+        <div className="settings-section__content">
+          <div className="settings-toggle">
+            <div className="settings-toggle__info">
+              <span className="settings-toggle__label">Require Guest Email Verification</span>
+              <span className="settings-toggle__description">
+                Guests must verify their email with a one-time code before placing an order.
+                Logged-in users are unaffected — their account email is already trusted.
+              </span>
+            </div>
+            <label className="toggle-switch">
+              <input
+                type="checkbox"
+                checked={require_guest_email_verification}
+                disabled={settingsLoading}
+                onChange={handleToggleGuestVerification}
+              />
+              <span className="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
 
       {/* <form onSubmit={handleSubmit} className="settings-form">
         <div className="settings-section">
