@@ -102,6 +102,25 @@
     }
 }
 
+.st-password-toggle {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--text-body, #6b7280);
+    border-radius: 4px;
+
+    &:hover {
+        background: var(--surface-muted, #f1f5f9);
+        color: var(--text-heading, #111827);
+    }
+}
+
 .st-input-right-element {
     flex-shrink: 0;
     display: flex;
