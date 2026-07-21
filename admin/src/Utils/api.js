@@ -1,8 +1,10 @@
-import { getCookie, removeCookie } from './helper';
+import { getCookie, removeCookie, getOrCreateGuestId } from './helper';
 
 const getAuthHeader = () => {
   const token = getCookie('token');
-  return token ? { Authorization: `Bearer ${token}` } : {};
+  if (token) return { Authorization: `Bearer ${token}` };
+  // Not logged in — identify as a guest so cart/checkout endpoints still work.
+  return { 'X-Guest-Id': getOrCreateGuestId() };
 };
 
 export const apiClient = async (endpoint, options = {}) => {

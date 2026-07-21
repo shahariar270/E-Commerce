@@ -3,19 +3,22 @@ const Order = require("../../model/order");
 const Coupon = require("../../model/coupon");
 const ApiResponse = require("../../utils/api_response");
 const sendMail = require("../../config/sender");
-const User = require('../../model/auth');
 
 class order_controller {
     async create_order(req, res) {
         try {
-            const user_id = req.user.id;
-            const { shippingAddress } = req.body;
+            const { id: user_id, guest_id } = req.user;
+            const { shippingAddress, email } = req.body;
 
             if (!shippingAddress) {
                 return ApiResponse.error(res, "Shipping address is required", 400);
             }
+            if (!email) {
+                return ApiResponse.error(res, "Email is required", 400);
+            }
 
-            const cart = await Cart.findOne({ user_id })
+            const cartFilter = user_id ? { user_id } : { guest_id };
+            const cart = await Cart.findOne(cartFilter)
 
             if (!cart || cart.items.length === 0) {
                 return ApiResponse.error(res, "Your cart is empty", 400);
@@ -33,7 +36,9 @@ class order_controller {
             const totalAmount = Math.max(0, subtotal - discountAmount);
 
             const newOrder = new Order({
-                user: user_id,
+                user: user_id || undefined,
+                guest_id: user_id ? undefined : guest_id,
+                email,
                 items: orderItems,
                 subtotal,
                 coupon: { code: couponCode, discount_amount: discountAmount },
@@ -44,7 +49,6 @@ class order_controller {
             });
 
             const savedOrder = await newOrder.save();
-            const user_email = await User.findById(user_id).select('email');
 
             if (couponCode) {
                 await Coupon.findOneAndUpdate({ code: couponCode }, { $inc: { used_count: 1 } });
@@ -61,7 +65,7 @@ class order_controller {
             `).join('');
 
             await sendMail({
-                email: user_email.email,
+                email,
                 subject: "Order placed successfully",
                 html: `<!DOCTYPE html>
 <html lang="en">
@@ -96,7 +100,7 @@ class order_controller {
           <tr>
             <td class="content" style="padding:40px;">
               <h2 style="margin-top:0;color:#111827;font-size:24px;">Order Confirmed! 🎉</h2>
-              <p style="color:#4b5563;font-size:16px;line-height:1.6;">Hi ${req.user.name},</p>
+              <p style="color:#4b5563;font-size:16px;line-height:1.6;">Hi ${shippingAddress.name},</p>
               <p style="color:#4b5563;font-size:16px;line-height:1.6;">Your order has been placed successfully. We're getting it ready for you!</p>
 
               <!-- Order Details -->

@@ -3,7 +3,10 @@ const { default: mongoose, Schema } = require("mongoose");
 
 const order_schema = new mongoose.Schema(
     {
-        user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+        // Exactly one of user / guest_id identifies who placed the order.
+        user: { type: Schema.Types.ObjectId, ref: 'User', required: false },
+        guest_id: { type: String, required: false },
+        email: { type: String, required: true },
         items: [
             {
                 product: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
