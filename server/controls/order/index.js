@@ -1,6 +1,7 @@
 const Cart = require("../../model/cart");
 const Order = require("../../model/order");
 const Coupon = require("../../model/coupon");
+const EmailVerification = require("../../model/emailVerification");
 const ApiResponse = require("../../utils/api_response");
 const sendMail = require("../../config/sender");
 
@@ -15,6 +16,17 @@ class order_controller {
             }
             if (!email) {
                 return ApiResponse.error(res, "Email is required", 400);
+            }
+
+            if (!user_id) {
+                const verification = await EmailVerification.findOne({
+                    guest_id,
+                    email: email.trim().toLowerCase(),
+                    verified: true,
+                });
+                if (!verification) {
+                    return ApiResponse.error(res, "Please verify your email before placing an order", 400);
+                }
             }
 
             const cartFilter = user_id ? { user_id } : { guest_id };
@@ -55,6 +67,10 @@ class order_controller {
             }
 
             await Cart.findByIdAndDelete(cart._id);
+
+            if (!user_id) {
+                await EmailVerification.deleteOne({ guest_id, email: email.trim().toLowerCase() });
+            }
 
             const orderItemsHtml = orderItems.map(item => `
             <tr>

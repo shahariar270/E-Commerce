@@ -1,4 +1,4 @@
-import { Field, useFormikContext } from "formik";
+import { Field, useFormikContext, getIn } from "formik";
 import { useState } from "react";
 import ErrorMessage from "../ErrorMessage";
 
@@ -17,7 +17,10 @@ const Input = ({
 
     const isPassword = type === "password";
     const inputType = isPassword && showPassword ? "text" : type;
-    const hasError = errors[name] && touched[name];
+    // Nested field names (e.g. "shippingAddress.name") need a nested lookup —
+    // errors/touched are shaped as { shippingAddress: { name: ... } }, not
+    // flat-keyed by the dotted string.
+    const hasError = getIn(errors, name) && getIn(touched, name);
 
     return (
         <div className="st-input-compo">

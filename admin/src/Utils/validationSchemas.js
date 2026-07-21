@@ -122,6 +122,28 @@ export const couponSchema = Yup.object({
     is_active: Yup.boolean().optional(),
 });
 
+// CHECKOUT VALIDATIONS
+export const checkoutSchema = Yup.object({
+    email: Yup.string()
+        .email("invalid email")
+        .required("email is required field"),
+    shippingAddress: Yup.object({
+        name: Yup.string()
+            .min(2, "full name must be at least 2 characters")
+            .required("full name is required field"),
+        phone: Yup.string()
+            .min(6, "phone number must be at least 6 characters")
+            .required("phone number is required field"),
+        address: Yup.string()
+            .min(5, "address must be at least 5 characters")
+            .required("address is required field"),
+        city: Yup.string()
+            .required("city is required field"),
+        postalCode: Yup.string()
+            .required("postal code is required field"),
+    }),
+});
+
 // ORDER VALIDATIONS
 export const orderSchema = Yup.object({
     shippingAddress: Yup.object({
