@@ -67,10 +67,19 @@
     position: relative;
     display: flex;
     align-items: center;
+    gap: 8px;
 
     .st-input {
         width: 100%;
+        min-width: 0;
+        flex: 1;
     }
+}
+
+.st-input-right-element {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
 }
 
 .st-dashboard-main {

@@ -11,6 +11,7 @@ const Input = ({
     as = 'input',
     disabled = false,
     required = false,
+    rightElement = null,
 }) => {
     const [showPassword, setShowPassword] = useState(false);
     const { errors, touched } = useFormikContext();
@@ -48,6 +49,11 @@ const Input = ({
                     >
                         <span className={showPassword ? "st-icon--eye-blocked" : "st-icon--view"}></span>
                     </button>
+                )}
+                {rightElement && (
+                    <div className="st-input-right-element">
+                        {rightElement}
+                    </div>
                 )}
             </div>
             <ErrorMessage name={name} />

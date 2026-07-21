@@ -120,57 +120,63 @@ export const Checkout = () => {
               <div className="st-checkout__field">
                 <h3>Contact Information</h3>
                 <div className="st-checkout--input-field">
-                  <Input name={'email'} type={'email'} placeholder={'you@example.com'} label='Email Address' required />
+                  <Input
+                    name={'email'}
+                    type={'email'}
+                    placeholder={'you@example.com'}
+                    label='Email Address'
+                    required
+                    rightElement={
+                      requiresEmailVerification && !hasCodeSentForThisEmail ? (
+                        isEmailVerified ? (
+                          <span className="st-checkout__verify-status st-checkout__verify-status--ok">✓ Verified</span>
+                        ) : (
+                          <Button
+                            type="button"
+                            variant="secondary"
+                            size="sm"
+                            label={sendingCode ? 'Sending...' : 'Send Verification Code'}
+                            disabled={!canSendCode}
+                            onClick={() => handleSendCode(values.email)}
+                          />
+                        )
+                      ) : null
+                    }
+                  />
 
-                  {requiresEmailVerification && (
+                  {requiresEmailVerification && !hasCodeSentForThisEmail && verifyMessage && (
+                    <p className="st-checkout__verify-message">{verifyMessage}</p>
+                  )}
+
+                  {requiresEmailVerification && !isEmailVerified && hasCodeSentForThisEmail && (
                     <div className="st-checkout__verify">
-                      {isEmailVerified ? (
-                        <p className="st-checkout__verify-status st-checkout__verify-status--ok">
-                          ✓ Email verified
-                        </p>
-                      ) : (
-                        <>
-                          {!hasCodeSentForThisEmail ? (
-                            <Button
-                              type="button"
-                              variant="secondary"
-                              size="sm"
-                              style={{ alignSelf: 'flex-start' }}
-                              label={sendingCode ? 'Sending...' : 'Send Verification Code'}
-                              disabled={!canSendCode}
-                              onClick={() => handleSendCode(values.email)}
-                            />
-                          ) : (
-                            <div className="st-checkout__verify-code">
-                              <input
-                                type="text"
-                                inputMode="numeric"
-                                className="st-checkout__verify-input"
-                                placeholder="6-digit code"
-                                value={verifyCodeInput}
-                                onChange={(e) => setVerifyCodeInput(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                              />
-                              <Button
-                                type="button"
-                                variant="primary"
-                                size="sm"
-                                label={verifying ? 'Verifying...' : 'Verify'}
-                                disabled={verifying || verifyCodeInput.length !== 6}
-                                onClick={() => handleVerifyCode(values.email)}
-                              />
-                              <button
-                                type="button"
-                                className="st-checkout__verify-resend"
-                                disabled={sendingCode}
-                                onClick={() => handleSendCode(values.email)}
-                              >
-                                Resend code
-                              </button>
-                            </div>
-                          )}
-                          {verifyMessage && <p className="st-checkout__verify-message">{verifyMessage}</p>}
-                        </>
-                      )}
+                      <div className="st-checkout__verify-code">
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          className="st-checkout__verify-input"
+                          placeholder="6-digit code"
+                          value={verifyCodeInput}
+                          onChange={(e) => setVerifyCodeInput(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                        />
+                        <Button
+                          type="button"
+                          variant="primary"
+                          size="sm"
+                          label={verifying ? 'Verifying...' : 'Verify'}
+                          disabled={verifying || verifyCodeInput.length !== 6}
+                          onClick={() => handleVerifyCode(values.email)}
+                        />
+                        <button
+                          type="button"
+                          className="st-checkout__verify-resend"
+                          disabled={sendingCode}
+                          onClick={() => handleSendCode(values.email)}
+                        >
+                          Resend code
+                        </button>
+                      </div>
+                      {verifyMessage && <p className="st-checkout__verify-message">{verifyMessage}</p>}
                     </div>
                   )}
                 </div>
