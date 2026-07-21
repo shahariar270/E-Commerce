@@ -78,7 +78,8 @@ export const CouponFormInner = ({ id, handleCloseModal }) => {
                         <Button
                             type="button"
                             variant="secondary"
-                            size="small"
+                            size="sm"
+                            style={{ alignSelf: 'flex-start' }}
                             label="Generate Coupon Code"
                             onClick={() => setFieldValue('code', generateCouponCode())}
                         >
