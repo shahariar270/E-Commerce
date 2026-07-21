@@ -29,7 +29,7 @@ const Input = ({
                 {label}
                 {required && <span style={{ color: 'red' }}> *</span>}
             </label>
-            <div className="st-input-wrapper">
+            <div className={`st-input-wrapper ${rightElement ? 'st-input-wrapper--merged' : ''}`}>
                 <Field
                     as={as}
                     id={name}

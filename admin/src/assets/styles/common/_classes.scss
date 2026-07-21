@@ -74,12 +74,48 @@
         min-width: 0;
         flex: 1;
     }
+
+    // When a right-element (e.g. an inline action button) is present, merge
+    // it into the same bordered box as the input instead of sitting beside
+    // it as a separate control — the input loses its own border and the
+    // button fills the wrapper's height, so it reads as one field.
+    &--merged {
+        gap: 0;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        overflow: hidden;
+        transition: border 0.2s, box-shadow 0.2s;
+
+        &:focus-within {
+            border-color: var(--st-primary);
+            box-shadow: 0 0 0 3px rgba(219, 68, 68, 0.15);
+        }
+
+        .st-input {
+            border: none;
+            border-radius: 0;
+
+            &:focus {
+                box-shadow: none;
+            }
+        }
+    }
 }
 
 .st-input-right-element {
     flex-shrink: 0;
     display: flex;
     align-items: center;
+    align-self: stretch;
+
+    .st-input-wrapper--merged & {
+        border-left: 1px solid #d1d5db;
+
+        .btn {
+            height: 100%;
+            border-radius: 0;
+        }
+    }
 }
 
 .st-dashboard-main {
