@@ -55,6 +55,19 @@ export const removeCookie = (name) => {
   document.cookie = `${name}=; path=/; max-age=0; SameSite=Lax`;
 };
 
+// Stable per-browser identity for anonymous (not logged in) shoppers, so
+// their cart/orders survive page reloads without requiring an account.
+export const getOrCreateGuestId = () => {
+  let guestId = localStorage.getItem('guest_id');
+  if (!guestId) {
+    guestId = typeof crypto !== 'undefined' && crypto.randomUUID
+      ? crypto.randomUUID()
+      : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    localStorage.setItem('guest_id', guestId);
+  }
+  return guestId;
+};
+
 
 export const useAuth = () => {
   const token = getCookie("token");

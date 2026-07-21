@@ -18,11 +18,21 @@ const cartItemSchema = new mongoose.Schema({
 }, { _id: false });
 
 const cartSchema = new mongoose.Schema({
+    // Exactly one of user_id / guest_id identifies the cart's owner.
+    // Both use a sparse unique index so a missing field never collides
+    // with other carts that are also missing it.
     user_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        required: true,
-        unique: true
+        required: false,
+        unique: true,
+        sparse: true
+    },
+    guest_id: {
+        type: String,
+        required: false,
+        unique: true,
+        sparse: true
     },
     items: [cartItemSchema],
 

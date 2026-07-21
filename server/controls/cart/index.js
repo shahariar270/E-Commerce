@@ -2,13 +2,17 @@ const Cart = require("../../model/cart");
 const ApiResponse = require("../../utils/api_response");
 const calculateTotals = require("./helper");
 
+// req.user is set by auth_middleware.identify — either a logged-in user
+// (id set) or a guest (guest_id set). Exactly one of the two identifies
+// which cart to operate on.
+const ownerFilter = (req) => req.user.id ? { user_id: req.user.id } : { guest_id: req.user.guest_id };
 
 class cart_system {
     async create_cart(req, res) {
         try {
             const { product_id, name, price, quantity } = req.body;
-            const { id: user_id } = req.user;
-            let cart = await Cart.findOne({ user_id });
+            const filter = ownerFilter(req);
+            let cart = await Cart.findOne(filter);
 
             const totalPrice = price * quantity;
 
@@ -24,7 +28,7 @@ class cart_system {
 
             } else {
                 cart = new Cart({
-                    user_id,
+                    ...filter,
                     items: [{ product_id, name, price, quantity, subtotal: totalPrice }]
                 });
             }
@@ -39,8 +43,7 @@ class cart_system {
     }
     async get_cart(req, res) {
         try {
-            const { id: user_id } = req.user;
-            const cart = await Cart.findOne({ user_id })
+            const cart = await Cart.findOne(ownerFilter(req))
                 .populate("items.product_id");
 
             if (!cart) return ApiResponse.error(res, "Cart is empty", 404);
@@ -50,11 +53,10 @@ class cart_system {
         }
     }
     async updated_cart(req, res) {
-        const { id: user_id } = req.user;
         const { product_id, quantity } = req.body;
 
         try {
-            const cart = await Cart.findOne({ user_id });
+            const cart = await Cart.findOne(ownerFilter(req));
             if (!cart) return ApiResponse.error(res, "Cart not found", 404);
 
             const item = cart.items.find(p => p.product_id.toString() === product_id);
@@ -77,11 +79,10 @@ class cart_system {
     }
 
     async remove_item_from_cart(req, res) {
-        const { id: user_id } = req.user;
         const { id } = req.params;
 
         try {
-            const cart = await Cart.findOne({ user_id });
+            const cart = await Cart.findOne(ownerFilter(req));
             if (!cart) return ApiResponse.error(res, "Cart not found", 404);
 
             cart.items = cart.items.filter(item => item.product_id.toString() !== id);
