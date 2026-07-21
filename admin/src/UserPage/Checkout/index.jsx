@@ -4,7 +4,7 @@ import { Form, Formik } from 'formik'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import './styles.scss'
-import { getCart } from '@Store/slices/cartSlice'
+import { getCart, clearCart } from '@Store/slices/cartSlice'
 import Button from '@Component/Buttons'
 import SEO from '@Component/SEO'
 import { useNavigate } from 'react-router-dom'
@@ -23,7 +23,10 @@ export const Checkout = () => {
   const handleSubmit = (values, { setSubmitting }) => {
     dispatch(createOrder(values))
       .unwrap()
-      .then((res) => setConfirmation(res.data))
+      .then((res) => {
+        setConfirmation(res.data);
+        dispatch(clearCart());
+      })
       .catch(() => { })
       .finally(() => setSubmitting(false));
   }

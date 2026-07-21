@@ -54,6 +54,15 @@ const applyCartPayload = (state, action) => {
 const cartSlice = createSlice({
   name: 'cart',
   initialState,
+  reducers: {
+    // The backend deletes the cart document once an order is placed, so
+    // local state needs an explicit reset too — a rejected getCart (404,
+    // cart not found) doesn't touch items, and there's nothing else that
+    // would clear stale items/coupon/badge count after checkout.
+    clearCart: (state) => {
+      Object.assign(state, initialState);
+    },
+  },
   extraReducers: (builder) => {
     const handlePending = (state) => { state.loading = true; state.error = null; };
     const handleRejected = (state, action) => { state.loading = false; state.error = action.error.message; };
@@ -85,4 +94,5 @@ const cartSlice = createSlice({
   },
 });
 
+export const { clearCart } = cartSlice.actions;
 export default cartSlice.reducer;
