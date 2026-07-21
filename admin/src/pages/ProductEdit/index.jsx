@@ -59,7 +59,7 @@ const ProductEdit = () => {
         return {
             product_name: currentProduct?.product_name || '',
             description: currentProduct?.description || '',
-            stock: currentProduct?.stock || 'in_stock',
+            stock: currentProduct?.stock ?? 0,
             category_ids: currentProduct?.category?.map(i => i._id) || [],
             price: currentProduct?.price || ''
         }
@@ -124,13 +124,22 @@ const ProductEdit = () => {
                             label="Description"
                             placeholder={'Enter a product description'}
                         />
-                        <Input
-                            label="Price"
-                            name="price"
-                            type="number"
-                            placeholder="Enter price"
-                            required
-                        />
+                        <div className="st-form--group">
+                            <Input
+                                label="Price"
+                                name="price"
+                                type="number"
+                                placeholder="Enter price"
+                                required
+                            />
+                            <Input
+                                label="Stock Quantity"
+                                name="stock"
+                                type="number"
+                                placeholder="Enter available quantity"
+                                required
+                            />
+                        </div>
                         <Select
                             name="category_ids"
                             label="Select Product category"

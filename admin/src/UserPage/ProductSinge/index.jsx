@@ -15,6 +15,7 @@ import {
   productJsonLd,
   productBreadcrumbJsonLd,
 } from '@utils/seo';
+import { getStockStatus } from '@utils/helper';
 
 const normalizeProductId = (product) => {
     if (!product) return null;
@@ -62,7 +63,7 @@ export const ProductSinge = () => {
         ? productReviews.reduce((sum, review) => sum + Number(review.rating || 0), 0) / productReviews.length
         : 0;
 
-    const increaseQty = () => setQuantity(prev => prev + 1);
+    const increaseQty = () => setQuantity(prev => (current?.stock ? Math.min(prev + 1, current.stock) : prev + 1));
 
     const decreaseQty = () => {
         setQuantity(prev => (prev > 1 ? prev - 1 : 1));
@@ -88,6 +89,9 @@ export const ProductSinge = () => {
     if (!current && loading) {
         return <div className="loading-message">Loading product...</div>;
     }
+
+    const stockInfo = getStockStatus(current?.stock);
+    const isOutOfStock = stockInfo.key === 'out_of_stock';
 
     const handleCart = (cartQuantity) => {
         dispatch(createCart({
@@ -173,6 +177,9 @@ export const ProductSinge = () => {
                         <div className="product-details">
                             <h2>{current.product_name}</h2>
                             <p className="price">Price: ${current.price}</p>
+                            <span className={`product-single__stock product-single__stock--${stockInfo.key.replace(/_/g, '-')}`}>
+                                {stockInfo.label}
+                            </span>
                             <div className="st-category-pill">
                                 <p>Category:</p>
                                 {current.category && current.category.map((cat) => (
@@ -182,20 +189,26 @@ export const ProductSinge = () => {
 
                             <div className="button-group">
                                 <div className="quantity-box">
-                                    <button type="button" onClick={decreaseQty}>-</button>
+                                    <button type="button" onClick={decreaseQty} disabled={isOutOfStock}>-</button>
                                     <input
                                         type="number"
                                         value={quantity}
-                                        onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))}
+                                        onChange={(e) => {
+                                            const next = Math.max(1, Number(e.target.value) || 1);
+                                            setQuantity(current.stock ? Math.min(next, current.stock) : next);
+                                        }}
                                         min="1"
+                                        max={current.stock || undefined}
+                                        disabled={isOutOfStock}
                                     />
-                                    <button type="button" onClick={increaseQty}>+</button>
+                                    <button type="button" onClick={increaseQty} disabled={isOutOfStock || quantity >= current.stock}>+</button>
                                 </div>
                                 <Button
-                                    label="Add to Cart"
+                                    label={isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
                                     onClick={() => handleCart(quantity)}
+                                    disabled={isOutOfStock}
                                 />
-                                <Button label="Buy Now" />
+                                <Button label="Buy Now" disabled={isOutOfStock} />
                             </div>
                         </div>
                     </div>

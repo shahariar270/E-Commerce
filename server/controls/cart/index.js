@@ -1,4 +1,5 @@
 const Cart = require("../../model/cart");
+const Product = require("../../model/product");
 const ApiResponse = require("../../utils/api_response");
 const calculateTotals = require("./helper");
 
@@ -8,16 +9,30 @@ class cart_system {
         try {
             const { product_id, name, price, quantity } = req.body;
             const { id: user_id } = req.user;
+
+            const product = await Product.findById(product_id);
+            if (!product) return ApiResponse.error(res, "Product not found", 404);
+
             let cart = await Cart.findOne({ user_id });
 
             const totalPrice = price * quantity;
+            const existingItem = cart?.items.find(p => p.product_id.toString() === product_id);
+            const resultingQuantity = (existingItem?.quantity || 0) + quantity;
+
+            if (resultingQuantity > product.stock) {
+                return ApiResponse.error(
+                    res,
+                    product.stock > 0
+                        ? `Only ${product.stock} left in stock`
+                        : "This product is out of stock",
+                    400
+                );
+            }
 
             if (cart) {
-                const itemIndex = cart.items.findIndex(p => p.product_id.toString() === product_id);
-
-                if (itemIndex > -1) {
-                    cart.items[itemIndex].quantity += quantity;
-                    cart.items[itemIndex].subtotal = cart.items[itemIndex].quantity * price;
+                if (existingItem) {
+                    existingItem.quantity = resultingQuantity;
+                    existingItem.subtotal = existingItem.quantity * price;
                 } else {
                     cart.items.push({ product_id, name, price, quantity, subtotal: totalPrice });
                 }
@@ -59,6 +74,18 @@ class cart_system {
 
             const item = cart.items.find(p => p.product_id.toString() === product_id);
             if (item) {
+                const product = await Product.findById(product_id);
+                if (!product) return ApiResponse.error(res, "Product not found", 404);
+                if (quantity > product.stock) {
+                    return ApiResponse.error(
+                        res,
+                        product.stock > 0
+                            ? `Only ${product.stock} left in stock`
+                            : "This product is out of stock",
+                        400
+                    );
+                }
+
                 item.quantity = quantity;
                 item.subtotal = item.price * quantity;
 

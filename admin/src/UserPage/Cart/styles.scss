@@ -84,6 +84,13 @@
     margin-top: 12px;
   }
 
+  &__stock-limit {
+    display: block;
+    margin-top: 6px;
+    font-size: 11px;
+    color: var(--color-error, #dc2626);
+  }
+
   &__qty {
     display: flex;
     align-items: center;
@@ -103,6 +110,11 @@
 
       &:hover {
         background: var(--surface-muted);
+      }
+
+      &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
       }
     }
 
