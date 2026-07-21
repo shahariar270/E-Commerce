@@ -12,14 +12,14 @@ import ErrorMessage from '@Component/ErrorMessage';
 export const CouponFormInner = ({ id, handleCloseModal }) => {
     const dispatch = useDispatch();
     const { currentCoupon, coupons } = useSelector((state) => state.coupon);
+    const existingCoupon = id ? coupons.find(c => c._id === id) : null;
+    const couponToEdit = id ? (existingCoupon || currentCoupon) : null;
 
     useEffect(() => {
-        if (id) {
-            const existingCoupon = coupons.find(c => c._id === id);
-            if (existingCoupon) return;
+        if (id && !existingCoupon) {
             dispatch(getCouponById(id));
         }
-    }, [id, coupons]);
+    }, [id, existingCoupon]);
 
     const handleSubmit = (values, { setSubmitting, resetForm }) => {
         const couponData = {
@@ -58,7 +58,7 @@ export const CouponFormInner = ({ id, handleCloseModal }) => {
             title={id ? 'Edit Coupon' : 'Add New Coupon'}
         >
             <Formik
-                initialValues={getCouponInitialValues(id ? currentCoupon : null)}
+                initialValues={getCouponInitialValues(couponToEdit)}
                 validationSchema={getCouponValidationSchema()}
                 onSubmit={handleSubmit}
                 enableReinitialize

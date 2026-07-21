@@ -3,8 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import Table from '@Component/Table';
 import CouponFormInner from './CouponFormInner';
 import { getCoupons, deleteCoupon } from '@Store/slices/couponSlice';
+import { showNotification } from '@Store/slices/notificationSlice';
 import Button from '@Component/Buttons';
 import SubHeading from '@Component/SubHeading';
+import './styles.scss';
 
 const Coupons = () => {
     const dispatch = useDispatch();
@@ -32,11 +34,31 @@ const Coupons = () => {
         }
     }, [dispatch]);
 
+    const handleCopyCode = useCallback((code) => {
+        navigator.clipboard.writeText(code)
+            .then(() => dispatch(showNotification({ message: `Copied "${code}" to clipboard`, type: 'success' })))
+            .catch(() => dispatch(showNotification({ message: 'Failed to copy coupon code', type: 'error' })));
+    }, [dispatch]);
+
     const columns = [
         {
             key: 'code',
             title: 'Code',
             width: '15%',
+            render: (value) => (
+                <div className="coupon-code-cell">
+                    <span>{value}</span>
+                    <button
+                        type="button"
+                        className="coupon-code-copy"
+                        onClick={() => handleCopyCode(value)}
+                        aria-label="Copy coupon code"
+                        title="Copy coupon code"
+                    >
+                        <span className="st-icon--clipboard" />
+                    </button>
+                </div>
+            ),
         },
         {
             key: 'discount_type',
