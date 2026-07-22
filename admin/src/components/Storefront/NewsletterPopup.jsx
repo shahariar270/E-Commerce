@@ -6,6 +6,7 @@ import { subscribe } from '@Store/slices/subscriberSlice';
 const DELAY_MS = 30000;
 const SUBSCRIBED_KEY = 'newsletter_subscribed';
 const DISMISSED_KEY = 'newsletter_popup_dismissed';
+const FIRST_SEEN_KEY = 'newsletter_first_seen_at';
 
 const NewsletterPopup = () => {
   const dispatch = useDispatch();
@@ -21,7 +22,20 @@ const NewsletterPopup = () => {
       return;
     }
 
-    const timer = setTimeout(() => setOpen(true), DELAY_MS);
+    // StorefrontLayout (and this popup with it) unmounts whenever a
+    // logged-in user visits an account page (/profile, /orders, /settings,
+    // /dashboard render under the plain admin-style Layout, not this one).
+    // A fresh 30s-from-mount timer would keep getting reset every time they
+    // wander back — anchor the delay to when they first arrived this
+    // session instead, so it counts total time on the site.
+    let firstSeenAt = sessionStorage.getItem(FIRST_SEEN_KEY);
+    if (!firstSeenAt) {
+      firstSeenAt = Date.now().toString();
+      sessionStorage.setItem(FIRST_SEEN_KEY, firstSeenAt);
+    }
+
+    const remaining = Math.max(0, DELAY_MS - (Date.now() - Number(firstSeenAt)));
+    const timer = setTimeout(() => setOpen(true), remaining);
     return () => clearTimeout(timer);
   }, []);
 
