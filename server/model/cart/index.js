@@ -51,7 +51,8 @@ const cartSchema = new mongoose.Schema({
         discount_type: { type: String, enum: ['percentage', 'fixed'], default: null },
         discount_value: { type: Number, default: null },
         max_discount_amount: { type: Number, default: null },
-        discount_amount: { type: Number, default: 0 }
+        discount_amount: { type: Number, default: 0 },
+        auto_applied: { type: Boolean, default: false }
     },
 
     grand_total: {

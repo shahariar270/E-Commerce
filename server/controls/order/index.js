@@ -6,6 +6,7 @@ const Settings = require("../../model/settings");
 const Product = require("../../model/product");
 const ApiResponse = require("../../utils/api_response");
 const sendMail = require("../../config/sender");
+const { calculateTotals, refreshCartCoupon } = require("../cart/helper");
 
 const BD_PHONE_REGEX = /^(?:\+?880|0)1[3-9]\d{8}$/;
 
@@ -86,6 +87,13 @@ class order_controller {
                 }
                 decremented.push(item);
             }
+
+            // Re-sync the coupon against its live record so a discount an
+            // admin edited (or expired/deactivated) after the customer
+            // applied it doesn't get charged at its stale value.
+            calculateTotals(cart);
+            await refreshCartCoupon(cart);
+            calculateTotals(cart);
 
             const subtotal = orderItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
             const couponCode = cart.coupon?.code || null;

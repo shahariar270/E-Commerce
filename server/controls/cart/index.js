@@ -1,7 +1,7 @@
 const Cart = require("../../model/cart");
 const Product = require("../../model/product");
 const ApiResponse = require("../../utils/api_response");
-const calculateTotals = require("./helper");
+const { calculateTotals, refreshCartCoupon, applyAutoCoupon } = require("./helper");
 
 // req.user is set by auth_middleware.identify — either a logged-in user
 // (id set) or a guest (guest_id set). Exactly one of the two identifies
@@ -54,6 +54,9 @@ class cart_system {
             }
 
             calculateTotals(cart);
+            await refreshCartCoupon(cart);
+            await applyAutoCoupon(cart);
+            calculateTotals(cart);
             await cart.save();
             return ApiResponse.success(res, "Item added to cart", cart, 201);
 
@@ -67,6 +70,16 @@ class cart_system {
                 .populate("items.product_id");
 
             if (!cart) return ApiResponse.error(res, "Cart is empty", 404);
+
+            const couponBefore = cart.coupon?.code;
+            const discountBefore = cart.coupon?.discount_amount;
+            await refreshCartCoupon(cart);
+            await applyAutoCoupon(cart);
+            calculateTotals(cart);
+            if (cart.coupon?.code !== couponBefore || cart.coupon?.discount_amount !== discountBefore) {
+                await cart.save();
+            }
+
             return ApiResponse.success(res, "Cart fetched successfully", cart);
         } catch (error) {
             return ApiResponse.error(res, "Error fetching cart", 500, error.message);
@@ -98,6 +111,9 @@ class cart_system {
                 item.subtotal = item.price * quantity;
 
                 calculateTotals(cart);
+                await refreshCartCoupon(cart);
+                await applyAutoCoupon(cart);
+                calculateTotals(cart);
                 await cart.save();
 
                 // Populate product_id before returning
@@ -120,6 +136,9 @@ class cart_system {
 
             cart.items = cart.items.filter(item => item.product_id.toString() !== id);
 
+            calculateTotals(cart);
+            await refreshCartCoupon(cart);
+            await applyAutoCoupon(cart);
             calculateTotals(cart);
             await cart.save();
 
