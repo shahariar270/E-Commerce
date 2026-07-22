@@ -22,12 +22,17 @@ class cart_system {
             const totalPrice = price * quantity;
             const existingItem = cart?.items.find(p => p.product_id.toString() === product_id);
             const resultingQuantity = (existingItem?.quantity || 0) + quantity;
+            // Documents saved before stock existed on the schema have it
+            // completely absent (not 0) — comparing a number against
+            // undefined is always false in JS, which would silently let the
+            // check below pass. Coerce to a real number first.
+            const availableStock = Number(product.stock) || 0;
 
-            if (resultingQuantity > product.stock) {
+            if (resultingQuantity > availableStock) {
                 return ApiResponse.error(
                     res,
-                    product.stock > 0
-                        ? `Only ${product.stock} left in stock`
+                    availableStock > 0
+                        ? `Only ${availableStock} left in stock`
                         : "This product is out of stock",
                     400
                 );
@@ -78,11 +83,12 @@ class cart_system {
             if (item) {
                 const product = await Product.findById(product_id);
                 if (!product) return ApiResponse.error(res, "Product not found", 404);
-                if (quantity > product.stock) {
+                const availableStock = Number(product.stock) || 0;
+                if (quantity > availableStock) {
                     return ApiResponse.error(
                         res,
-                        product.stock > 0
-                            ? `Only ${product.stock} left in stock`
+                        availableStock > 0
+                            ? `Only ${availableStock} left in stock`
                             : "This product is out of stock",
                         400
                     );

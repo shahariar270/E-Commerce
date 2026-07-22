@@ -63,8 +63,12 @@ class order_controller {
             // gets rolled back if a later item fails.
             const decremented = [];
             for (const item of orderItems) {
+                // $ifNull normalizes a completely-missing stock field (e.g.
+                // documents saved before stock existed on the schema) to 0
+                // within the query itself, so it's never treated as
+                // satisfying $gte by accident.
                 const result = await Product.updateOne(
-                    { _id: item.product, stock: { $gte: item.quantity } },
+                    { _id: item.product, $expr: { $gte: [{ $ifNull: ["$stock", 0] }, item.quantity] } },
                     { $inc: { stock: -item.quantity } }
                 );
                 if (result.matchedCount === 0) {
@@ -75,7 +79,7 @@ class order_controller {
                     return ApiResponse.error(
                         res,
                         product
-                            ? `Only ${product.stock} left in stock for "${product.product_name}"`
+                            ? `Only ${Number(product.stock) || 0} left in stock for "${product.product_name}"`
                             : "One of the items in your cart is no longer available",
                         400
                     );
