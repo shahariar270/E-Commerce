@@ -1,7 +1,7 @@
 const Coupon = require("../../model/coupon");
 const Cart = require("../../model/cart");
 const ApiResponse = require("../../utils/api_response");
-const calculateTotals = require("../cart/helper");
+const { calculateTotals } = require("../cart/helper");
 
 // req.user is set by auth_middleware.identify — either a logged-in user
 // (id set) or a guest (guest_id set). Exactly one of the two identifies
@@ -20,6 +20,7 @@ class coupon_controller {
                 usage_limit,
                 expiry_date,
                 is_active,
+                auto_apply,
             } = req.body;
             const user_id = req.user.id;
 
@@ -46,6 +47,7 @@ class coupon_controller {
                 usage_limit: usage_limit || null,
                 expiry_date,
                 is_active,
+                auto_apply,
                 user_id,
             });
 
@@ -95,6 +97,7 @@ class coupon_controller {
                 usage_limit,
                 expiry_date,
                 is_active,
+                auto_apply,
             } = req.body;
 
             if (discount_type && !['percentage', 'fixed'].includes(discount_type)) {
@@ -109,6 +112,7 @@ class coupon_controller {
                 usage_limit: usage_limit || null,
                 expiry_date,
                 is_active,
+                auto_apply,
             };
 
             if (code) {
@@ -181,6 +185,7 @@ class coupon_controller {
                 discount_value: coupon.discount_value,
                 max_discount_amount: coupon.max_discount_amount,
                 discount_amount: 0,
+                auto_applied: false,
             };
 
             calculateTotals(cart);
@@ -200,7 +205,7 @@ class coupon_controller {
                 return ApiResponse.error(res, "Cart not found", 404);
             }
 
-            cart.coupon = { code: null, discount_type: null, discount_value: null, max_discount_amount: null, discount_amount: 0 };
+            cart.coupon = { code: null, discount_type: null, discount_value: null, max_discount_amount: null, discount_amount: 0, auto_applied: false };
             calculateTotals(cart);
             await cart.save();
 

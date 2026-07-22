@@ -121,6 +121,7 @@ export const couponSchema = Yup.object({
     expiry_date: Yup.date()
         .required("expiry date is required field"),
     is_active: Yup.boolean().optional(),
+    auto_apply: Yup.boolean().optional(),
 });
 
 // CHECKOUT VALIDATIONS

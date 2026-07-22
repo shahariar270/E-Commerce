@@ -43,6 +43,10 @@ const coupon_schema = new mongoose.Schema(
             type: Boolean,
             default: true,
         },
+        auto_apply: {
+            type: Boolean,
+            default: false,
+        },
         user_id: {
             type: String,
             required: true,
