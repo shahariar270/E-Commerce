@@ -102,7 +102,10 @@ export const updateProfile = createAsyncThunk(
       }
 
       const formData = new FormData();
-      const { first_name, last_name, current_pass, new_pass, profile_image, remove_image } = profileData;
+      const {
+        first_name, last_name, current_pass, new_pass, profile_image, remove_image,
+        address_name, address_phone, address_line, address_city, address_postal_code,
+      } = profileData;
 
       if (first_name !== undefined) formData.append('first_name', first_name);
       if (last_name !== undefined) formData.append('last_name', last_name);
@@ -110,6 +113,11 @@ export const updateProfile = createAsyncThunk(
       if (new_pass) formData.append('new_pass', new_pass);
       if (profile_image) formData.append('profile_image', profile_image);
       if (remove_image) formData.append('remove_image', 'true');
+      if (address_name !== undefined) formData.append('address_name', address_name);
+      if (address_phone !== undefined) formData.append('address_phone', address_phone);
+      if (address_line !== undefined) formData.append('address_line', address_line);
+      if (address_city !== undefined) formData.append('address_city', address_city);
+      if (address_postal_code !== undefined) formData.append('address_postal_code', address_postal_code);
 
       const response = await fetch(`${authRoute}update_profile`, {
         method: 'POST',

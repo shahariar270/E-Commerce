@@ -80,7 +80,10 @@ module.exports = {
     },
     update_profile_controller: async (req, res) => {
         try {
-            const { current_pass, new_pass, first_name, last_name, role, remove_image } = req.body;
+            const {
+                current_pass, new_pass, first_name, last_name, role, remove_image,
+                address_name, address_phone, address_line, address_city, address_postal_code,
+            } = req.body;
             const userId = req.user.id;
             let updates = {}
 
@@ -114,6 +117,12 @@ module.exports = {
             if (last_name !== undefined) {
                 updates.last_name = last_name;
             }
+
+            if (address_name !== undefined) user.saved_address.name = address_name;
+            if (address_phone !== undefined) user.saved_address.phone = address_phone;
+            if (address_line !== undefined) user.saved_address.address = address_line;
+            if (address_city !== undefined) user.saved_address.city = address_city;
+            if (address_postal_code !== undefined) user.saved_address.postalCode = address_postal_code;
 
             Object.assign(user, updates);
             await user.save();
