@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { getProducts } from '@Store/slices/productSlice'
 import { getCategories } from '@Store/slices/categorySlice'
 import ProductCard from '@Component/ProductCard'
-import Pagination from '@Component/Pagination'
 import Select from '@Component/Select'
 import SectionHeading from '@Component/Storefront/SectionHeading'
 import './styles.scss'
 import SEO from '@Component/SEO'
+
+const PAGE_SIZE = 12
 
 const filterOptions = [
     { label: 'Price: High to Low', value: 'hig_to_lo' },
@@ -28,7 +29,6 @@ export const PublicProduct = () => {
         return params.get('search') || ''
     })
     const [currentPage, setCurrentPage] = useState(1)
-    const [pageSize, setPageSize] = useState(10)
     const [hasInitialFetch, setHasInitialFetch] = useState(false)
     const [selectedFilter, setSelectedFilter] = useState(() => {
         const params = new URLSearchParams(window.location.search)
@@ -39,6 +39,9 @@ export const PublicProduct = () => {
         return params.get('category') || null
     })
 
+    const sentinelRef = useRef(null)
+    const hasMore = products.length < pagination.total
+
     useEffect(() => {
         if (!categories || categories.length === 0) {
             dispatch(getCategories({ page: 1, limit: 20 }))
@@ -48,7 +51,7 @@ export const PublicProduct = () => {
     useEffect(() => {
         // Skip API call if we already have products and no filters/search/pagination changes
         // Only skip on initial page load without search or filter
-        if (hasInitialFetch && products.length > 0 && !searchQuery && !selectedFilter && !selectedCategory && currentPage === 1 && pageSize === 10) {
+        if (hasInitialFetch && products.length > 0 && !searchQuery && !selectedFilter && !selectedCategory && currentPage === 1) {
             return;
         }
 
@@ -58,14 +61,39 @@ export const PublicProduct = () => {
                 filter: selectedFilter,
                 category: selectedCategory,
                 page: currentPage,
-                per_page: pageSize
+                per_page: PAGE_SIZE,
+                append: currentPage > 1,
             }))
             setHasInitialFetch(true)
         }
 
         const timeoutId = setTimeout(fetchProducts, 300)
         return () => clearTimeout(timeoutId)
-    }, [dispatch, searchQuery, currentPage, pageSize, selectedFilter, selectedCategory, hasInitialFetch, products.length])
+        // products.length is intentionally excluded — it changes as a
+        // *result* of this effect's own dispatch (both the replace and the
+        // append case), so depending on it would re-trigger a fetch of the
+        // same page right after every load, appending it twice.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dispatch, searchQuery, currentPage, selectedFilter, selectedCategory, hasInitialFetch])
+
+    // Infinite scroll: load the next page once the sentinel below the grid
+    // comes near the viewport, instead of a click-through pager.
+    useEffect(() => {
+        if (loading || !hasMore) return;
+        const sentinel = sentinelRef.current;
+        if (!sentinel) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting) {
+                    setCurrentPage((prev) => prev + 1)
+                }
+            },
+            { rootMargin: '400px' }
+        )
+        observer.observe(sentinel)
+        return () => observer.disconnect()
+    }, [loading, hasMore, products.length])
 
     const handleFilterChange = (option) => {
         const value = option?.value || null
@@ -90,6 +118,11 @@ export const PublicProduct = () => {
             url.searchParams.delete('category')
         }
         window.history.replaceState({}, '', url)
+    }
+
+    const handleSearchChange = (value) => {
+        setSearchQuery(value)
+        setCurrentPage(1)
     }
 
     const activeFilterOption = filterOptions.find(o => o.value === selectedFilter) || null
@@ -152,7 +185,7 @@ export const PublicProduct = () => {
                             type="text"
                             placeholder="Search products..."
                             value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onChange={(e) => handleSearchChange(e.target.value)}
                             className="public-product-page__search"
                         />
                         <Select
@@ -164,7 +197,7 @@ export const PublicProduct = () => {
                     </div>
                 </div>
 
-                {loading ? (
+                {loading && currentPage === 1 ? (
                     <div className="public-product-page__loading">
                         <div className="loading-spinner"></div>
                         <p>Loading products...</p>
@@ -181,19 +214,18 @@ export const PublicProduct = () => {
                             ))}
                         </div>
 
-                        <div className="public-product-page__pagination">
-                            <Pagination
-                                currentPage={currentPage}
-                                total={pagination.total}
-                                pageSize={pageSize}
-                                onPageChange={setCurrentPage}
-                                onPageSizeChange={(size) => {
-                                    setPageSize(size);
-                                    setCurrentPage(1);
-                                }}
-                                pageSizeOptions={[10, 20, 50]}
-                            />
-                        </div>
+                        <div ref={sentinelRef} className="public-product-page__sentinel" />
+
+                        {loading && currentPage > 1 && (
+                            <div className="public-product-page__loading-more">
+                                <div className="loading-spinner"></div>
+                                <p>Loading more...</p>
+                            </div>
+                        )}
+
+                        {!hasMore && (
+                            <p className="public-product-page__end">You've reached the end of the list</p>
+                        )}
                     </>
                 )}
             </div>
