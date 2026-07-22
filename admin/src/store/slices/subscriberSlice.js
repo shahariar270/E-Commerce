@@ -1,6 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { apiClient } from '@utils/api';
 
+export const subscribe = createAsyncThunk(
+  'subscriber/subscribe',
+  async (email) => apiClient('/subscribe', { method: 'POST', body: JSON.stringify({ email }) })
+);
+
 export const getSubscribers = createAsyncThunk(
   'subscriber/getSubscribers',
   async ({ page = 1, limit = 10, search = '' } = {}) => {

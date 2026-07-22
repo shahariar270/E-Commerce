@@ -3,6 +3,11 @@ const auth_middleware = require('../../middlewares/auth_middleware');
 const subscriber_controller = require('../../controls/subscriber');
 const router = express.Router();
 
+router.post(
+    '/subscribe',
+    subscriber_controller.subscribe
+);
+
 router.get(
     '/admin/subscribers',
     auth_middleware.verify_token,

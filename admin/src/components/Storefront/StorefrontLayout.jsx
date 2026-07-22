@@ -6,6 +6,7 @@ import Notification from '@Component/Notifications';
 import UtilityBar from './UtilityBar';
 import Nav from './Nav';
 import Footer from './Footer';
+import NewsletterPopup from './NewsletterPopup';
 
 const StorefrontLayout = () => {
   const dispatch = useDispatch();
@@ -24,6 +25,7 @@ const StorefrontLayout = () => {
         <Outlet />
       </main>
       <Footer />
+      <NewsletterPopup />
       <Notification />
     </div>
   );
