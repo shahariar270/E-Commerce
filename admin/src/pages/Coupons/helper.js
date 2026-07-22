@@ -15,6 +15,7 @@ export const getCouponInitialValues = (coupon) => {
         usage_limit: coupon?.usage_limit ?? '',
         expiry_date: coupon ? toDateInputValue(coupon.expiry_date) : '',
         is_active: coupon ? coupon.is_active : true,
+        auto_apply: coupon?.auto_apply ?? false,
     };
 };
 

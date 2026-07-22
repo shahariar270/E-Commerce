@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import Table from '@Component/Table';
-import CouponFormInner from './CouponFormInner';
 import { getCoupons, deleteCoupon } from '@Store/slices/couponSlice';
 import { showNotification } from '@Store/slices/notificationSlice';
 import Button from '@Component/Buttons';
@@ -10,6 +10,7 @@ import './styles.scss';
 
 const Coupons = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { coupons, loading, error, message, pagination } = useSelector(
         (state) => state.coupon
     );
@@ -17,14 +18,10 @@ const Coupons = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [searchQuery, setSearchQuery] = useState('');
-    const [modalState, setModalState] = useState({ open: false, editId: null });
 
     useEffect(() => {
         dispatch(getCoupons({ page: currentPage, limit: pageSize }));
     }, [dispatch, currentPage, pageSize]);
-
-    const handleOpenModal = useCallback((id = null) => setModalState({ open: true, editId: id }), []);
-    const handleCloseModal = useCallback(() => setModalState({ open: false, editId: null }), []);
 
     const handleDelete = useCallback((id) => {
         if (window.confirm('Are you sure you want to delete this coupon?')) {
@@ -107,7 +104,7 @@ const Coupons = () => {
                     <Button
                         variant="primary"
                         size="small"
-                        onClick={() => handleOpenModal(row._id)}
+                        onClick={() => navigate(`/admin/coupon/${row._id}`)}
                         label='Edit'
                     >
                     </Button>
@@ -135,7 +132,7 @@ const Coupons = () => {
                 title={"Coupons"}
                 subtitle={"Manage discount coupons for your store."}
                 rightContent={
-                    <Button variant="primary" onClick={() => handleOpenModal()} label='Add New Coupon'>
+                    <Button variant="primary" onClick={() => navigate('/admin/coupon/new')} label='Add New Coupon'>
                     </Button>
                 }
             />
@@ -158,14 +155,6 @@ const Coupons = () => {
                 onPageSizeChange={(size) => { setPageSize(size); setCurrentPage(1); }}
                 emptyMessage="No coupons found"
             />
-
-            {modalState.open && (
-                <CouponFormInner
-                    id={modalState.editId}
-                    handleCloseModal={handleCloseModal}
-                />
-            )}
-
         </div>
     );
 };
