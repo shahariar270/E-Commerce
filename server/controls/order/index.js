@@ -2,6 +2,7 @@ const Cart = require("../../model/cart");
 const Order = require("../../model/order");
 const Coupon = require("../../model/coupon");
 const User = require("../../model/auth");
+const Subscriber = require("../../model/subscriber");
 const EmailVerification = require("../../model/emailVerification");
 const Settings = require("../../model/settings");
 const Product = require("../../model/product");
@@ -15,7 +16,7 @@ class order_controller {
     async create_order(req, res) {
         try {
             const { id: user_id, guest_id } = req.user;
-            const { shippingAddress, email, save_address } = req.body;
+            const { shippingAddress, email, save_address, subscribe } = req.body;
 
             if (!shippingAddress) {
                 return ApiResponse.error(res, "Shipping address is required", 400);
@@ -130,6 +131,15 @@ class order_controller {
 
             if (couponCode) {
                 await Coupon.findOneAndUpdate({ code: couponCode }, { $inc: { used_count: 1 } });
+            }
+
+            if (subscribe) {
+                const normalized_email = email.trim().toLowerCase();
+                await Subscriber.findOneAndUpdate(
+                    { email: normalized_email },
+                    { email: normalized_email, source: 'checkout' },
+                    { upsert: true, setDefaultsOnInsert: true }
+                );
             }
 
             await Cart.findByIdAndDelete(cart._id);

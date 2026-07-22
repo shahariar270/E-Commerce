@@ -15,6 +15,7 @@ import Categories from "./pages/Categories";
 import Coupons from "./pages/Coupons";
 import CouponEdit from "./pages/CouponEdit";
 import Customers from "./pages/Customers";
+import Subscribers from "./pages/Subscribers";
 import { PublicProduct } from "@Pages/PublicProduct";
 import { ProductSinge } from "./UserPage/ProductSinge";
 import Home from "./UserPage/Home";
@@ -89,6 +90,7 @@ function App() {
           <Route path="product/:id" element={<ProductEdit />} />
           <Route path="orders" element={<Orders />} />
           <Route path="customers" element={<Customers />} />
+          <Route path="subscribers" element={<Subscribers />} />
           <Route path="categories" element={<Categories />} />
           <Route path="coupons" element={<Coupons />} />
           <Route path="coupon/new" element={<CouponEdit />} />

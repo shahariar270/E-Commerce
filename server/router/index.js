@@ -12,6 +12,7 @@ const dashboard = require('../router/dashboard/index');
 const comment = require('../router/comment/index');
 const review = require('../router/review/index');
 const customer_router = require('../router/customer/index');
+const subscriber_router = require('../router/subscriber/index');
 
 
 router.use('/auth', auth_router);
@@ -26,5 +27,6 @@ router.use('/api', dashboard);
 router.use('/api', comment);
 router.use('/api', review);
 router.use('/api', customer_router);
+router.use('/api', subscriber_router);
 
 module.exports = router;

@@ -15,6 +15,7 @@ import { checkoutSchema } from '@utils/validationSchemas'
 const getInitialValues = (user, isAuthenticated) => ({
   email: isAuthenticated ? (user?.email || '') : '',
   save_address: isAuthenticated,
+  subscribe: false,
   shippingAddress: {
     name: user?.saved_address?.name || '',
     phone: user?.saved_address?.phone || '',
@@ -223,6 +224,10 @@ export const Checkout = () => {
                       Save this address for next time
                     </label>
                   )}
+                  <label className="st-checkout__save-address">
+                    <Field type="checkbox" name="subscribe" checked={values.subscribe} />
+                    Get notified about new products and offers
+                  </label>
                 </div>
               </div>
               <div className="st-checkout_box">
