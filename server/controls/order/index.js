@@ -1,6 +1,7 @@
 const Cart = require("../../model/cart");
 const Order = require("../../model/order");
 const Coupon = require("../../model/coupon");
+const User = require("../../model/auth");
 const EmailVerification = require("../../model/emailVerification");
 const Settings = require("../../model/settings");
 const Product = require("../../model/product");
@@ -14,7 +15,7 @@ class order_controller {
     async create_order(req, res) {
         try {
             const { id: user_id, guest_id } = req.user;
-            const { shippingAddress, email } = req.body;
+            const { shippingAddress, email, save_address } = req.body;
 
             if (!shippingAddress) {
                 return ApiResponse.error(res, "Shipping address is required", 400);
@@ -24,6 +25,18 @@ class order_controller {
             }
             if (!BD_PHONE_REGEX.test(shippingAddress.phone || '')) {
                 return ApiResponse.error(res, "Enter a valid Bangladeshi phone number (e.g. 01712345678)", 400);
+            }
+
+            if (user_id && save_address) {
+                await User.findByIdAndUpdate(user_id, {
+                    saved_address: {
+                        name: shippingAddress.name,
+                        phone: shippingAddress.phone,
+                        address: shippingAddress.address,
+                        city: shippingAddress.city,
+                        postalCode: shippingAddress.postalCode,
+                    },
+                });
             }
 
             if (!user_id) {

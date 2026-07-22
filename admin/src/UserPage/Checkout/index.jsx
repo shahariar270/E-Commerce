@@ -1,6 +1,7 @@
 import Input from '@Component/Input'
 import { createOrder } from '@Store/slices/orderSlice'
-import { Form, Formik } from 'formik'
+import { getProfile } from '@Store/slices/auth/authSlice'
+import { Form, Formik, Field } from 'formik'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import './styles.scss'
@@ -11,11 +12,24 @@ import { useNavigate } from 'react-router-dom'
 import { apiClient } from '@utils/api'
 import { checkoutSchema } from '@utils/validationSchemas'
 
+const getInitialValues = (user, isAuthenticated) => ({
+  email: isAuthenticated ? (user?.email || '') : '',
+  save_address: isAuthenticated,
+  shippingAddress: {
+    name: user?.saved_address?.name || '',
+    phone: user?.saved_address?.phone || '',
+    address: user?.saved_address?.address || '',
+    city: user?.saved_address?.city || '',
+    postalCode: user?.saved_address?.postalCode || '',
+  },
+});
+
 export const Checkout = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { items, total_quantity, total_price, coupon, grand_total } = useSelector((state) => state.cart);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const user = useSelector((state) => state.auth.user);
   const [confirmation, setConfirmation] = useState(null);
 
   // Guest-only email verification (logged-in users' account email is
@@ -32,6 +46,12 @@ export const Checkout = () => {
   useEffect(() => {
     dispatch(getCart());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (isAuthenticated && !user) {
+      dispatch(getProfile());
+    }
+  }, [dispatch, isAuthenticated, user]);
 
   const handleSendCode = async (email) => {
     setSendingCode(true);
@@ -76,17 +96,6 @@ export const Checkout = () => {
       .finally(() => setSubmitting(false));
   }
 
-  const initialValues = {
-    email: '',
-    shippingAddress: {
-      name: '',
-      phone: '',
-      address: '',
-      city: '',
-      postalCode: '',
-    }
-  }
-
   if (confirmation) {
     return (
       <div className="eshop-container st-checkout st-checkout--confirmation">
@@ -104,8 +113,9 @@ export const Checkout = () => {
   return (
     <Formik
       className="st-page--checkout"
+      enableReinitialize
       onSubmit={handleSubmit}
-      initialValues={initialValues}
+      initialValues={getInitialValues(user, isAuthenticated)}
       validationSchema={checkoutSchema}
     >
       {({ values, isSubmitting }) => {
@@ -121,90 +131,98 @@ export const Checkout = () => {
             <SEO title="Checkout" description="Complete your purchase securely." noindex />
             <h1 className="st-checkout__title">Checkout</h1>
             <Form className="st-checkout__form">
-              <div className="st-checkout__field">
-                <h3>Contact Information</h3>
-                <div className="st-checkout--input-field">
-                  <Input
-                    name={'email'}
-                    type={'email'}
-                    placeholder={'you@example.com'}
-                    label='Email Address'
-                    required
-                    rightElement={
-                      requiresEmailVerification && !hasCodeSentForThisEmail ? (
-                        isEmailVerified ? (
-                          <span className="st-checkout__verify-status st-checkout__verify-status--ok">✓ Verified</span>
-                        ) : (
+              {!isAuthenticated && (
+                <div className="st-checkout__field">
+                  <h3>Contact Information</h3>
+                  <div className="st-checkout--input-field">
+                    <Input
+                      name={'email'}
+                      type={'email'}
+                      placeholder={'you@example.com'}
+                      label='Email Address'
+                      required
+                      rightElement={
+                        requiresEmailVerification && !hasCodeSentForThisEmail ? (
+                          isEmailVerified ? (
+                            <span className="st-checkout__verify-status st-checkout__verify-status--ok">✓ Verified</span>
+                          ) : (
+                            <Button
+                              type="button"
+                              variant="secondary"
+                              size="sm"
+                              label={sendingCode ? 'Sending...' : 'Send Verification Code'}
+                              disabled={!canSendCode}
+                              onClick={() => handleSendCode(values.email)}
+                            />
+                          )
+                        ) : null
+                      }
+                    />
+
+                    {requiresEmailVerification && !hasCodeSentForThisEmail && verifyMessage && (
+                      <p className={`st-checkout__verify-message st-checkout__verify-message--${verifyMessageType}`}>{verifyMessage}</p>
+                    )}
+
+                    {requiresEmailVerification && !isEmailVerified && hasCodeSentForThisEmail && (
+                      <div className="st-checkout__verify">
+                        <p className="st-checkout__verify-label">
+                          Enter the 6-digit code sent to <strong>{values.email}</strong>
+                        </p>
+                        <div className="st-checkout__verify-code">
+                          <input
+                            type="text"
+                            inputMode="numeric"
+                            autoFocus
+                            className="st-checkout__verify-input"
+                            placeholder="000000"
+                            value={verifyCodeInput}
+                            onChange={(e) => setVerifyCodeInput(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                          />
                           <Button
                             type="button"
-                            variant="secondary"
+                            variant="primary"
                             size="sm"
-                            label={sendingCode ? 'Sending...' : 'Send Verification Code'}
-                            disabled={!canSendCode}
-                            onClick={() => handleSendCode(values.email)}
+                            label={verifying ? 'Verifying...' : 'Verify'}
+                            disabled={verifying || verifyCodeInput.length !== 6}
+                            onClick={() => handleVerifyCode(values.email)}
                           />
-                        )
-                      ) : null
-                    }
-                  />
-
-                  {requiresEmailVerification && !hasCodeSentForThisEmail && verifyMessage && (
-                    <p className={`st-checkout__verify-message st-checkout__verify-message--${verifyMessageType}`}>{verifyMessage}</p>
-                  )}
-
-                  {requiresEmailVerification && !isEmailVerified && hasCodeSentForThisEmail && (
-                    <div className="st-checkout__verify">
-                      <p className="st-checkout__verify-label">
-                        Enter the 6-digit code sent to <strong>{values.email}</strong>
-                      </p>
-                      <div className="st-checkout__verify-code">
-                        <input
-                          type="text"
-                          inputMode="numeric"
-                          autoFocus
-                          className="st-checkout__verify-input"
-                          placeholder="000000"
-                          value={verifyCodeInput}
-                          onChange={(e) => setVerifyCodeInput(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                        />
-                        <Button
-                          type="button"
-                          variant="primary"
-                          size="sm"
-                          label={verifying ? 'Verifying...' : 'Verify'}
-                          disabled={verifying || verifyCodeInput.length !== 6}
-                          onClick={() => handleVerifyCode(values.email)}
-                        />
+                        </div>
+                        <div className="st-checkout__verify-footer">
+                          {verifyMessage && (
+                            <p className={`st-checkout__verify-message st-checkout__verify-message--${verifyMessageType}`}>
+                              {verifyMessage}
+                            </p>
+                          )}
+                          <button
+                            type="button"
+                            className="st-checkout__verify-resend"
+                            disabled={sendingCode}
+                            onClick={() => handleSendCode(values.email)}
+                          >
+                            {sendingCode ? 'Resending...' : 'Resend code'}
+                          </button>
+                        </div>
                       </div>
-                      <div className="st-checkout__verify-footer">
-                        {verifyMessage && (
-                          <p className={`st-checkout__verify-message st-checkout__verify-message--${verifyMessageType}`}>
-                            {verifyMessage}
-                          </p>
-                        )}
-                        <button
-                          type="button"
-                          className="st-checkout__verify-resend"
-                          disabled={sendingCode}
-                          onClick={() => handleSendCode(values.email)}
-                        >
-                          {sendingCode ? 'Resending...' : 'Resend code'}
-                        </button>
-                      </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
               <div className="st-checkout__field">
                 <h3>Shipping Information</h3>
                 <div className="st-checkout--input-field">
-                  <Input name={'shippingAddress.name'} placeholder={'Johnathan Sterling'} label='Full Name' required />
-                  <Input name={'shippingAddress.phone'} type="tel" placeholder={'01712345678'} label='Phone Number' required />
-                  <Input name={'shippingAddress.address'} as="textarea" placeholder={'House, road, area, thana/upazila'} label='Address' required />
+                  <Input name={'shippingAddress.name'} placeholder={'Johnathan Sterling'} label='Full Name' required={!isAuthenticated} />
+                  <Input name={'shippingAddress.phone'} type="tel" placeholder={'01712345678'} label='Phone Number' required={!isAuthenticated} />
+                  <Input name={'shippingAddress.address'} as="textarea" placeholder={'House, road, area, thana/upazila'} label='Address' required={!isAuthenticated} />
                   <div className="st-form--group">
-                    <Input name={'shippingAddress.city'} placeholder={'Dhaka'} label='City' required />
-                    <Input name={'shippingAddress.postalCode'} placeholder={'1207'} label='Postal Code' required />
+                    <Input name={'shippingAddress.city'} placeholder={'Dhaka'} label='City' required={!isAuthenticated} />
+                    <Input name={'shippingAddress.postalCode'} placeholder={'1207'} label='Postal Code' required={!isAuthenticated} />
                   </div>
+                  {isAuthenticated && (
+                    <label className="st-checkout__save-address">
+                      <Field type="checkbox" name="save_address" checked={values.save_address} />
+                      Save this address for next time
+                    </label>
+                  )}
                 </div>
               </div>
               <div className="st-checkout_box">

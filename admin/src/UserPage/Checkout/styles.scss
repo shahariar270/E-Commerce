@@ -152,6 +152,16 @@
         }
     }
 
+    &__save-address {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 8px;
+        font-size: 13px;
+        color: var(--text-body);
+        cursor: pointer;
+    }
+
     &--confirmation {
         max-width: 480px;
         margin: 60px auto;
