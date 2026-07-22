@@ -25,7 +25,7 @@ class dashboard {
             const total_order = await Order.countDocuments();
             const total_product = await Product.countDocuments();
 
-            const customer_count = await User.countDocuments({ role: "buyer" });
+            const customer_count = await User.countDocuments({ user_role: "buyer" });
 
             return ApiResponse.success(res, "Dashboard Loading successfully", {
                 revenue_count,

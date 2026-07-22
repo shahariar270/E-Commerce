@@ -11,6 +11,7 @@ const settings_router = require('../router/settings/index');
 const dashboard = require('../router/dashboard/index');
 const comment = require('../router/comment/index');
 const review = require('../router/review/index');
+const customer_router = require('../router/customer/index');
 
 
 router.use('/auth', auth_router);
@@ -24,5 +25,6 @@ router.use('/api', settings_router);
 router.use('/api', dashboard);
 router.use('/api', comment);
 router.use('/api', review);
+router.use('/api', customer_router);
 
 module.exports = router;
