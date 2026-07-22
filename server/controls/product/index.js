@@ -66,7 +66,7 @@ class product_controller {
 
     async get_products(req, res) {
         try {
-            const { category, stock, search, filter, page = 1, per_page = 10 } = req.query;
+            const { category, stock, search, filter, page = 1, per_page = 10, random } = req.query;
             let query = {};
             let sort = { createdAt: -1 };
             let priceSort = null;
@@ -103,7 +103,15 @@ class product_controller {
 
             let get_all_products;
 
-            if (priceSort !== null) {
+            if (random === 'true') {
+                // $sample draws a true random subset from the whole
+                // matching set each call — pagination doesn't apply here,
+                // it's meant for a "featured picks" style feed.
+                get_all_products = await Product.aggregate([
+                    { $match: query },
+                    { $sample: { size: limit } },
+                ]);
+            } else if (priceSort !== null) {
                 // price is stored as String, so use $toInt to sort numerically
                 get_all_products = await Product.aggregate([
                     { $match: query },

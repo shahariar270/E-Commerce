@@ -30,7 +30,7 @@ const Home = () => {
 
   useEffect(() => {
     if (products.length === 0) {
-      dispatch(getProducts({ per_page: 8 }));
+      dispatch(getProducts({ per_page: 8, random: true }));
     }
     if (!categories || categories.length === 0) {
       dispatch(getCategories({ page: 1, limit: 20 }));

@@ -21,6 +21,7 @@ export const getProducts = createAsyncThunk(
     if (params.category) query.append('category', params.category);
     if (params.page) query.append('page', params.page);
     if (params.per_page) query.append('per_page', params.per_page);
+    if (params.random) query.append('random', 'true');
     const queryString = query.toString();
     return apiClient(`/products${queryString ? `?${queryString}` : ''}`);
   }
