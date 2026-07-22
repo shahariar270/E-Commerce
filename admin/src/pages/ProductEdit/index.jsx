@@ -19,16 +19,13 @@ const ProductEdit = () => {
     const dispatch = useDispatch();
     const { id } = useParams();
 
-    const productData = useSelector(state => state.product.data);
     const currentProduct = useSelector(state => state.product.current);
 
     useEffect(() => {
-        if (id) {
-            const existingProduct = productData.find(p => p._id === id);
-            if (existingProduct) return;
+        if (id && currentProduct?._id !== id) {
             dispatch(getProductById(id));
         }
-    }, [id, productData]);
+    }, [id, currentProduct]);
 
 
     const handleSubmit = async (values) => {
