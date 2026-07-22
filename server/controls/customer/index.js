@@ -55,6 +55,30 @@ class customer_controller {
             return ApiResponse.error(res, "Error retrieving customers", 500, error.message);
         }
     }
+
+    async update_customer_status(req, res) {
+        try {
+            const { id } = req.params;
+            const { is_active } = req.body;
+
+            if (typeof is_active !== 'boolean') {
+                return ApiResponse.error(res, "is_active must be true or false", 400);
+            }
+
+            if (id === req.user.id) {
+                return ApiResponse.error(res, "You cannot disable your own account", 400);
+            }
+
+            const customer = await User.findByIdAndUpdate(id, { is_active }, { new: true }).select('-password');
+            if (!customer) {
+                return ApiResponse.error(res, "Customer not found", 404);
+            }
+
+            return ApiResponse.success(res, `Account ${is_active ? 'enabled' : 'disabled'} successfully`, customer);
+        } catch (error) {
+            return ApiResponse.error(res, "Error updating account status", 500, error.message);
+        }
+    }
 }
 
 module.exports = new customer_controller;

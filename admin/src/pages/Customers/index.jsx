@@ -1,17 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { jwtDecode } from 'jwt-decode';
 import Table from '@Component/Table';
-import { getCustomers } from '@Store/slices/customerSlice';
+import Button from '@Component/Buttons';
+import { getCustomers, updateCustomerStatus } from '@Store/slices/customerSlice';
 import SubHeading from '@Component/SubHeading';
 import SEO from '@Component/SEO';
+import { getCookie } from '@utils/helper';
 import './styles.scss';
 
 const formatDate = (date) => (date ? new Date(date).toLocaleDateString() : '-');
 const formatMoney = (value) => `$${Number(value || 0).toFixed(2)}`;
 
+const getCurrentUserId = () => {
+    const token = getCookie('token');
+    if (!token) return null;
+    try {
+        return jwtDecode(token)?.id ?? null;
+    } catch (err) {
+        return null;
+    }
+};
+
 const Customers = () => {
     const dispatch = useDispatch();
     const { customers, loading, error, pagination } = useSelector((state) => state.customer);
+    const currentUserId = getCurrentUserId();
 
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -21,11 +35,18 @@ const Customers = () => {
         dispatch(getCustomers({ page: currentPage, limit: pageSize, search: searchQuery }));
     }, [dispatch, currentPage, pageSize, searchQuery]);
 
+    const handleToggleStatus = (row) => {
+        const nextActive = row.is_active === false;
+        const verb = nextActive ? 'enable' : 'disable';
+        if (!window.confirm(`Are you sure you want to ${verb} ${row.email}'s account?`)) return;
+        dispatch(updateCustomerStatus({ id: row._id, is_active: nextActive }));
+    };
+
     const columns = [
         {
             key: 'first_name',
             title: 'Customer',
-            width: '30%',
+            width: '25%',
             render: (_, row) => {
                 const name = `${row.first_name || ''} ${row.last_name || ''}`.trim() || row.user_name;
                 const initial = name?.trim()?.charAt(0)?.toUpperCase() || '?';
@@ -63,8 +84,33 @@ const Customers = () => {
         {
             key: 'createdAt',
             title: 'Joined',
-            width: '15%',
+            width: '13%',
             render: (value) => formatDate(value),
+        },
+        {
+            key: 'is_active',
+            title: 'Status',
+            width: '10%',
+            render: (value) => (
+                <span className={`badge ${value === false ? 'badge--danger' : 'badge--success'}`}>
+                    {value === false ? 'Disabled' : 'Active'}
+                </span>
+            ),
+        },
+        {
+            key: 'actions',
+            title: 'Actions',
+            width: '13%',
+            render: (_, row) => (
+                row._id === currentUserId ? null : (
+                    <Button
+                        variant={row.is_active === false ? 'secondary' : 'danger'}
+                        size="small"
+                        label={row.is_active === false ? 'Enable' : 'Disable'}
+                        onClick={() => handleToggleStatus(row)}
+                    />
+                )
+            ),
         },
     ];
 

@@ -66,6 +66,11 @@ module.exports = {
             if (!isMatch) {
                 return ApiResponse.error(res, "Password Wrong", 401);
             }
+
+            if (user.is_active === false) {
+                return ApiResponse.error(res, "This account has been disabled. Contact support for help.", 403);
+            }
+
             const token = jwt.sign(
                 { id: user._id, user_name: user.user_name, user_role: user.user_role },
                 jwt_token,

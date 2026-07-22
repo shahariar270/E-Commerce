@@ -12,6 +12,15 @@ export const getCustomers = createAsyncThunk(
   }
 );
 
+export const updateCustomerStatus = createAsyncThunk(
+  'customer/updateCustomerStatus',
+  async ({ id, is_active }) =>
+    apiClient(`/admin/customers/${id}/status`, {
+      method: 'PUT',
+      body: JSON.stringify({ is_active }),
+    })
+);
+
 const initialState = {
   customers: [],
   loading: false,
@@ -35,6 +44,16 @@ const customerSlice = createSlice({
       })
       .addCase(getCustomers.rejected, (state, action) => {
         state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(updateCustomerStatus.fulfilled, (state, action) => {
+        const updated = action.payload?.data;
+        const index = state.customers.findIndex((c) => c._id === updated?._id);
+        if (index !== -1) {
+          state.customers[index] = { ...state.customers[index], ...updated };
+        }
+      })
+      .addCase(updateCustomerStatus.rejected, (state, action) => {
         state.error = action.error.message;
       });
   },

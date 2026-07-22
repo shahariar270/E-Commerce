@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const ApiResponse = require('../../utils/api_response');
+const User = require('../../model/auth');
 
 
 class auth_middleware {
@@ -22,9 +23,17 @@ class auth_middleware {
         }
         const token = authHeader.split(" ")[1];
 
-        jwt.verify(token, this.secret, (err, decoded) => {
+        jwt.verify(token, this.secret, async (err, decoded) => {
             if (err) {
                 return ApiResponse.error(res, "Invalid token", 403);
+            }
+
+            // A still-valid token doesn't mean the account is still allowed
+            // in — an admin may have disabled it after this token was
+            // issued, so re-check current status on every request.
+            const account = await User.findById(decoded.id).select('is_active');
+            if (!account || account.is_active === false) {
+                return ApiResponse.error(res, "This account has been disabled", 401);
             }
 
             req.user = decoded;
@@ -40,8 +49,12 @@ class auth_middleware {
 
         if (authHeader) {
             const token = authHeader.split(" ")[1];
-            return jwt.verify(token, this.secret, (err, decoded) => {
+            return jwt.verify(token, this.secret, async (err, decoded) => {
                 if (!err) {
+                    const account = await User.findById(decoded.id).select('is_active');
+                    if (!account || account.is_active === false) {
+                        return ApiResponse.error(res, "This account has been disabled", 401);
+                    }
                     req.user = decoded;
                     return next();
                 }
