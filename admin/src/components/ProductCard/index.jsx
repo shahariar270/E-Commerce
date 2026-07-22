@@ -3,6 +3,7 @@ import './styles.scss';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { createCart } from '@Store/slices/cartSlice';
+import { getStockStatus } from '@utils/helper';
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
@@ -12,16 +13,8 @@ const ProductCard = ({ product }) => {
   const categoryName = product.category?.[0]?.name?.trim();
   const productAlt = `Buy ${product.product_name}${categoryName ? ` — ${categoryName}` : ""} online in Bangladesh`;
 
-  const getStockStatus = (stock) => {
-    const statusMap = {
-      in_stock: { label: 'In Stock', class: 'in-stock' },
-      out_stock: { label: 'Out of Stock', class: 'out-stock' },
-      coming_soon: { label: 'Coming Soon', class: 'coming-soon' },
-    };
-    return statusMap[stock] || { label: stock, class: '' };
-  };
-
   const stockInfo = getStockStatus(product.stock);
+  const isOutOfStock = stockInfo.key === 'out_of_stock';
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
@@ -43,7 +36,7 @@ const ProductCard = ({ product }) => {
           loading="lazy"
         />
         {categoryName && <span className="product-card__category-pill">{categoryName}</span>}
-        <span className={`product-card__stock product-card__stock--${stockInfo.class}`}>
+        <span className={`product-card__stock product-card__stock--${stockInfo.key.replace(/_/g, '-')}`}>
           {stockInfo.label}
         </span>
       </div>
@@ -63,10 +56,10 @@ const ProductCard = ({ product }) => {
           </span>
           <button
             className="product-card__btn"
-            disabled={product.stock === 'out_stock'}
+            disabled={isOutOfStock}
             onClick={handleAddToCart}
           >
-            Add to Cart
+            {isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
           </button>
         </div>
       </div>

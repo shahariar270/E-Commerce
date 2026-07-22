@@ -3,6 +3,7 @@ const Order = require("../../model/order");
 const Coupon = require("../../model/coupon");
 const EmailVerification = require("../../model/emailVerification");
 const Settings = require("../../model/settings");
+const Product = require("../../model/product");
 const ApiResponse = require("../../utils/api_response");
 const sendMail = require("../../config/sender");
 
@@ -52,6 +53,35 @@ class order_controller {
                 quantity: item.quantity,
                 price: item.price
             }));
+
+            // Re-verify and reserve stock now, atomically per item — the cart
+            // may have been sitting for a while, and this is the only place
+            // that guards against overselling when two orders race for the
+            // same last unit. No DB transaction required: the conditional
+            // $gte guard means a decrement either fully succeeds or is a
+            // no-op, and anything already decremented in this order attempt
+            // gets rolled back if a later item fails.
+            const decremented = [];
+            for (const item of orderItems) {
+                const result = await Product.updateOne(
+                    { _id: item.product, stock: { $gte: item.quantity } },
+                    { $inc: { stock: -item.quantity } }
+                );
+                if (result.matchedCount === 0) {
+                    for (const done of decremented) {
+                        await Product.updateOne({ _id: done.product }, { $inc: { stock: done.quantity } });
+                    }
+                    const product = await Product.findById(item.product).select('product_name stock');
+                    return ApiResponse.error(
+                        res,
+                        product
+                            ? `Only ${product.stock} left in stock for "${product.product_name}"`
+                            : "One of the items in your cart is no longer available",
+                        400
+                    );
+                }
+                decremented.push(item);
+            }
 
             const subtotal = orderItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
             const couponCode = cart.coupon?.code || null;

@@ -67,9 +67,10 @@ export const productSchema = Yup.object({
     price: Yup.number()
         .positive("price must be a positive number")
         .required("price is required field"),
-    stock: Yup.string()
-        .oneOf(["in_stock", "out_of_stock", "low_stock"], "invalid stock status")
-        .optional(),
+    stock: Yup.number()
+        .min(0, "stock cannot be negative")
+        .integer("stock must be a whole number")
+        .required("stock quantity is required field"),
     category_ids: Yup.array()
         .of(Yup.string())
         .min(1, "at least one category is required")

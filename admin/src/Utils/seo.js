@@ -92,11 +92,9 @@ export const productJsonLd = (product, { reviews = [], averageRating = 0 } = {})
     priceCurrency: "BDT",
     price: product.price != null ? String(product.price) : undefined,
     availability:
-      product.stock === "in_stock"
+      Number(product.stock) > 0
         ? "https://schema.org/InStock"
-        : product.stock === "out_stock"
-        ? "https://schema.org/OutOfStock"
-        : "https://schema.org/PreOrder",
+        : "https://schema.org/OutOfStock",
     seller: { "@type": "Organization", name: SITE_CONFIG.siteName },
   };
 

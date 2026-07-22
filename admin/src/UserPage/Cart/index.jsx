@@ -18,7 +18,9 @@ const Cart = () => {
 
   const handleQuantityChange = (item, delta) => {
     const newQty = (item.quantity || 1) + delta;
+    const availableStock = item?.product_id?.stock;
     if (newQty < 1) return;
+    if (typeof availableStock === 'number' && newQty > availableStock) return;
     dispatch(updateCart({ product_id: item?.product_id?._id, quantity: newQty }));
   };
 
@@ -69,8 +71,16 @@ const Cart = () => {
                     <div className="st-cart__qty">
                       <button onClick={() => handleQuantityChange(item, -1)}>−</button>
                       <span>{item.quantity}</span>
-                      <button onClick={() => handleQuantityChange(item, 1)}>+</button>
+                      <button
+                        onClick={() => handleQuantityChange(item, 1)}
+                        disabled={typeof item?.product_id?.stock === 'number' && item.quantity >= item.product_id.stock}
+                      >
+                        +
+                      </button>
                     </div>
+                    {typeof item?.product_id?.stock === 'number' && item.quantity >= item.product_id.stock && (
+                      <span className="st-cart__stock-limit">Max available in stock</span>
+                    )}
                     <button
                       className="st-cart__remove"
                       onClick={() => handleRemove(item?.product_id?._id)}

@@ -23,10 +23,13 @@ const product_schema = new mongoose.Schema(
             required: true,
             minlength: 6,
         },
+        // Real inventory count — in/low/out-of-stock status is derived from
+        // this everywhere it's displayed, not stored separately, so there's
+        // only ever one source of truth for availability.
         stock: {
-            type: String,
-            enum: ['in_stock', 'coming_soon', 'out_stock'],
-            trim: true,
+            type: Number,
+            default: 0,
+            min: 0,
         },
         category: {
             type: [{
