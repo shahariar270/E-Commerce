@@ -18,22 +18,36 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 6px;
     border: none;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 500;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
     position: relative;
     overflow: hidden;
     cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+
+    &:hover {
+        transform: translateY(-1px);
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+
     //size variants
     &--sm {
-        padding: 6px 12px;
+        padding: 8px 14px;
+        font-size: 13px;
     }
     &--md {
-        padding: 8px 16px;
+        padding: 11px 20px;
     }
     &--lg {
-        padding: 10px 20px;
+        padding: 14px 28px;
+        font-size: 16px;
     }
 
     //color variants
@@ -41,6 +55,11 @@
         background-color: var(--st-primary);
         color: var(--text-white);
         z-index: 0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.16);
+
+        &:hover {
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22);
+        }
 
         @include btn-slide(var(--st-primary-hover));
     }
@@ -49,6 +68,11 @@
         background-color: var(--st-secondary);
         color: var(--text-primary);
         z-index: 0;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+
+        &:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        }
 
         @include btn-slide(var(--st-secondary-hover));
     }
@@ -91,6 +115,7 @@
     opacity: 0.6;
     cursor: not-allowed !important;
     pointer-events: none;
+    transform: none !important;
 }
 
 .btn:disabled::before {
