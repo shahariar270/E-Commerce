@@ -75,6 +75,9 @@ export const productSchema = Yup.object({
         .of(Yup.string())
         .min(1, "at least one category is required")
         .required("category is required field"),
+    brand: Yup.string().optional(),
+    sku: Yup.string().optional(),
+    warranty: Yup.string().optional(),
 });
 
 // CART VALIDATIONS

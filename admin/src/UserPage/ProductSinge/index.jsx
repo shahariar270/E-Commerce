@@ -198,6 +198,20 @@ export const ProductSinge = () => {
                                 ))}
                             </div>
 
+                            {(current.brand || current.sku || current.warranty) && (
+                                <ul className="product-highlights">
+                                    {current.brand && (
+                                        <li><span>Brand</span>{current.brand}</li>
+                                    )}
+                                    {current.sku && (
+                                        <li><span>SKU</span>{current.sku}</li>
+                                    )}
+                                    {current.warranty && (
+                                        <li><span>Warranty</span>{current.warranty}</li>
+                                    )}
+                                </ul>
+                            )}
+
                             <div className="button-group">
                                 <div className="quantity-box">
                                     <button type="button" onClick={decreaseQty} disabled={isOutOfStock}>-</button>

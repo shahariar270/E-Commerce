@@ -48,6 +48,21 @@ const product_schema = new mongoose.Schema(
             type: String,
             default: ''
         },
+        brand: {
+            type: String,
+            default: '',
+            trim: true,
+        },
+        sku: {
+            type: String,
+            default: '',
+            trim: true,
+        },
+        warranty: {
+            type: String,
+            default: '',
+            trim: true,
+        },
     },
     { timestamps: true }
 );

@@ -59,7 +59,10 @@ const ProductEdit = () => {
             description: currentProduct?.description || '',
             stock: currentProduct?.stock ?? 0,
             category_ids: currentProduct?.category?.map(i => i._id) || [],
-            price: currentProduct?.price || ''
+            price: currentProduct?.price || '',
+            brand: currentProduct?.brand || '',
+            sku: currentProduct?.sku || '',
+            warranty: currentProduct?.warranty || ''
         }
     }
 
@@ -137,6 +140,23 @@ const ProductEdit = () => {
                                 type="number"
                                 placeholder="Enter available quantity"
                                 required
+                            />
+                        </div>
+                        <div className="st-form--group">
+                            <Input
+                                label="Brand"
+                                name="brand"
+                                placeholder="e.g. Sony"
+                            />
+                            <Input
+                                label="SKU"
+                                name="sku"
+                                placeholder="e.g. SKU-12345"
+                            />
+                            <Input
+                                label="Warranty"
+                                name="warranty"
+                                placeholder="e.g. 1 Year Warranty"
                             />
                         </div>
                         <Select
