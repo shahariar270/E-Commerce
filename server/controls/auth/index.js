@@ -1,10 +1,13 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
+const { OAuth2Client } = require('google-auth-library');
 const User = require('../../model/auth');
 const {
     registerSchema,
     loginSchema,
-    updateProfileSchema
+    updateProfileSchema,
+    googleLoginSchema
 } = require('../../validation_schema/auth');
 const { uploadImage } = require('../../utils/cloudniry');
 const ApiResponse = require('../../utils/api_response');
@@ -12,6 +15,15 @@ const jwt_token = process.env.JWT_TOKEN;
 if (!jwt_token) {
     throw new Error('FATAL: JWT_TOKEN environment variable is not set');
 }
+
+const google_client_id = process.env.GOOGLE_CLIENT_ID;
+const googleClient = google_client_id ? new OAuth2Client(google_client_id) : null;
+
+const issue_token = (user) => jwt.sign(
+    { id: user._id, user_name: user.user_name, user_role: user.user_role },
+    jwt_token,
+    { expiresIn: "1h" }
+);
 
 
 module.exports = {
@@ -71,14 +83,69 @@ module.exports = {
                 return ApiResponse.error(res, "This account has been disabled. Contact support for help.", 403);
             }
 
-            const token = jwt.sign(
-                { id: user._id, user_name: user.user_name, user_role: user.user_role },
-                jwt_token,
-                { expiresIn: "1h" }
-            );
+            const token = issue_token(user);
 
             return ApiResponse.success(res, "Login successfully", { token });
 
+        } catch (error) {
+            return ApiResponse.error(res, error.message, 500);
+        }
+    },
+    google_login_controller: async (req, res) => {
+        try {
+            if (!googleClient) {
+                return ApiResponse.error(res, "Google login is not configured", 500);
+            }
+
+            const validate = googleLoginSchema.safeParse(req.body);
+            if (!validate.success) {
+                return ApiResponse.error(res, validate.error.issues[0].message, 400);
+            }
+
+            const { credential } = req.body;
+
+            let payload;
+            try {
+                const ticket = await googleClient.verifyIdToken({
+                    idToken: credential,
+                    audience: google_client_id,
+                });
+                payload = ticket.getPayload();
+            } catch (err) {
+                return ApiResponse.error(res, "Invalid Google credential", 401);
+            }
+
+            if (!payload?.email || !payload.email_verified) {
+                return ApiResponse.error(res, "Google account has no verified email", 401);
+            }
+
+            const email = payload.email.toLowerCase();
+            let user = await User.findOne({ email });
+
+            if (user) {
+                if (user.is_active === false) {
+                    return ApiResponse.error(res, "This account has been disabled. Contact support for help.", 403);
+                }
+                if (!user.google_id) {
+                    user.google_id = payload.sub;
+                    await user.save();
+                }
+            } else {
+                const randomPassword = await bcrypt.hash(crypto.randomBytes(32).toString('hex'), 10);
+                user = await User.create({
+                    user_name: email.split('@')[0],
+                    email,
+                    password: randomPassword,
+                    first_name: payload.given_name || payload.name || 'Google',
+                    last_name: payload.family_name || '',
+                    image: payload.picture || '',
+                    google_id: payload.sub,
+                });
+            }
+
+            const token = issue_token(user);
+
+            return ApiResponse.success(res, "Login successfully", { token });
         } catch (error) {
             return ApiResponse.error(res, error.message, 500);
         }
