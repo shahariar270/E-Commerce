@@ -39,6 +39,13 @@ const userSchema = new mongoose.Schema(
             default: '',
             trim: true,
         },
+        google_id: {
+            type: String,
+            default: null,
+            index: true,
+            sparse: true,
+            unique: true,
+        },
         user_role: {
             type: String,
             default: 'buyer',
