@@ -1,8 +1,9 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form } from "formik";
+import { GoogleLogin } from '@react-oauth/google';
 import Input from "../../components/Input";
 import Button from "../../components/Buttons";
-import { loginUser, clearError } from "../../store/slices/auth/authSlice";
+import { loginUser, googleLogin, clearError } from "../../store/slices/auth/authSlice";
 import { loginSchema } from "../../Utils/validationSchemas";
 import { useNavigate } from "react-router-dom";
 import "./style.scss";
@@ -15,31 +16,44 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, error } = useSelector((state) => state.auth);
+  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
   const initialValues = {
     email: "",
     password: "",
   };
 
+  const redirectAfterLogin = () => {
+    const token = getCookie('token');
+    const user = jwtDecode(token);
+
+    if (user.user_role === "admin") {
+      navigate("/admin/dashboard");
+    } else {
+      navigate("/");
+    }
+  };
+
   const handleSubmit = (values, { setSubmitting, resetForm }) => {
     dispatch(clearError());
     dispatch(loginUser({ email: values.email, password: values.password }))
       .unwrap()
-      .then(() => {
-        const token = getCookie('token');
-        const user = jwtDecode(token);
-
-          if (user.user_role === "admin") {
-            navigate("/admin/dashboard");
-          } else {
-            navigate("/");
-          }
-      })
+      .then(redirectAfterLogin)
       .catch(() => {
         // Error is handled by Redux
       })
       .finally(() => {
         setSubmitting(false);
+      });
+  };
+
+  const handleGoogleSuccess = (credentialResponse) => {
+    dispatch(clearError());
+    dispatch(googleLogin({ credential: credentialResponse.credential }))
+      .unwrap()
+      .then(redirectAfterLogin)
+      .catch(() => {
+        // Error is handled by Redux
       });
   };
 
@@ -115,6 +129,21 @@ const Login = () => {
             </Form>
           )}
         </Formik>
+
+        {googleClientId && (
+          <>
+            <div className="st-login-divider">
+              <span>or</span>
+            </div>
+            <div className="st-login-google">
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={() => {}}
+                width="100%"
+              />
+            </div>
+          </>
+        )}
 
         <div className="st-login-footer">
           <p>

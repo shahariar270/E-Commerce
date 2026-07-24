@@ -110,6 +110,28 @@
   }
 }
 
+.st-login-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background-color: var(--border-default);
+  }
+}
+
+.st-login-google {
+  display: flex;
+  justify-content: center;
+}
+
 .st-login-footer {
   text-align: center;
   margin-top: 24px;
