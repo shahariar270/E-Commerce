@@ -19,6 +19,9 @@ import Subscribers from "./pages/Subscribers";
 import { PublicProduct } from "@Pages/PublicProduct";
 import { ProductSinge } from "./UserPage/ProductSinge";
 import Home from "./UserPage/Home";
+import PrivacyPolicy from "./pages/StaticPages/PrivacyPolicy";
+import TermsOfUse from "./pages/StaticPages/TermsOfUse";
+import FAQ from "./pages/StaticPages/FAQ";
 import ErrorPage from "./pages/ErrorPage";
 import Cart from "./UserPage/Cart";
 import { Checkout } from "./UserPage/Checkout";
@@ -72,6 +75,9 @@ function App() {
           <Route path="product/:id" element={<ProductSinge />} />
           <Route path="cart" element={<Cart />} />
           <Route path="checkout" element={<Checkout />} />
+          <Route path="privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="terms-of-use" element={<TermsOfUse />} />
+          <Route path="faq" element={<FAQ />} />
         </Route>
 
         <Route element={<Layout />}>

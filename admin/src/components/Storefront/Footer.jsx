@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import logo from '../../assets/images/logo.svg';
 import { subscribe } from '@Store/slices/subscriberSlice';
 import './styles.scss';
@@ -9,6 +10,12 @@ const columns = [
   ['Account', ['My Account', 'Login / Register', 'Cart']],
   ['Quick Link', ['Privacy Policy', 'Terms Of Use', 'FAQ', 'Contact']],
 ];
+
+const quickLinkHrefs = {
+  'Privacy Policy': '/privacy-policy',
+  'Terms Of Use': '/terms-of-use',
+  'FAQ': '/faq',
+};
 
 const SubscribeForm = () => {
   const dispatch = useDispatch();
@@ -75,7 +82,9 @@ const Footer = () => (
           <h4>{heading}</h4>
           <div className="eshop-footer__col-links">
             {items.map((item) => (
-              <a key={item}>{item}</a>
+              quickLinkHrefs[item]
+                ? <Link key={item} to={quickLinkHrefs[item]}>{item}</Link>
+                : <a key={item}>{item}</a>
             ))}
           </div>
         </div>
