@@ -1,0 +1,22 @@
+[
+  {
+    "_id": "6a1baadd44f6f81b24ef2e57",
+    "product": "6a1b85a944f6f81b24ef2a23",
+    "author": "6a1b933644f6f81b24ef2cfe",
+    "content": "এটাতে ডিস্কাউন্ট হবে?\n",
+    "parent": null,
+    "createdAt": "2026-05-31T03:28:29.688Z",
+    "updatedAt": "2026-05-31T03:28:29.688Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a1bab7f44f6f81b24ef2eb4",
+    "product": "6a1b85a944f6f81b24ef2a23",
+    "author": "6a146653f287cc3b2873b1ef",
+    "content": "na? looking for next offers",
+    "parent": "6a1baadd44f6f81b24ef2e57",
+    "createdAt": "2026-05-31T03:31:11.984Z",
+    "updatedAt": "2026-05-31T03:31:11.984Z",
+    "__v": 0
+  }
+]

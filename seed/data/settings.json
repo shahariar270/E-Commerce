@@ -1,0 +1,9 @@
+[
+  {
+    "_id": "6a6008f65fc810d12bc827f1",
+    "__v": 0,
+    "createdAt": "2026-07-22T00:04:06.023Z",
+    "require_guest_email_verification": false,
+    "updatedAt": "2026-07-22T00:04:08.495Z"
+  }
+]

@@ -1,0 +1,19 @@
+[
+  {
+    "_id": "6a60119f2a40bdd0aff4e9bb",
+    "code": "GUWR339L",
+    "discount_type": "fixed",
+    "discount_value": 1000,
+    "max_discount_amount": null,
+    "min_purchase_amount": 0,
+    "usage_limit": null,
+    "used_count": 1,
+    "expiry_date": "2026-07-23T00:00:00.000Z",
+    "is_active": true,
+    "auto_apply": false,
+    "user_id": "6a146653f287cc3b2873b1ef",
+    "createdAt": "2026-07-22T00:41:04.003Z",
+    "updatedAt": "2026-07-22T01:33:06.820Z",
+    "__v": 0
+  }
+]

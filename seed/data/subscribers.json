@@ -1,0 +1,18 @@
+[
+  {
+    "_id": "6a6023d65fc810d12bc827f3",
+    "email": "subscriber1@example.com",
+    "__v": 0,
+    "createdAt": "2026-07-22T01:58:46.966Z",
+    "source": "website",
+    "updatedAt": "2026-07-22T01:58:46.966Z"
+  },
+  {
+    "_id": "6a60de7b25bfb3dc0467cbb8",
+    "email": "subscriber2@example.com",
+    "__v": 0,
+    "createdAt": "2026-07-22T15:15:07.682Z",
+    "source": "checkout",
+    "updatedAt": "2026-07-22T15:15:07.682Z"
+  }
+]

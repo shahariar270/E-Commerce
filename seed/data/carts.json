@@ -1,0 +1,340 @@
+[
+  {
+    "_id": "6a5a3303fa4ed8520487c35d",
+    "user_id": "6a5a32d5fa4ed8520487c34c",
+    "items": [
+      {
+        "product_id": "6a1b884244f6f81b24ef2b4d",
+        "name": "Zeblaze GTR 3 1.32",
+        "price": 3699,
+        "quantity": 1,
+        "subtotal": 3699
+      },
+      {
+        "product_id": "6a1b925644f6f81b24ef2c76",
+        "name": "tmu",
+        "price": 1196,
+        "quantity": 1,
+        "subtotal": 1196
+      }
+    ],
+    "total_quantity": 2,
+    "total_price": 4895,
+    "createdAt": "2026-07-17T13:49:55.173Z",
+    "updatedAt": "2026-07-17T17:27:26.254Z",
+    "__v": 1
+  },
+  {
+    "_id": "6a5ecf7f71f56e96db3b7d6d",
+    "guest_id": "f4a6e8c6-e737-44b1-a3a1-f811194e6287",
+    "items": [
+      {
+        "product_id": "6a1b925644f6f81b24ef2c76",
+        "name": "tmu",
+        "price": 1196,
+        "quantity": 1,
+        "subtotal": 1196
+      }
+    ],
+    "total_quantity": 1,
+    "total_price": 1196,
+    "coupon": {
+      "code": null,
+      "discount_type": null,
+      "discount_value": null,
+      "max_discount_amount": null,
+      "discount_amount": 0
+    },
+    "grand_total": 1196,
+    "createdAt": "2026-07-21T01:46:39.253Z",
+    "updatedAt": "2026-07-21T01:46:39.253Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a5f7c21aa3616d7816ea577",
+    "user_id": "6a240d6c0095ca3d21efe87a",
+    "items": [
+      {
+        "product_id": "6a1b875444f6f81b24ef2a77",
+        "name": "Whirlpool Refrigerator NEO INV 258GD CRP",
+        "price": 52799,
+        "quantity": 1,
+        "subtotal": 52799
+      }
+    ],
+    "total_quantity": 1,
+    "total_price": 52799,
+    "coupon": {
+      "code": null,
+      "discount_type": null,
+      "discount_value": null,
+      "max_discount_amount": null,
+      "discount_amount": 0,
+      "auto_applied": false
+    },
+    "grand_total": 52799,
+    "createdAt": "2026-07-21T14:03:13.024Z",
+    "updatedAt": "2026-07-22T01:03:58.424Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a5f8115218649fdba42ce2b",
+    "guest_id": "dda33f81-b57c-4b84-96e0-87b2de7c151f",
+    "items": [
+      {
+        "product_id": "6a1b925644f6f81b24ef2c76",
+        "name": "tmu",
+        "price": 1196,
+        "quantity": 1,
+        "subtotal": 1196
+      }
+    ],
+    "total_quantity": 1,
+    "total_price": 1196,
+    "coupon": {
+      "code": null,
+      "discount_type": null,
+      "discount_value": null,
+      "max_discount_amount": null,
+      "discount_amount": 0
+    },
+    "grand_total": 1196,
+    "createdAt": "2026-07-21T14:24:21.759Z",
+    "updatedAt": "2026-07-21T14:24:21.759Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a5f8120218649fdba42ce2e",
+    "guest_id": "5b006291-280e-4ef5-b497-a2c2628628fd",
+    "items": [
+      {
+        "product_id": "6a1b925644f6f81b24ef2c76",
+        "name": "tmu",
+        "price": 1196,
+        "quantity": 1,
+        "subtotal": 1196
+      }
+    ],
+    "total_quantity": 1,
+    "total_price": 1196,
+    "coupon": {
+      "code": null,
+      "discount_type": null,
+      "discount_value": null,
+      "max_discount_amount": null,
+      "discount_amount": 0
+    },
+    "grand_total": 1196,
+    "createdAt": "2026-07-21T14:24:32.720Z",
+    "updatedAt": "2026-07-21T14:24:32.720Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a5f8145218649fdba42ce36",
+    "guest_id": "c81d88bb-999c-4048-be2e-cabb5639ede0",
+    "items": [
+      {
+        "product_id": "6a1b925644f6f81b24ef2c76",
+        "name": "tmu",
+        "price": 1196,
+        "quantity": 1,
+        "subtotal": 1196
+      }
+    ],
+    "total_quantity": 1,
+    "total_price": 1196,
+    "coupon": {
+      "code": null,
+      "discount_type": null,
+      "discount_value": null,
+      "max_discount_amount": null,
+      "discount_amount": 0
+    },
+    "grand_total": 1196,
+    "createdAt": "2026-07-21T14:25:09.744Z",
+    "updatedAt": "2026-07-21T14:25:09.744Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a5f82f8218649fdba42cec3",
+    "guest_id": "91a0df8c-eaef-4043-8d44-2b60df41c0b5",
+    "items": [
+      {
+        "product_id": "6a1b925644f6f81b24ef2c76",
+        "name": "tmu",
+        "price": 1196,
+        "quantity": 1,
+        "subtotal": 1196
+      }
+    ],
+    "total_quantity": 1,
+    "total_price": 1196,
+    "coupon": {
+      "code": null,
+      "discount_type": null,
+      "discount_value": null,
+      "max_discount_amount": null,
+      "discount_amount": 0
+    },
+    "grand_total": 1196,
+    "createdAt": "2026-07-21T14:32:24.127Z",
+    "updatedAt": "2026-07-21T15:26:46.989Z",
+    "__v": 4
+  },
+  {
+    "_id": "6a5f8b497b2b93c976c52bf2",
+    "guest_id": "fc61ab57-f2a9-462b-a12f-cd7b67c29a42",
+    "items": [
+      {
+        "product_id": "6a1b925644f6f81b24ef2c76",
+        "name": "tmu",
+        "price": 1196,
+        "quantity": 1,
+        "subtotal": 1196
+      }
+    ],
+    "total_quantity": 1,
+    "total_price": 1196,
+    "coupon": {
+      "code": null,
+      "discount_type": null,
+      "discount_value": null,
+      "max_discount_amount": null,
+      "discount_amount": 0
+    },
+    "grand_total": 1196,
+    "createdAt": "2026-07-21T15:07:53.563Z",
+    "updatedAt": "2026-07-21T15:07:53.563Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a5f90a07b2b93c976c52c15",
+    "guest_id": "67e50946-9e20-4884-b135-b8e67cb74e37",
+    "items": [
+      {
+        "product_id": "6a1b925644f6f81b24ef2c76",
+        "name": "tmu",
+        "price": 1196,
+        "quantity": 1,
+        "subtotal": 1196
+      }
+    ],
+    "total_quantity": 1,
+    "total_price": 1196,
+    "coupon": {
+      "code": null,
+      "discount_type": null,
+      "discount_value": null,
+      "max_discount_amount": null,
+      "discount_amount": 0
+    },
+    "grand_total": 1196,
+    "createdAt": "2026-07-21T15:30:40.717Z",
+    "updatedAt": "2026-07-21T15:30:40.717Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a5f937b7b2b93c976c52c26",
+    "guest_id": "f8bf08f1-af6d-467c-b197-bd63d299b3ff",
+    "items": [
+      {
+        "product_id": "6a1b925644f6f81b24ef2c76",
+        "name": "tmu",
+        "price": 1196,
+        "quantity": 1,
+        "subtotal": 1196
+      }
+    ],
+    "total_quantity": 1,
+    "total_price": 1196,
+    "coupon": {
+      "code": null,
+      "discount_type": null,
+      "discount_value": null,
+      "max_discount_amount": null,
+      "discount_amount": 0
+    },
+    "grand_total": 1196,
+    "createdAt": "2026-07-21T15:42:51.430Z",
+    "updatedAt": "2026-07-21T15:42:51.430Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a5f9933ea697f7d2ed74b3c",
+    "guest_id": "0961bb09-72ea-49aa-a21c-67b24b03aab0",
+    "items": [
+      {
+        "product_id": "6a1b925644f6f81b24ef2c76",
+        "name": "tmu",
+        "price": 1196,
+        "quantity": 1,
+        "subtotal": 1196
+      }
+    ],
+    "total_quantity": 1,
+    "total_price": 1196,
+    "coupon": {
+      "code": null,
+      "discount_type": null,
+      "discount_value": null,
+      "max_discount_amount": null,
+      "discount_amount": 0
+    },
+    "grand_total": 1196,
+    "createdAt": "2026-07-21T16:07:15.363Z",
+    "updatedAt": "2026-07-21T16:07:15.363Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a6009fc8f44726fb749b4e0",
+    "guest_id": "147eff08-7962-4638-bc1e-f52a06aed112",
+    "items": [
+      {
+        "product_id": "6a1b925644f6f81b24ef2c76",
+        "name": "tmu",
+        "price": 1196,
+        "quantity": 1,
+        "subtotal": 1196
+      }
+    ],
+    "total_quantity": 1,
+    "total_price": 1196,
+    "coupon": {
+      "code": null,
+      "discount_type": null,
+      "discount_value": null,
+      "max_discount_amount": null,
+      "discount_amount": 0
+    },
+    "grand_total": 1196,
+    "createdAt": "2026-07-22T00:08:28.863Z",
+    "updatedAt": "2026-07-22T00:08:28.863Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a6013472a40bdd0aff4ea27",
+    "guest_id": "31381fa4-ca9a-4b85-a027-ef44f00eff94",
+    "items": [
+      {
+        "product_id": "6a1b854e44f6f81b24ef2a09",
+        "name": "Mini UPS For WiFi Router and ONU",
+        "price": 2119,
+        "quantity": 1,
+        "subtotal": 2119
+      }
+    ],
+    "total_quantity": 1,
+    "total_price": 2119,
+    "coupon": {
+      "code": null,
+      "discount_type": null,
+      "discount_value": null,
+      "max_discount_amount": null,
+      "discount_amount": 0
+    },
+    "grand_total": 2119,
+    "createdAt": "2026-07-22T00:48:07.576Z",
+    "updatedAt": "2026-07-22T00:48:07.576Z",
+    "__v": 0
+  }
+]
