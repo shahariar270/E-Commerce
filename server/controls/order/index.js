@@ -12,20 +12,41 @@ const { calculateTotals, refreshCartCoupon } = require("../cart/helper");
 
 const BD_PHONE_REGEX = /^(?:\+?880|0)1[3-9]\d{8}$/;
 
+const escapeHtml = (str) =>
+    String(str ?? '').replace(/[&<>"']/g, (c) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+    }[c]));
+
 class order_controller {
     async create_order(req, res) {
         try {
             const { id: user_id, guest_id } = req.user;
-            const { shippingAddress, email, save_address, subscribe } = req.body;
+            const { shippingAddress, email: submittedEmail, save_address, subscribe } = req.body;
 
             if (!shippingAddress) {
                 return ApiResponse.error(res, "Shipping address is required", 400);
             }
-            if (!email) {
-                return ApiResponse.error(res, "Email is required", 400);
-            }
             if (!BD_PHONE_REGEX.test(shippingAddress.phone || '')) {
                 return ApiResponse.error(res, "Enter a valid Bangladeshi phone number (e.g. 01712345678)", 400);
+            }
+
+            // Authenticated orders always use the account's own email — never
+            // trust a client-supplied value here, or any logged-in user could
+            // relay an unverified order-confirmation email (and forced
+            // newsletter subscription) to an arbitrary address via a direct
+            // API call, bypassing the guest email-verification flow below.
+            let email;
+            if (user_id) {
+                const account = await User.findById(user_id).select('email');
+                if (!account) {
+                    return ApiResponse.error(res, "User not found", 404);
+                }
+                email = account.email;
+            } else {
+                email = submittedEmail;
+                if (!email) {
+                    return ApiResponse.error(res, "Email is required", 400);
+                }
             }
 
             if (user_id && save_address) {
@@ -150,7 +171,7 @@ class order_controller {
 
             const orderItemsHtml = orderItems.map(item => `
             <tr>
-              <td style="padding:12px;border:1px solid #e5e7eb;">${item.name}</td>
+              <td style="padding:12px;border:1px solid #e5e7eb;">${escapeHtml(item.name)}</td>
               <td align="center" style="padding:12px;border:1px solid #e5e7eb;">${item.quantity}</td>
               <td align="right" style="padding:12px;border:1px solid #e5e7eb;">$${(item.price * item.quantity).toFixed(2)}</td>
             </tr>
@@ -192,7 +213,7 @@ class order_controller {
           <tr>
             <td class="content" style="padding:40px;">
               <h2 style="margin-top:0;color:#111827;font-size:24px;">Order Confirmed! 🎉</h2>
-              <p style="color:#4b5563;font-size:16px;line-height:1.6;">Hi ${shippingAddress.name},</p>
+              <p style="color:#4b5563;font-size:16px;line-height:1.6;">Hi ${escapeHtml(shippingAddress.name)},</p>
               <p style="color:#4b5563;font-size:16px;line-height:1.6;">Your order has been placed successfully. We're getting it ready for you!</p>
 
               <!-- Order Details -->
