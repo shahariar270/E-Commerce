@@ -10,24 +10,11 @@ const router = require('./router');
 const ApiResponse = require('./utils/api_response');
 const Cart = require('./model/cart');
 const http = require('http');
-const { Server } = require('socket.io');
+const socketManager = require('./socket');
 
 const server = http.createServer(app);
 
-const io = new Server(server, {
-    cors: {
-        origin: process.env.FRONTEND_URL || 'http://localhost:5173',
-        methods: ["GET", "POST"]
-    }
-});
-
-// io.on('connection', (socket) => {
-//     console.log('User connected:', socket.id);
-
-//     socket.on('disconnect', () => {
-//         console.log('User disconnected');
-//     });
-// });
+socketManager.init(server);
 
 const allowedOrigins = [
     process.env.FRONTEND_URL,

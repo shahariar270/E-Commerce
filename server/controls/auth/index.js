@@ -11,6 +11,7 @@ const {
 } = require('../../validation_schema/auth');
 const { uploadImage } = require('../../utils/cloudniry');
 const ApiResponse = require('../../utils/api_response');
+const socketManager = require('../../socket');
 const jwt_token = process.env.JWT_TOKEN;
 if (!jwt_token) {
     throw new Error('FATAL: JWT_TOKEN environment variable is not set');
@@ -42,12 +43,21 @@ module.exports = {
 
             const hashedPass = await bcrypt.hash(password, 10);
 
-            await User.create({
+            const newUser = await User.create({
                 user_name,
                 email,
                 password: hashedPass,
                 first_name,
                 last_name,
+            });
+
+            socketManager.emitToAdmins('new_user', {
+                id: newUser._id,
+                user_name: newUser.user_name,
+                first_name: newUser.first_name,
+                last_name: newUser.last_name,
+                email: newUser.email,
+                createdAt: newUser.createdAt,
             });
 
             return ApiResponse.success(res, "User created successfully", null, 201);
