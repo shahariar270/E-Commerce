@@ -7,11 +7,17 @@ const {
     registerSchema,
     loginSchema,
     updateProfileSchema,
-    googleLoginSchema
+    googleLoginSchema,
+    forgotPasswordSchema,
+    resetPasswordSchema
 } = require('../../validation_schema/auth');
 const { uploadImage } = require('../../utils/cloudniry');
 const ApiResponse = require('../../utils/api_response');
 const socketManager = require('../../socket');
+const sendMail = require('../../config/sender');
+
+const RESET_TOKEN_TTL_MS = 30 * 60 * 1000;
+const hashToken = (token) => crypto.createHash('sha256').update(token).digest('hex');
 const jwt_token = process.env.JWT_TOKEN;
 if (!jwt_token) {
     throw new Error('FATAL: JWT_TOKEN environment variable is not set');
@@ -222,6 +228,108 @@ module.exports = {
 
             return ApiResponse.success(res, 'User Get Successfully', userData);
 
+        } catch (error) {
+            return ApiResponse.error(res, error.message, 500);
+        }
+    },
+    forgot_password_controller: async (req, res) => {
+        try {
+            const validate = forgotPasswordSchema.safeParse(req.body);
+            if (!validate.success) {
+                return ApiResponse.error(res, validate.error.issues[0].message, 400);
+            }
+
+            const { email } = req.body;
+            // Always return the same response whether or not the email is
+            // registered — confirming/denying an account's existence here is
+            // the classic password-reset enumeration vector.
+            const genericMessage = "If that email is registered, a password reset link has been sent";
+
+            const user = await User.findOne({ email: email.toLowerCase() });
+            if (user) {
+                const rawToken = crypto.randomBytes(32).toString('hex');
+                user.reset_password_token = hashToken(rawToken);
+                user.reset_password_expires = Date.now() + RESET_TOKEN_TTL_MS;
+                await user.save();
+
+                const resetUrl = `${process.env.FRONTEND_URL || ''}/reset-password?token=${rawToken}`;
+                await sendMail({
+                    email: user.email,
+                    subject: "Reset your password",
+                    html: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reset your password</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f7fa;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f7fa;padding:20px 0;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:12px;overflow:hidden;box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+          <tr>
+            <td align="center" style="background-color:#111827;padding:40px;">
+              <h1 style="color:#ffffff;margin:0;font-size:28px;letter-spacing:1px;">E-commerce</h1>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:40px;">
+              <h2 style="margin-top:0;color:#111827;font-size:24px;">Reset your password</h2>
+              <p style="color:#4b5563;font-size:16px;line-height:1.6;">
+                We received a request to reset the password for this account. Click the button
+                below to choose a new one. This link expires in 30 minutes.
+              </p>
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:30px;">
+                <tr>
+                  <td align="center">
+                    <a href="${resetUrl}" style="background-color:#111827;color:#ffffff;text-decoration:none;padding:16px 32px;border-radius:8px;display:inline-block;font-size:16px;font-weight:bold;">Reset Password</a>
+                  </td>
+                </tr>
+              </table>
+              <p style="margin-top:40px;color:#9ca3af;font-size:14px;text-align:center;">
+                Didn't request this? You can safely ignore this email — your password won't change.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`,
+                });
+            }
+
+            return ApiResponse.success(res, genericMessage);
+        } catch (error) {
+            return ApiResponse.error(res, error.message, 500);
+        }
+    },
+    reset_password_controller: async (req, res) => {
+        try {
+            const validate = resetPasswordSchema.safeParse(req.body);
+            if (!validate.success) {
+                return ApiResponse.error(res, validate.error.issues[0].message, 400);
+            }
+
+            const { token, password } = req.body;
+
+            const user = await User.findOne({
+                reset_password_token: hashToken(token),
+                reset_password_expires: { $gt: Date.now() },
+            });
+
+            if (!user) {
+                return ApiResponse.error(res, "Invalid or expired reset link", 400);
+            }
+
+            user.password = await bcrypt.hash(password, 10);
+            user.reset_password_token = undefined;
+            user.reset_password_expires = undefined;
+            await user.save();
+
+            return ApiResponse.success(res, "Password reset successfully. You can now sign in.");
         } catch (error) {
             return ApiResponse.error(res, error.message, 500);
         }

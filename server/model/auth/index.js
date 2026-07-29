@@ -63,6 +63,17 @@ const userSchema = new mongoose.Schema(
             city: { type: String, default: '' },
             postalCode: { type: String, default: '' },
         },
+        // Left genuinely unset (no default) between resets — an explicit
+        // default here would leave every user with the same value, which
+        // breaks a would-be unique index the same way google_id's does.
+        reset_password_token: {
+            type: String,
+            select: false,
+        },
+        reset_password_expires: {
+            type: Date,
+            select: false,
+        },
     },
     { timestamps: true }
 );
