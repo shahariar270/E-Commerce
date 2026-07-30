@@ -49,6 +49,7 @@ export const ProductSinge = () => {
         error: reviewError,
     } = useSelector(state => state.review);
     const { token } = useSelector(state => state.auth);
+    const cartLoading = useSelector(state => state.cart.loading);
     const dispatch = useDispatch();
     const [quantity, setQuantity] = useState(1);
     const [activeImage, setActiveImage] = useState(current?.image_gallery?.[0]);
@@ -231,13 +232,13 @@ export const ProductSinge = () => {
                                 <Button
                                     label={isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
                                     onClick={() => handleCart(quantity)}
-                                    disabled={isOutOfStock}
+                                    disabled={isOutOfStock || cartLoading}
                                 />
                                 <Button
                                     label="Buy Now"
                                     variant="secondary"
                                     onClick={() => handleBuyNow(quantity)}
-                                    disabled={isOutOfStock}
+                                    disabled={isOutOfStock || cartLoading}
                                 />
                             </div>
                         </div>
