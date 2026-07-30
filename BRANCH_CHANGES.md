@@ -2,10 +2,10 @@
 
 Snapshot comparison of the `feature/coupon-system` branch ([PR #15](https://github.com/shahariar270/E-Commerce/pull/15), open & mergeable) against `master`.
 
-- **65 commits**, **126 files changed** (+7,280 / −535)
-- Generated: 2026-07-30
+- **70 commits**, **127 files changed** (+7,434 / −541)
+- Generated: 2026-07-31
 
-This branch has absorbed three other merged PRs on top of the original coupon-system work: [#19](https://github.com/shahariar270/E-Commerce/pull/19) (live admin notifications), [#20](https://github.com/shahariar270/E-Commerce/pull/20) (order-cancellation restock), and [#21](https://github.com/shahariar270/E-Commerce/pull/21) (forgot/reset password).
+This branch has absorbed four other merged PRs on top of the original coupon-system work: [#19](https://github.com/shahariar270/E-Commerce/pull/19) (live admin notifications), [#20](https://github.com/shahariar270/E-Commerce/pull/20) (order-cancellation restock), [#21](https://github.com/shahariar270/E-Commerce/pull/21) (forgot/reset password), and [#22](https://github.com/shahariar270/E-Commerce/pull/22) (cart item count fixes).
 
 ---
 
@@ -56,6 +56,8 @@ This branch has absorbed three other merged PRs on top of the original coupon-sy
 
 ## Fixes
 
+- **Cart badge going stale under rapid Add to Cart clicks** — cart mutations are read-modify-write on the server, and each response fully overwrites the client's cart state; firing several at once (e.g. clicking Add to Cart on multiple products before the first request lands) raced, so the header badge could end up showing a stale count instead of the real total. Cart-mutating controls (Add to Cart, quantity +/−, Remove) are now serialized client-side.
+- **Add to Cart button flicker** — a first pass at the race fix above disabled buttons off the cart slice's single global `loading` flag, which every product card (and every cart line item) subscribed to, so adding one product briefly dimmed/undimmed *every* Add to Cart button on the page. Fixed to track the in-flight state per card/item instead, so only the button actually being clicked visibly disables.
 - **Settings page styling** — the page's inline `<style>` tag used SCSS-nesting syntax (`&__title`, `&::before`, ...), invalid in a plain CSS `<style>` element, so the toggle switch and label/description spacing silently never applied. Flattened to valid CSS.
 - **Stock never restored** on order cancellation/deletion (see above).
 - Order confirmation emails: fixed trusting a client-supplied email for logged-in orders, and escaped user-controlled fields to prevent HTML/XSS injection into the email body.
@@ -73,6 +75,7 @@ This branch has absorbed three other merged PRs on top of the original coupon-sy
 
 ## UX / polish
 
+- Product listing cards show "{count} in Cart" on the Add to Cart button once a product is already in the cart, instead of a static "Add to Cart" label.
 - "Generate Coupon Code" button no longer stretches full width.
 - Verification "Send Code" button moved inline next to the email field; general polish pass on the guest checkout / verification UI.
 - Shipping address field changed to a textarea; Bangladeshi phone number format validated.
