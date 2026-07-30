@@ -14,6 +14,16 @@ const ProductCard = ({ product }) => {
   // header badge count — reflecting a stale intermediate response instead
   // of the final total. Serializing them client-side avoids that.
   const cartLoading = useSelector((state) => state.cart.loading);
+  // Cart items come back either as a raw product id string (createCart's
+  // response) or a populated product object (getCart/updateCart/
+  // removeFromCart all populate items.product_id) — match against both
+  // shapes so the "already in cart" count stays correct regardless of
+  // which action last touched the cart.
+  const cartItems = useSelector((state) => state.cart.items);
+  const inCartQty = cartItems.find((item) => {
+    const itemProductId = typeof item.product_id === 'object' ? item.product_id?._id : item.product_id;
+    return itemProductId === product._id;
+  })?.quantity || 0;
 
   // Keyword-rich, descriptive alt text for product images (SEO + accessibility)
   const categoryName = product.category?.[0]?.name?.trim();
@@ -65,7 +75,7 @@ const ProductCard = ({ product }) => {
             disabled={isOutOfStock || cartLoading}
             onClick={handleAddToCart}
           >
-            {isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
+            {isOutOfStock ? 'Out of Stock' : inCartQty > 0 ? `${inCartQty} in Cart` : 'Add to Cart'}
           </button>
         </div>
       </div>
