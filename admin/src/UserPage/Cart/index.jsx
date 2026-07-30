@@ -69,11 +69,11 @@ const Cart = () => {
 
                   <div className="st-cart__actions">
                     <div className="st-cart__qty">
-                      <button onClick={() => handleQuantityChange(item, -1)}>−</button>
+                      <button onClick={() => handleQuantityChange(item, -1)} disabled={loading}>−</button>
                       <span>{item.quantity}</span>
                       <button
                         onClick={() => handleQuantityChange(item, 1)}
-                        disabled={typeof item?.product_id?.stock === 'number' && item.quantity >= item.product_id.stock}
+                        disabled={loading || (typeof item?.product_id?.stock === 'number' && item.quantity >= item.product_id.stock)}
                       >
                         +
                       </button>
@@ -84,6 +84,7 @@ const Cart = () => {
                     <button
                       className="st-cart__remove"
                       onClick={() => handleRemove(item?.product_id?._id)}
+                      disabled={loading}
                     >
                       Remove
                     </button>

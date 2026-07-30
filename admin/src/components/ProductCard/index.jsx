@@ -1,13 +1,19 @@
 import React from 'react';
 import './styles.scss';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { createCart } from '@Store/slices/cartSlice';
 import { getStockStatus } from '@utils/helper';
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  // Cart mutations are read-modify-write on the server, so firing several
+  // at once (e.g. clicking Add to Cart on multiple cards before the first
+  // request lands) races and can leave the client's cart state — and the
+  // header badge count — reflecting a stale intermediate response instead
+  // of the final total. Serializing them client-side avoids that.
+  const cartLoading = useSelector((state) => state.cart.loading);
 
   // Keyword-rich, descriptive alt text for product images (SEO + accessibility)
   const categoryName = product.category?.[0]?.name?.trim();
@@ -56,7 +62,7 @@ const ProductCard = ({ product }) => {
           </span>
           <button
             className="product-card__btn"
-            disabled={isOutOfStock}
+            disabled={isOutOfStock || cartLoading}
             onClick={handleAddToCart}
           >
             {isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
