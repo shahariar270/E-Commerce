@@ -17,6 +17,15 @@ const escapeHtml = (str) =>
         '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
     }[c]));
 
+// Returns items reserved at checkout back to product stock. Callers must
+// only invoke this once per order (guarded by order.stock_restored) since
+// there's no reverse link from Product back to the reservation to dedupe.
+const restockOrderItems = async (items) => {
+    for (const item of items) {
+        await Product.updateOne({ _id: item.product }, { $inc: { stock: item.quantity } });
+    }
+};
+
 class order_controller {
     async create_order(req, res) {
         try {
@@ -368,6 +377,12 @@ class order_controller {
             if (!order) {
                 return ApiResponse.error(res, "Order not found!", 404);
             }
+
+            if (status === 'cancelled' && order.status !== 'cancelled' && !order.stock_restored) {
+                await restockOrderItems(order.items);
+                order.stock_restored = true;
+            }
+
             order.status = status;
             await order.save();
             return ApiResponse.success(res, "Order status updated successfully", order);
@@ -380,12 +395,17 @@ class order_controller {
     async delete_order(req, res) {
         try {
             const orderId = req.params.id;
-            const order = await Order
-                .findByIdAndDelete(orderId);
+            const order = await Order.findById(orderId);
 
             if (!order) {
                 return ApiResponse.error(res, "Order not found!", 404);
             }
+
+            if (!order.stock_restored) {
+                await restockOrderItems(order.items);
+            }
+
+            await Order.findByIdAndDelete(orderId);
             return ApiResponse.success(res, "Order deleted successfully");
         }
         catch (error) {
