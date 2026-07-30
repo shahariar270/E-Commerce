@@ -28,6 +28,21 @@ export const registerSchema = Yup.object({
         .required("last name is required field"),
 });
 
+export const forgotPasswordSchema = Yup.object({
+    email: Yup.string()
+        .email("invalid email")
+        .required("email is required field"),
+});
+
+export const resetPasswordSchema = Yup.object({
+    new_password: Yup.string()
+        .min(6, "password must be at least 6 characters")
+        .required("password is required field"),
+    confirm_password: Yup.string()
+        .oneOf([Yup.ref("new_password")], "passwords must match")
+        .required("please confirm your password"),
+});
+
 export const updateProfileSchema = Yup.object({
     current_pass: Yup.string()
         .min(6, "current password must be at least 6 characters")
