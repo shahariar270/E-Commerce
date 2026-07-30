@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './styles.scss';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,8 +12,13 @@ const ProductCard = ({ product }) => {
   // at once (e.g. clicking Add to Cart on multiple cards before the first
   // request lands) races and can leave the client's cart state — and the
   // header badge count — reflecting a stale intermediate response instead
-  // of the final total. Serializing them client-side avoids that.
+  // of the final total. cartLoading guards against that globally, but it's
+  // shared by every card on the page — using it to visually disable this
+  // card's own button would flicker every *other* card's button too each
+  // time any add-to-cart request starts/finishes. isAdding tracks just
+  // this card's own in-flight request for the visual state instead.
   const cartLoading = useSelector((state) => state.cart.loading);
+  const [isAdding, setIsAdding] = useState(false);
   // Cart items come back either as a raw product id string (createCart's
   // response) or a populated product object (getCart/updateCart/
   // removeFromCart all populate items.product_id) — match against both
@@ -34,12 +39,14 @@ const ProductCard = ({ product }) => {
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
+    if (cartLoading) return;
+    setIsAdding(true);
     dispatch(createCart({
       product_id: product._id,
       name: product.product_name,
       price: product.price,
       quantity: 1,
-    }));
+    })).finally(() => setIsAdding(false));
   };
 
   return (
@@ -72,7 +79,7 @@ const ProductCard = ({ product }) => {
           </span>
           <button
             className="product-card__btn"
-            disabled={isOutOfStock || cartLoading}
+            disabled={isOutOfStock || isAdding}
             onClick={handleAddToCart}
           >
             {isOutOfStock ? 'Out of Stock' : inCartQty > 0 ? `${inCartQty} in Cart` : 'Add to Cart'}

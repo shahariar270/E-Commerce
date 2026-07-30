@@ -11,6 +11,12 @@ const Cart = () => {
   const dispatch = useDispatch();
   const { items, total_quantity, total_price, coupon, grand_total, loading } = useSelector((state) => state.cart);
   const [couponCode, setCouponCode] = useState("");
+  // loading is shared by the whole cart, so using it to visually disable a
+  // single line item's controls would flicker every *other* item's
+  // controls too each time any one of them is updated. Track which item is
+  // actually being mutated for the visual state; loading itself still
+  // guards other items' handlers against racing this one.
+  const [mutatingId, setMutatingId] = useState(null);
 
   useEffect(() => {
     dispatch(getCart());
@@ -21,11 +27,16 @@ const Cart = () => {
     const availableStock = item?.product_id?.stock;
     if (newQty < 1) return;
     if (typeof availableStock === 'number' && newQty > availableStock) return;
-    dispatch(updateCart({ product_id: item?.product_id?._id, quantity: newQty }));
+    if (loading) return;
+    const id = item?.product_id?._id;
+    setMutatingId(id);
+    dispatch(updateCart({ product_id: id, quantity: newQty })).finally(() => setMutatingId(null));
   };
 
   const handleRemove = (id) => {
-    dispatch(removeFromCart(id));
+    if (loading) return;
+    setMutatingId(id);
+    dispatch(removeFromCart(id)).finally(() => setMutatingId(null));
   };
 
   const handleApplyCoupon = (e) => {
@@ -69,11 +80,11 @@ const Cart = () => {
 
                   <div className="st-cart__actions">
                     <div className="st-cart__qty">
-                      <button onClick={() => handleQuantityChange(item, -1)} disabled={loading}>−</button>
+                      <button onClick={() => handleQuantityChange(item, -1)} disabled={mutatingId === item.product_id?._id}>−</button>
                       <span>{item.quantity}</span>
                       <button
                         onClick={() => handleQuantityChange(item, 1)}
-                        disabled={loading || (typeof item?.product_id?.stock === 'number' && item.quantity >= item.product_id.stock)}
+                        disabled={mutatingId === item.product_id?._id || (typeof item?.product_id?.stock === 'number' && item.quantity >= item.product_id.stock)}
                       >
                         +
                       </button>
@@ -84,7 +95,7 @@ const Cart = () => {
                     <button
                       className="st-cart__remove"
                       onClick={() => handleRemove(item?.product_id?._id)}
-                      disabled={loading}
+                      disabled={mutatingId === item.product_id?._id}
                     >
                       Remove
                     </button>
