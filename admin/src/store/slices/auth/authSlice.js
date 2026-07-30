@@ -100,7 +100,7 @@ export const forgotPassword = createAsyncThunk(
       const data = await response.json();
 
       if (!response.ok) {
-        return rejectWithValue(data.message || 'Request failed');
+        return rejectWithValue(data.message || 'Failed to send reset link');
       }
 
       return data;
@@ -112,20 +112,20 @@ export const forgotPassword = createAsyncThunk(
 
 export const resetPassword = createAsyncThunk(
   'auth/resetPassword',
-  async ({ token, password }, { rejectWithValue }) => {
+  async ({ email, token, new_password }, { rejectWithValue }) => {
     try {
       const response = await fetch(`${authRoute}reset-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ token, password }),
+        body: JSON.stringify({ email, token, new_password }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        return rejectWithValue(data.message || 'Reset failed');
+        return rejectWithValue(data.message || 'Failed to reset password');
       }
 
       return data;
@@ -283,6 +283,19 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+      // Register
+      .addCase(registerUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.message = action.payload.message;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
       // Forgot Password
       .addCase(forgotPassword.pending, (state) => {
         state.loading = true;
@@ -308,19 +321,6 @@ const authSlice = createSlice({
         state.message = action.payload.message;
       })
       .addCase(resetPassword.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-      // Register
-      .addCase(registerUser.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(registerUser.fulfilled, (state, action) => {
-        state.loading = false;
-        state.message = action.payload.message;
-      })
-      .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

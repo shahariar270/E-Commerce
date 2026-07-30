@@ -1,11 +1,10 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form } from "formik";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Input from "../../components/Input";
 import Button from "../../components/Buttons";
 import { resetPassword, clearError, clearMessage } from "../../store/slices/auth/authSlice";
 import { resetPasswordSchema } from "../../Utils/validationSchemas";
-import { useQuery } from "@utils/helper";
 import "../Login/style.scss";
 import logo from '../../assets/images/logo.svg';
 import SEO from '@Component/SEO';
@@ -13,19 +12,25 @@ import SEO from '@Component/SEO';
 const ResetPassword = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const query = useQuery();
-  const token = query.get('token');
+  const [searchParams] = useSearchParams();
   const { loading, error, message } = useSelector((state) => state.auth);
 
-  const initialValues = { password: "", confirm_password: "" };
+  const token = searchParams.get('token');
+  const email = searchParams.get('email');
+  const linkIsValid = Boolean(token && email);
+
+  const initialValues = {
+    new_password: "",
+    confirm_password: "",
+  };
 
   const handleSubmit = (values, { setSubmitting }) => {
     dispatch(clearError());
     dispatch(clearMessage());
-    dispatch(resetPassword({ token, password: values.password }))
+    dispatch(resetPassword({ email, token, new_password: values.new_password }))
       .unwrap()
       .then(() => {
-        setTimeout(() => navigate('/login'), 1500);
+        navigate('/login');
       })
       .catch(() => {
         // Error is handled by Redux
@@ -50,7 +55,7 @@ const ResetPassword = () => {
           </p>
         </div>
 
-        {!token ? (
+        {!linkIsValid ? (
           <div className="st-login-error" style={{
             color: '#dc3545',
             marginBottom: '16px',
@@ -59,7 +64,8 @@ const ResetPassword = () => {
             borderRadius: '4px',
             border: '1px solid #f5c6cb'
           }}>
-            This reset link is missing its token. Please request a new one.
+            This reset link is invalid. Please request a new one from the{" "}
+            <a href="/forgot-password">forgot password</a> page.
           </div>
         ) : (
           <Formik
@@ -91,20 +97,20 @@ const ResetPassword = () => {
                     borderRadius: '4px',
                     border: '1px solid #c3e6cb'
                   }}>
-                    {message} Redirecting to sign in…
+                    {message}
                   </div>
                 )}
 
                 <Input
                   label="New Password"
-                  name="password"
+                  name="new_password"
                   type="password"
                   placeholder="Enter your new password"
                   required
                 />
 
                 <Input
-                  label="Confirm New Password"
+                  label="Confirm Password"
                   name="confirm_password"
                   type="password"
                   placeholder="Re-enter your new password"

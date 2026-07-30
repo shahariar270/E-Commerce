@@ -6,6 +6,8 @@ import reducer, {
   getProfile,
   updateProfile,
   logout,
+  forgotPassword,
+  resetPassword,
   clearError,
   clearMessage,
 } from './authSlice';
@@ -189,6 +191,90 @@ describe('authSlice', () => {
 
     expect(state.user.name).toBe('Updated');
     expect(state.message).toBe('Updated successfully');
+  });
+
+  // -------------------------
+  // ✅ FORGOT PASSWORD
+  // -------------------------
+  test('forgotPassword success', async () => {
+    global.fetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        message: 'If an account exists for this email, a password reset link has been sent',
+      }),
+    });
+
+    const store = configureStore({
+      reducer: { auth: reducer },
+    });
+
+    await store.dispatch(forgotPassword({ email: 'a@test.com' }));
+
+    const state = store.getState().auth;
+
+    expect(state.message).toBe('If an account exists for this email, a password reset link has been sent');
+    expect(state.error).toBe(null);
+  });
+
+  test('forgotPassword fail', async () => {
+    global.fetch.mockResolvedValue({
+      ok: false,
+      json: async () => ({
+        message: 'invalid email',
+      }),
+    });
+
+    const store = configureStore({
+      reducer: { auth: reducer },
+    });
+
+    await store.dispatch(forgotPassword({ email: 'not-an-email' }));
+
+    const state = store.getState().auth;
+
+    expect(state.error).toBe('invalid email');
+  });
+
+  // -------------------------
+  // ✅ RESET PASSWORD
+  // -------------------------
+  test('resetPassword success', async () => {
+    global.fetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        message: 'Password has been reset successfully. You can now sign in.',
+      }),
+    });
+
+    const store = configureStore({
+      reducer: { auth: reducer },
+    });
+
+    await store.dispatch(resetPassword({ email: 'a@test.com', token: 'tok', new_password: 'newpass1' }));
+
+    const state = store.getState().auth;
+
+    expect(state.message).toBe('Password has been reset successfully. You can now sign in.');
+    expect(state.error).toBe(null);
+  });
+
+  test('resetPassword fail', async () => {
+    global.fetch.mockResolvedValue({
+      ok: false,
+      json: async () => ({
+        message: 'This reset link is invalid or has expired. Please request a new one.',
+      }),
+    });
+
+    const store = configureStore({
+      reducer: { auth: reducer },
+    });
+
+    await store.dispatch(resetPassword({ email: 'a@test.com', token: 'bad', new_password: 'newpass1' }));
+
+    const state = store.getState().auth;
+
+    expect(state.error).toBe('This reset link is invalid or has expired. Please request a new one.');
   });
 
   // -------------------------

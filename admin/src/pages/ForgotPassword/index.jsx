@@ -12,12 +12,14 @@ const ForgotPassword = () => {
   const dispatch = useDispatch();
   const { loading, error, message } = useSelector((state) => state.auth);
 
-  const initialValues = { email: "" };
+  const initialValues = {
+    email: "",
+  };
 
   const handleSubmit = (values, { setSubmitting }) => {
     dispatch(clearError());
     dispatch(clearMessage());
-    dispatch(forgotPassword(values))
+    dispatch(forgotPassword({ email: values.email }))
       .unwrap()
       .catch(() => {
         // Error is handled by Redux
@@ -36,7 +38,7 @@ const ForgotPassword = () => {
             <img src={logo} alt="" className="st-login-logo__icon" />
             <span className="st-login-logo__text">E-commerce</span>
           </div>
-          <h1 className="st-login-title">Forgot Password</h1>
+          <h1 className="st-login-title">Forgot Password?</h1>
           <p className="st-login-subtitle">
             Enter your email and we'll send you a link to reset your password
           </p>

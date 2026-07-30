@@ -34,6 +34,10 @@ const order_schema = new mongoose.Schema(
             default: 'pending'
         },
         paymentStatus: { type: String, enum: ['pending', 'paid', 'failed', 'unpaid'], default: 'unpaid' },
+        // Tracks whether this order's items have already been returned to
+        // product stock (on cancellation), so a later delete of an already-
+        // cancelled order never double-restocks it.
+        stock_restored: { type: Boolean, default: false },
         createdAt: { type: Date, default: Date.now }
     },
     { timestamps: true }

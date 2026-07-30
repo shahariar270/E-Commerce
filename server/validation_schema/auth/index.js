@@ -48,11 +48,13 @@ const forgotPasswordSchema = z.object({
 });
 
 const resetPasswordSchema = z.object({
+    email: z.string({
+        required_error: "email is required field"
+    }).email("invalid email"),
     token: z.string({
-        required_error: "reset token is required"
-    }).min(1, "reset token is required"),
-
-    password: z.string({
+        required_error: "reset token is required field"
+    }).min(1, "reset token is required field"),
+    new_password: z.string({
         required_error: "password is required field"
     }).min(6, "password must be at least 6 characters")
 });

@@ -35,11 +35,11 @@ export const forgotPasswordSchema = Yup.object({
 });
 
 export const resetPasswordSchema = Yup.object({
-    password: Yup.string()
+    new_password: Yup.string()
         .min(6, "password must be at least 6 characters")
         .required("password is required field"),
     confirm_password: Yup.string()
-        .oneOf([Yup.ref("password")], "passwords must match")
+        .oneOf([Yup.ref("new_password")], "passwords must match")
         .required("please confirm your password"),
 });
 
