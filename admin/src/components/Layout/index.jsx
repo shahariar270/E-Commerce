@@ -6,6 +6,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { getCookie } from "@utils/helper";
 import Button from "@Component/Buttons";
 import Notification from "@Component/Notifications";
+import AdminNotificationSocket from "@Component/AdminNotificationSocket";
 
 export const Layout = () => {
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ export const Layout = () => {
 
   return (
     <div className={`st-layout ${sidebarOpen && isAdmin ? 'st-layout--sidebar-open' : 'st-layout--sidebar-collapsed'}`}>
+      {isAdmin && <AdminNotificationSocket />}
       {isAdmin && (
         <div className="st-layout__sidebar-container">
           <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />

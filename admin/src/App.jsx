@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
-import { useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 
 import Login from "./pages/Login";
@@ -29,7 +28,6 @@ import Cart from "./UserPage/Cart";
 import { Checkout } from "./UserPage/Checkout";
 import Order from "./UserPage/Order";
 import StorefrontLayout from "@Component/Storefront/StorefrontLayout";
-import { io } from "socket.io-client";
 import { getCookie } from "@utils/helper";
 
 const ProtectedAdmin = ({ children }) => {
@@ -49,21 +47,6 @@ const ProtectedAdmin = ({ children }) => {
 };
 
 function App() {
-  // useEffect(() => {
-  //   const socket = io("http://localhost:5000");
-
-  //   socket.on("connect", () => {
-  //     console.log("✅ Connected:", socket.id);
-  //   });
-
-  //   socket.on("connect_error", (err) => {
-  //     console.log("❌ Error:", err.message);
-  //   });
-
-  //   return () => {
-  //     socket.disconnect();
-  //   };
-  // }, []);
   return (
 
     <Router>

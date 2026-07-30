@@ -8,6 +8,7 @@ const Settings = require("../../model/settings");
 const Product = require("../../model/product");
 const ApiResponse = require("../../utils/api_response");
 const sendMail = require("../../config/sender");
+const socketManager = require('../../socket');
 const { calculateTotals, refreshCartCoupon } = require("../cart/helper");
 
 const BD_PHONE_REGEX = /^(?:\+?880|0)1[3-9]\d{8}$/;
@@ -171,6 +172,14 @@ class order_controller {
                     { upsert: true, setDefaultsOnInsert: true }
                 );
             }
+
+            socketManager.emitToAdmins('new_order', {
+                id: savedOrder._id,
+                customerName: shippingAddress.name,
+                itemCount: orderItems.length,
+                totalAmount: savedOrder.totalAmount,
+                createdAt: savedOrder.createdAt,
+            });
 
             await Cart.findByIdAndDelete(cart._id);
 

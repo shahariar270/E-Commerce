@@ -13,6 +13,7 @@ import customerReducer from './slices/customerSlice'
 import subscriberReducer from './slices/subscriberSlice'
 import { logger } from 'redux-logger';
 import notificationReducer from './slices/notificationSlice';
+import adminNotificationReducer from './slices/adminNotificationSlice';
 import { notificationMiddleware } from './notificationMiddleware';
 
 const store = configureStore({
@@ -23,6 +24,7 @@ const store = configureStore({
     cart: cartReducer,
     coupon: couponReducer,
     notification: notificationReducer,
+    adminNotifications: adminNotificationReducer,
     order: orderReducer,
     dashboard: dashboardReducer,
     comment: commentReducer,
