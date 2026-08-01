@@ -1,14 +1,22 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getCart, updateCart, removeFromCart } from "@Store/slices/cartSlice";
+import { getCart, updateCart, removeFromCart, applyCoupon, removeCoupon } from "@Store/slices/cartSlice";
 import Button from "@Component/Buttons";
+import SEO from "@Component/SEO";
 import "./styles.scss";
 
 const Cart = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { items, total_quantity, total_price } = useSelector((state) => state.cart);
+  const { items, total_quantity, total_price, coupon, grand_total, loading } = useSelector((state) => state.cart);
+  const [couponCode, setCouponCode] = useState("");
+  // loading is shared by the whole cart, so using it to visually disable a
+  // single line item's controls would flicker every *other* item's
+  // controls too each time any one of them is updated. Track which item is
+  // actually being mutated for the visual state; loading itself still
+  // guards other items' handlers against racing this one.
+  const [mutatingId, setMutatingId] = useState(null);
 
   useEffect(() => {
     dispatch(getCart());
@@ -16,16 +24,34 @@ const Cart = () => {
 
   const handleQuantityChange = (item, delta) => {
     const newQty = (item.quantity || 1) + delta;
+    const availableStock = item?.product_id?.stock;
     if (newQty < 1) return;
-    dispatch(updateCart({ product_id: item?.product_id?._id, quantity: newQty }));
+    if (typeof availableStock === 'number' && newQty > availableStock) return;
+    if (loading) return;
+    const id = item?.product_id?._id;
+    setMutatingId(id);
+    dispatch(updateCart({ product_id: id, quantity: newQty })).finally(() => setMutatingId(null));
   };
 
   const handleRemove = (id) => {
-    dispatch(removeFromCart(id));
+    if (loading) return;
+    setMutatingId(id);
+    dispatch(removeFromCart(id)).finally(() => setMutatingId(null));
+  };
+
+  const handleApplyCoupon = (e) => {
+    e.preventDefault();
+    if (!couponCode.trim()) return;
+    dispatch(applyCoupon(couponCode.trim())).unwrap().then(() => setCouponCode("")).catch(() => {});
+  };
+
+  const handleRemoveCoupon = () => {
+    dispatch(removeCoupon());
   };
 
   return (
     <div className="st-cart eshop-container">
+      <SEO title="Shopping Cart" description="Review the items in your cart before checkout." noindex />
       <h1 className="st-cart__title">Shopping Cart ({total_quantity} Items)</h1>
 
       <div className="st-cart__layout">
@@ -54,13 +80,22 @@ const Cart = () => {
 
                   <div className="st-cart__actions">
                     <div className="st-cart__qty">
-                      <button onClick={() => handleQuantityChange(item, -1)}>−</button>
+                      <button onClick={() => handleQuantityChange(item, -1)} disabled={mutatingId === item.product_id?._id}>−</button>
                       <span>{item.quantity}</span>
-                      <button onClick={() => handleQuantityChange(item, 1)}>+</button>
+                      <button
+                        onClick={() => handleQuantityChange(item, 1)}
+                        disabled={mutatingId === item.product_id?._id || (typeof item?.product_id?.stock === 'number' && item.quantity >= item.product_id.stock)}
+                      >
+                        +
+                      </button>
                     </div>
+                    {typeof item?.product_id?.stock === 'number' && item.quantity >= item.product_id.stock && (
+                      <span className="st-cart__stock-limit">Max available in stock</span>
+                    )}
                     <button
                       className="st-cart__remove"
                       onClick={() => handleRemove(item?.product_id?._id)}
+                      disabled={mutatingId === item.product_id?._id}
                     >
                       Remove
                     </button>
@@ -77,9 +112,44 @@ const Cart = () => {
             <span>Items:</span>
             <span>{total_quantity}</span>
           </div>
+          <div className="st-cart__summary-row">
+            <span>Subtotal:</span>
+            <span>${total_price?.toFixed(2)}</span>
+          </div>
+
+          {coupon?.code ? (
+            <>
+              <div className="st-cart__summary-row st-cart__summary-discount">
+                <span>Discount ({coupon.code}):</span>
+                <span>-${coupon.discount_amount?.toFixed(2)}</span>
+              </div>
+              <button
+                type="button"
+                className="st-cart__coupon-remove"
+                onClick={handleRemoveCoupon}
+                disabled={loading}
+              >
+                Remove coupon
+              </button>
+            </>
+          ) : (
+            <form className="st-cart__coupon" onSubmit={handleApplyCoupon}>
+              <input
+                type="text"
+                className="st-cart__coupon-input"
+                placeholder="Coupon code"
+                value={couponCode}
+                onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+              />
+              <button type="submit" className="st-cart__coupon-apply" disabled={loading || !couponCode.trim()}>
+                Apply
+              </button>
+            </form>
+          )}
+
           <div className="st-cart__summary-row st-cart__summary-total">
             <span>Total:</span>
-            <strong>${total_price?.toFixed(2)}</strong>
+            <strong>${(grand_total ?? total_price)?.toFixed(2)}</strong>
           </div>
           <Button
             label="Checkout"

@@ -38,6 +38,12 @@
     //     width: 100%;
     //     max-width: 190px;
     // }
+
+    &__address-hint {
+        margin: 0 0 4px;
+        font-size: 13px;
+        color: var(--st-text-secondary);
+    }
 }
 
 .st-page {

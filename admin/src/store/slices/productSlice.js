@@ -21,6 +21,7 @@ export const getProducts = createAsyncThunk(
     if (params.category) query.append('category', params.category);
     if (params.page) query.append('page', params.page);
     if (params.per_page) query.append('per_page', params.per_page);
+    if (params.random) query.append('random', 'true');
     const queryString = query.toString();
     return apiClient(`/products${queryString ? `?${queryString}` : ''}`);
   }
@@ -101,7 +102,16 @@ const productSlice = createSlice({
       .addCase(getProducts.pending, handlePending)
       .addCase(getProducts.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload.data.products;
+        const products = action.payload.data.products;
+        if (action.meta.arg?.append) {
+          // A page can be re-requested (e.g. StrictMode's double effect) —
+          // skip anything already in the list instead of duplicating it.
+          const existingIds = new Set(state.data.map(p => p._id));
+          state.data = [...state.data, ...products.filter(p => !existingIds.has(p._id))];
+        } else {
+          state.data = products;
+        }
+        state.pagination.page = action.meta.arg?.page || 1;
         state.pagination.total = action.payload.data.total;
       })
       .addCase(getProducts.rejected, handleRejected)

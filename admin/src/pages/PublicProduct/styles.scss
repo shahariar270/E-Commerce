@@ -85,7 +85,8 @@
     }
 
     &__loading,
-    &__empty {
+    &__empty,
+    &__loading-more {
         text-align: center;
         padding: 60px 20px;
 
@@ -95,7 +96,8 @@
         }
     }
 
-    &__loading {
+    &__loading,
+    &__loading-more {
         .loading-spinner {
             width: 40px;
             height: 40px;
@@ -107,10 +109,29 @@
         }
     }
 
-    &__pagination {
-        margin-top: var(--space-8);
-        padding-top: var(--space-6);
-        border-top: 1px solid var(--border-default);
+    &__loading-more {
+        padding: 24px 20px;
+
+        .loading-spinner {
+            width: 28px;
+            height: 28px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: var(--text-sm);
+        }
+    }
+
+    &__sentinel {
+        height: 1px;
+    }
+
+    &__end {
+        text-align: center;
+        padding: 24px 20px;
+        font-size: var(--text-sm);
+        color: var(--text-muted);
     }
 }
 

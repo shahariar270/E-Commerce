@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import SEO from '@Component/SEO';
 import './styles.scss';
 
 const ErrorPage = ({
@@ -12,6 +13,7 @@ const ErrorPage = ({
 }) => {
     return (
         <div className="st-page">
+            <SEO title={title} description={message} noindex />
             <div className="error-content">
                 <div className="error-code">{code}</div>
                 <h1 className="error-title">{title}</h1>

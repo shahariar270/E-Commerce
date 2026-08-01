@@ -28,6 +28,21 @@ export const registerSchema = Yup.object({
         .required("last name is required field"),
 });
 
+export const forgotPasswordSchema = Yup.object({
+    email: Yup.string()
+        .email("invalid email")
+        .required("email is required field"),
+});
+
+export const resetPasswordSchema = Yup.object({
+    new_password: Yup.string()
+        .min(6, "password must be at least 6 characters")
+        .required("password is required field"),
+    confirm_password: Yup.string()
+        .oneOf([Yup.ref("new_password")], "passwords must match")
+        .required("please confirm your password"),
+});
+
 export const updateProfileSchema = Yup.object({
     current_pass: Yup.string()
         .min(6, "current password must be at least 6 characters")
@@ -67,13 +82,17 @@ export const productSchema = Yup.object({
     price: Yup.number()
         .positive("price must be a positive number")
         .required("price is required field"),
-    stock: Yup.string()
-        .oneOf(["in_stock", "out_of_stock", "low_stock"], "invalid stock status")
-        .optional(),
+    stock: Yup.number()
+        .min(0, "stock cannot be negative")
+        .integer("stock must be a whole number")
+        .required("stock quantity is required field"),
     category_ids: Yup.array()
         .of(Yup.string())
         .min(1, "at least one category is required")
         .required("category is required field"),
+    brand: Yup.string().optional(),
+    sku: Yup.string().optional(),
+    warranty: Yup.string().optional(),
 });
 
 // CART VALIDATIONS
@@ -88,6 +107,61 @@ export const cartSchema = Yup.object({
     quantity: Yup.number()
         .min(1, "quantity must be at least 1")
         .required("quantity is required field"),
+});
+
+// COUPON VALIDATIONS
+export const couponSchema = Yup.object({
+    code: Yup.string()
+        .min(3, "code must be at least 3 characters")
+        .max(30, "code must not exceed 30 characters")
+        .required("code is required field"),
+    discount_type: Yup.string()
+        .oneOf(["percentage", "fixed"], "invalid discount type")
+        .required("discount type is required field"),
+    discount_value: Yup.number()
+        .positive("discount value must be a positive number")
+        .when("discount_type", {
+            is: "percentage",
+            then: (schema) => schema.max(100, "percentage discount cannot exceed 100"),
+        })
+        .required("discount value is required field"),
+    max_discount_amount: Yup.number()
+        .positive("max discount amount must be a positive number")
+        .nullable()
+        .optional(),
+    min_purchase_amount: Yup.number()
+        .min(0, "minimum purchase amount cannot be negative")
+        .optional(),
+    usage_limit: Yup.number()
+        .positive("usage limit must be a positive number")
+        .nullable()
+        .optional(),
+    expiry_date: Yup.date()
+        .required("expiry date is required field"),
+    is_active: Yup.boolean().optional(),
+    auto_apply: Yup.boolean().optional(),
+});
+
+// CHECKOUT VALIDATIONS
+export const checkoutSchema = Yup.object({
+    email: Yup.string()
+        .email("invalid email")
+        .required("email is required field"),
+    shippingAddress: Yup.object({
+        name: Yup.string()
+            .min(2, "full name must be at least 2 characters")
+            .required("full name is required field"),
+        phone: Yup.string()
+            .matches(/^(?:\+?880|0)1[3-9]\d{8}$/, "enter a valid Bangladeshi phone number (e.g. 01712345678)")
+            .required("phone number is required field"),
+        address: Yup.string()
+            .min(5, "address must be at least 5 characters")
+            .required("address is required field"),
+        city: Yup.string()
+            .required("city is required field"),
+        postalCode: Yup.string()
+            .required("postal code is required field"),
+    }),
 });
 
 // ORDER VALIDATIONS

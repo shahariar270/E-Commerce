@@ -1,0 +1,125 @@
+[
+  {
+    "_id": "6a146653f287cc3b2873b1ef",
+    "user_name": "seed_user_1",
+    "email": "user1@example.com",
+    "first_name": "First1",
+    "last_name": "Last1",
+    "image": "",
+    "user_role": "admin",
+    "createdAt": "2026-05-25T15:10:11.785Z",
+    "updatedAt": "2026-07-24T15:35:43.214Z",
+    "__v": 0,
+    "saved_address": {
+      "name": "Seed Address 1",
+      "phone": "01700000001",
+      "address": "1 Example Street",
+      "city": "Dhaka",
+      "postalCode": "1200"
+    }
+  },
+  {
+    "_id": "6a1b933644f6f81b24ef2cfe",
+    "user_name": "seed_user_2",
+    "email": "user2@example.com",
+    "first_name": "First2",
+    "last_name": "Last2",
+    "image": "",
+    "user_role": "buyer",
+    "createdAt": "2026-05-31T01:47:34.493Z",
+    "updatedAt": "2026-07-24T15:35:43.231Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a240d6c0095ca3d21efe87a",
+    "user_name": "seed_user_3",
+    "email": "user3@example.com",
+    "first_name": "First3",
+    "last_name": "Last3",
+    "image": "",
+    "user_role": "buyer",
+    "createdAt": "2026-06-06T12:07:08.718Z",
+    "updatedAt": "2026-07-24T15:35:43.232Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a3aafdd2a5ed71c2ecc5186",
+    "user_name": "seed_user_4",
+    "email": "user4@example.com",
+    "first_name": "First4",
+    "last_name": "Last4",
+    "image": "",
+    "user_role": "buyer",
+    "createdAt": "2026-06-23T16:10:05.360Z",
+    "updatedAt": "2026-07-24T15:35:43.233Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a3ab0012a5ed71c2ecc5189",
+    "user_name": "seed_user_5",
+    "email": "user5@example.com",
+    "first_name": "First5",
+    "last_name": "Last5",
+    "image": "",
+    "user_role": "buyer",
+    "createdAt": "2026-06-23T16:10:41.484Z",
+    "updatedAt": "2026-07-24T15:35:43.234Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a3c0a8b0c469cdc80c3c505",
+    "user_name": "seed_user_6",
+    "email": "user6@example.com",
+    "first_name": "First6",
+    "last_name": "Last6",
+    "image": "",
+    "user_role": "buyer",
+    "createdAt": "2026-06-24T16:49:15.116Z",
+    "updatedAt": "2026-07-24T15:35:43.235Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a3c7020719982bc2b5ac200",
+    "user_name": "seed_user_7",
+    "email": "user7@example.com",
+    "first_name": "First7",
+    "last_name": "Last7",
+    "image": "",
+    "user_role": "buyer",
+    "createdAt": "2026-06-25T00:02:40.992Z",
+    "updatedAt": "2026-07-24T15:35:43.236Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a5a32d5fa4ed8520487c34c",
+    "user_name": "seed_user_8",
+    "email": "user8@example.com",
+    "first_name": "First8",
+    "last_name": "Last8",
+    "image": "",
+    "user_role": "admin",
+    "createdAt": "2026-07-17T13:49:09.153Z",
+    "updatedAt": "2026-07-24T15:35:43.237Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a635b579f8d936c99dc02a1",
+    "user_name": "seed_user_9",
+    "email": "user9@example.com",
+    "first_name": "First9",
+    "last_name": "Last9",
+    "image": "",
+    "user_role": "buyer",
+    "is_active": true,
+    "saved_address": {
+      "name": "",
+      "phone": "",
+      "address": "",
+      "city": "",
+      "postalCode": ""
+    },
+    "createdAt": "2026-07-24T12:32:23.247Z",
+    "updatedAt": "2026-07-24T15:35:43.238Z",
+    "__v": 0
+  }
+]

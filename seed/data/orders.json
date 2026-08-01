@@ -1,0 +1,211 @@
+[
+  {
+    "_id": "6a1cd6e8eeec36d3319225d8",
+    "user": "6a1b933644f6f81b24ef2cfe",
+    "items": [
+      {
+        "product": "6a1b84ef44f6f81b24ef29f3",
+        "name": "Mini UPS For WiFi Router and ONU",
+        "quantity": 1,
+        "price": 2119,
+        "_id": "6a1cd6e8eeec36d3319225d9"
+      }
+    ],
+    "totalAmount": 2119,
+    "shippingAddress": {
+      "name": "Seed Customer 1",
+      "phone": "01700000001",
+      "address": "1 Example Street",
+      "city": "Dhaka",
+      "postalCode": "1200"
+    },
+    "status": "shipped",
+    "paymentStatus": "unpaid",
+    "createdAt": "2026-06-01T00:48:40.263Z",
+    "updatedAt": "2026-06-03T23:54:08.935Z",
+    "__v": 0,
+    "email": "order1@example.com"
+  },
+  {
+    "_id": "6a240dbc0095ca3d21efe8c4",
+    "user": "6a240d6c0095ca3d21efe87a",
+    "items": [
+      {
+        "product": "6a1b84ef44f6f81b24ef29f3",
+        "name": "Mini UPS For WiFi Router and ONU",
+        "quantity": 1,
+        "price": 2119,
+        "_id": "6a240dbc0095ca3d21efe8c5"
+      }
+    ],
+    "totalAmount": 2119,
+    "shippingAddress": {
+      "name": "Seed Customer 2",
+      "phone": "01700000002",
+      "address": "2 Example Street",
+      "city": "Dhaka",
+      "postalCode": "1200"
+    },
+    "status": "pending",
+    "paymentStatus": "unpaid",
+    "createdAt": "2026-06-06T12:08:28.778Z",
+    "updatedAt": "2026-06-06T12:08:28.778Z",
+    "__v": 0,
+    "email": "order2@example.com"
+  },
+  {
+    "_id": "6a5ecbc1559a175b4161b862",
+    "guest_id": "077e239e-e6ba-4150-a203-00efb214d7c5",
+    "email": "order3@example.com",
+    "items": [
+      {
+        "product": "6a1b925644f6f81b24ef2c76",
+        "name": "tmu",
+        "quantity": 1,
+        "price": 1196,
+        "_id": "6a5ecbc1559a175b4161b863"
+      }
+    ],
+    "totalAmount": 1196,
+    "shippingAddress": {
+      "name": "Seed Customer 3",
+      "phone": "01700000003",
+      "address": "3 Example Street",
+      "city": "Dhaka",
+      "postalCode": "1200"
+    },
+    "status": "pending",
+    "paymentStatus": "unpaid",
+    "createdAt": "2026-07-21T01:30:41.903Z",
+    "updatedAt": "2026-07-21T01:30:41.903Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a5f8174218649fdba42ce63",
+    "guest_id": "91a0df8c-eaef-4043-8d44-2b60df41c0b5",
+    "email": "order4@example.com",
+    "items": [
+      {
+        "product": "6a1b925644f6f81b24ef2c76",
+        "name": "tmu",
+        "quantity": 1,
+        "price": 1196,
+        "_id": "6a5f8174218649fdba42ce64"
+      }
+    ],
+    "subtotal": 1196,
+    "coupon": {
+      "code": null,
+      "discount_amount": 0
+    },
+    "totalAmount": 1196,
+    "shippingAddress": {
+      "name": "Seed Customer 4",
+      "phone": "01700000004",
+      "address": "4 Example Street",
+      "city": "Dhaka",
+      "postalCode": "1200"
+    },
+    "status": "pending",
+    "paymentStatus": "unpaid",
+    "createdAt": "2026-07-21T14:25:56.727Z",
+    "updatedAt": "2026-07-21T14:25:56.727Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a5f82b4218649fdba42cea1",
+    "guest_id": "4a48c061-4be2-49fd-9c0f-153a8b64183e",
+    "email": "order5@example.com",
+    "items": [
+      {
+        "product": "6a1b925644f6f81b24ef2c76",
+        "name": "tmu",
+        "quantity": 1,
+        "price": 1196,
+        "_id": "6a5f82b4218649fdba42cea2"
+      }
+    ],
+    "subtotal": 1196,
+    "coupon": {
+      "code": null,
+      "discount_amount": 0
+    },
+    "totalAmount": 1196,
+    "shippingAddress": {
+      "name": "Seed Customer 5",
+      "phone": "01700000005",
+      "address": "5 Example Street",
+      "city": "Dhaka",
+      "postalCode": "1200"
+    },
+    "status": "shipped",
+    "paymentStatus": "unpaid",
+    "createdAt": "2026-07-21T14:31:16.775Z",
+    "updatedAt": "2026-07-22T00:29:32.301Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a601dd2ba6671ae4b2a914f",
+    "user": "6a146653f287cc3b2873b1ef",
+    "email": "order6@example.com",
+    "items": [
+      {
+        "product": "6a1b854e44f6f81b24ef2a09",
+        "name": "Mini UPS For WiFi Router and ONU",
+        "quantity": 1,
+        "price": 2119,
+        "_id": "6a601dd2ba6671ae4b2a9150"
+      }
+    ],
+    "subtotal": 2119,
+    "coupon": {
+      "code": "GUWR339L",
+      "discount_amount": 1000
+    },
+    "totalAmount": 1119,
+    "shippingAddress": {
+      "name": "Seed Customer 6",
+      "phone": "01700000006",
+      "address": "6 Example Street",
+      "city": "Dhaka",
+      "postalCode": "1200"
+    },
+    "status": "pending",
+    "paymentStatus": "unpaid",
+    "createdAt": "2026-07-22T01:33:06.814Z",
+    "updatedAt": "2026-07-22T01:33:06.814Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a60de7bfc6293ee99d80725",
+    "user": "6a146653f287cc3b2873b1ef",
+    "email": "order7@example.com",
+    "items": [
+      {
+        "product": "6a1b854e44f6f81b24ef2a09",
+        "name": "Mini UPS For WiFi Router and ONU",
+        "quantity": 1,
+        "price": 2119,
+        "_id": "6a60de7bfc6293ee99d80726"
+      }
+    ],
+    "subtotal": 2119,
+    "coupon": {
+      "code": null,
+      "discount_amount": 0
+    },
+    "totalAmount": 2119,
+    "shippingAddress": {
+      "name": "Seed Customer 7",
+      "phone": "01700000007",
+      "address": "7 Example Street",
+      "city": "Dhaka",
+      "postalCode": "1200"
+    },
+    "status": "pending",
+    "paymentStatus": "unpaid",
+    "createdAt": "2026-07-22T15:15:07.668Z",
+    "updatedAt": "2026-07-22T15:15:07.668Z",
+    "__v": 0
+  }
+]

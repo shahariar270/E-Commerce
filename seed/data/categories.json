@@ -1,0 +1,62 @@
+[
+  {
+    "_id": "6a1a40cd5cc2f996d8b46462",
+    "name": "electronic",
+    "slug": "electronic",
+    "user_id": "6a146653f287cc3b2873b1ef",
+    "is_active": true,
+    "createdAt": "2026-05-30T01:43:41.494Z",
+    "updatedAt": "2026-07-24T15:35:43.240Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a1a413b5cc2f996d8b46465",
+    "name": "Book",
+    "slug": "book",
+    "user_id": "6a146653f287cc3b2873b1ef",
+    "is_active": true,
+    "createdAt": "2026-05-30T01:45:31.254Z",
+    "updatedAt": "2026-07-24T15:35:43.251Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a1a415e5cc2f996d8b46468",
+    "name": "kids",
+    "slug": "kids",
+    "user_id": "6a146653f287cc3b2873b1ef",
+    "is_active": true,
+    "createdAt": "2026-05-30T01:46:06.887Z",
+    "updatedAt": "2026-07-24T15:35:43.252Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a1a41a15cc2f996d8b4646b",
+    "name": "mobile",
+    "slug": "mobile",
+    "user_id": "6a146653f287cc3b2873b1ef",
+    "is_active": true,
+    "createdAt": "2026-05-30T01:47:13.966Z",
+    "updatedAt": "2026-07-24T15:35:43.253Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a1a41ab5cc2f996d8b4646e",
+    "name": "Health",
+    "slug": "health",
+    "user_id": "6a146653f287cc3b2873b1ef",
+    "is_active": true,
+    "createdAt": "2026-05-30T01:47:23.172Z",
+    "updatedAt": "2026-07-24T15:35:43.254Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a1a41c05cc2f996d8b46471",
+    "name": "Beauty",
+    "slug": "beauty",
+    "user_id": "6a146653f287cc3b2873b1ef",
+    "is_active": true,
+    "createdAt": "2026-05-30T01:47:44.741Z",
+    "updatedAt": "2026-07-24T15:35:43.255Z",
+    "__v": 0
+  }
+]

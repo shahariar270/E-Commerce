@@ -1,0 +1,12 @@
+.badge {
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+
+    &--source {
+        background-color: #e0e7ff;
+        color: #4338ca;
+    }
+}

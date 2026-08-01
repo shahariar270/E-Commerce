@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '@Store/slices/auth/authSlice';
-import logo from '../../assets/images/fulllogo.svg';
+import logo from '../../assets/images/logo.svg';
 import './styles.scss';
 
 const Nav = () => {
@@ -29,7 +29,10 @@ const Nav = () => {
   return (
     <div className="eshop-nav">
       <div className="eshop-container eshop-nav__inner">
-        <img src={logo} alt="E-commerce" className="eshop-nav__logo" onClick={() => navigate('/')} />
+        <div className="eshop-nav__logo" onClick={() => navigate('/')}>
+          <img src={logo} alt="" className="eshop-nav__logo-icon" />
+          <span className="eshop-nav__logo-text">E-commerce</span>
+        </div>
 
         <form className="eshop-nav__search" onSubmit={handleSearch}>
           <span className="eshop-nav__search-icon">⌕</span>

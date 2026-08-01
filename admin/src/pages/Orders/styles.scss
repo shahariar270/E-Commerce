@@ -19,6 +19,11 @@
     color: #111827;
 }
 
+.customer-email {
+    font-size: 12px;
+    color: #6b7280;
+}
+
 .customer-phone {
     font-size: 12px;
     color: #6b7280;
@@ -70,5 +75,172 @@
     &--view {
         color: #4caf50;
         &:hover { color: #388e3c; }
+    }
+}
+
+.order-details {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 420px;
+
+    &__row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    &__date {
+        margin-left: auto;
+        font-size: 13px;
+        color: #6b7280;
+    }
+
+    &__section {
+        h3 {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            color: #6b7280;
+            margin: 0 0 8px;
+        }
+    }
+
+    &__customer {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 14px;
+        background-color: #f9fafb;
+        border-radius: 10px;
+    }
+
+    &__avatar {
+        flex-shrink: 0;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #4338ca;
+        color: #fff;
+        font-weight: 700;
+        font-size: 15px;
+    }
+
+    &__customer-info {
+        min-width: 0;
+    }
+
+    &__customer-name {
+        font-weight: 600;
+        font-size: 15px;
+        color: #111827;
+    }
+
+    &__customer-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 16px;
+        margin-top: 2px;
+    }
+
+    &__link {
+        font-size: 13px;
+        color: #4b5563;
+        text-decoration: none;
+
+        &:hover {
+            color: #4338ca;
+            text-decoration: underline;
+        }
+    }
+
+    &__address {
+        margin: 0;
+        color: #374151;
+        line-height: 1.5;
+    }
+
+    &__items {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid #eef0f2;
+        }
+
+        th {
+            color: #6b7280;
+            font-weight: 600;
+            background-color: #f9fafb;
+        }
+
+        tbody tr:hover {
+            background-color: #f9fafb;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+    }
+
+    &__totals {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        background-color: #f9fafb;
+        border-radius: 10px;
+        padding: 12px 14px;
+
+        > div {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #4b5563;
+        }
+
+        &--grand {
+            border-top: 1px solid #e5e7eb;
+            margin-top: 4px;
+            padding-top: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #111827;
+        }
+    }
+}
+
+.badge {
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+
+    &--status {
+        background-color: #f3f4f6;
+        color: #374151;
+    }
+
+    &--status-pending { background-color: #fef3c7; color: #b45309; }
+    &--status-processing { background-color: #dbeafe; color: #1d4ed8; }
+    &--status-shipped { background-color: #ede9fe; color: #6d28d9; }
+    &--status-delivered { background-color: #dcfce7; color: #15803d; }
+    &--status-cancelled { background-color: #fee2e2; color: #b91c1c; }
+
+    &--success {
+        background-color: #dcfce7;
+        color: #16a34a;
+    }
+
+    &--danger {
+        background-color: #fee2e2;
+        color: #dc2626;
     }
 }

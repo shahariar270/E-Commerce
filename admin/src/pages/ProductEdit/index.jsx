@@ -12,22 +12,20 @@ import { useSelectPagination } from "@utils/Hooks/SelectPagination";
 import { productSchema } from "@utils/validationSchemas";
 import ProductImages from "./ProductImage";
 import SubHeading from "@Component/SubHeading";
+import SEO from "@Component/SEO";
 
 const ProductEdit = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { id } = useParams();
 
-    const productData = useSelector(state => state.product.data);
     const currentProduct = useSelector(state => state.product.current);
 
     useEffect(() => {
-        if (id) {
-            const existingProduct = productData.find(p => p._id === id);
-            if (existingProduct) return;
+        if (id && currentProduct?._id !== id) {
             dispatch(getProductById(id));
         }
-    }, [id, productData]);
+    }, [id, currentProduct]);
 
 
     const handleSubmit = async (values) => {
@@ -59,9 +57,12 @@ const ProductEdit = () => {
         return {
             product_name: currentProduct?.product_name || '',
             description: currentProduct?.description || '',
-            stock: currentProduct?.stock || 'in_stock',
+            stock: currentProduct?.stock ?? 0,
             category_ids: currentProduct?.category?.map(i => i._id) || [],
-            price: currentProduct?.price || ''
+            price: currentProduct?.price || '',
+            brand: currentProduct?.brand || '',
+            sku: currentProduct?.sku || '',
+            warranty: currentProduct?.warranty || ''
         }
     }
 
@@ -71,6 +72,7 @@ const ProductEdit = () => {
 
     return (
         <div className="st-form-inner st-gap-4">
+            <SEO title={id ? "Edit Product" : "Add Product"} noindex />
             <Formik
                 enableReinitialize
                 onSubmit={handleSubmit}
@@ -124,13 +126,39 @@ const ProductEdit = () => {
                             label="Description"
                             placeholder={'Enter a product description'}
                         />
-                        <Input
-                            label="Price"
-                            name="price"
-                            type="number"
-                            placeholder="Enter price"
-                            required
-                        />
+                        <div className="st-form--group">
+                            <Input
+                                label="Price"
+                                name="price"
+                                type="number"
+                                placeholder="Enter price"
+                                required
+                            />
+                            <Input
+                                label="Stock Quantity"
+                                name="stock"
+                                type="number"
+                                placeholder="Enter available quantity"
+                                required
+                            />
+                        </div>
+                        <div className="st-form--group">
+                            <Input
+                                label="Brand"
+                                name="brand"
+                                placeholder="e.g. Sony"
+                            />
+                            <Input
+                                label="SKU"
+                                name="sku"
+                                placeholder="e.g. SKU-12345"
+                            />
+                            <Input
+                                label="Warranty"
+                                name="warranty"
+                                placeholder="e.g. 1 Year Warranty"
+                            />
+                        </div>
                         <Select
                             name="category_ids"
                             label="Select Product category"

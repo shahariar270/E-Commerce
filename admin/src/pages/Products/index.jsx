@@ -6,7 +6,8 @@ import './styles.scss';
 import { useDispatch, useSelector } from "react-redux";
 import { deleteProduct, getProducts } from "@Store/slices/productSlice";
 import SubHeading from "@Component/SubHeading";
-import { sliceString } from "@utils/helper";
+import SEO from "@Component/SEO";
+import { sliceString, getStockStatus } from "@utils/helper";
 import Tooltip from "@Component/Tooltip";
 
 
@@ -101,13 +102,12 @@ const Products = () => {
       sortable: true,
       align: "center",
       render: (value) => {
-        let statusClass = 'stock-badge--in';
-        if (value === 0) statusClass = 'stock-badge--out';
-        else if (value < 20) statusClass = 'stock-badge--low';
+        const stockInfo = getStockStatus(value);
+        const modifier = { in_stock: 'in', low_stock: 'low', out_of_stock: 'out' }[stockInfo.key];
 
         return (
-          <span className={`stock-badge ${statusClass}`}>
-            {value === 0 ? 'Out of Stock' : value < 20 ? `Low Stock (${value})` : `In Stock (${value})`}
+          <span className={`stock-badge stock-badge--${modifier}`}>
+            {stockInfo.label}
           </span>
         );
       },
@@ -147,6 +147,7 @@ const Products = () => {
 
   return (
     <div className="products-page st-page">
+      <SEO title="Manage Products" description="Manage your product inventory." noindex />
       <SubHeading
         title="Products"
         subtitle="Manage your product inventory"

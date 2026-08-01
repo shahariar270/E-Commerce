@@ -3,7 +3,10 @@ const { default: mongoose, Schema } = require("mongoose");
 
 const order_schema = new mongoose.Schema(
     {
-        user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+        // Exactly one of user / guest_id identifies who placed the order.
+        user: { type: Schema.Types.ObjectId, ref: 'User', required: false },
+        guest_id: { type: String, required: false },
+        email: { type: String, required: true },
         items: [
             {
                 product: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
@@ -12,6 +15,11 @@ const order_schema = new mongoose.Schema(
                 price: { type: Number, required: true }
             }
         ],
+        subtotal: { type: Number, required: true },
+        coupon: {
+            code: { type: String, default: null },
+            discount_amount: { type: Number, default: 0 }
+        },
         totalAmount: { type: Number, required: true },
         shippingAddress: {
             name: { type: String, required: true },
@@ -26,6 +34,10 @@ const order_schema = new mongoose.Schema(
             default: 'pending'
         },
         paymentStatus: { type: String, enum: ['pending', 'paid', 'failed', 'unpaid'], default: 'unpaid' },
+        // Tracks whether this order's items have already been returned to
+        // product stock (on cancellation), so a later delete of an already-
+        // cancelled order never double-restocks it.
+        stock_restored: { type: Boolean, default: false },
         createdAt: { type: Date, default: Date.now }
     },
     { timestamps: true }

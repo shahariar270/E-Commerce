@@ -1,0 +1,37 @@
+.coupon-code-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.coupon-code-copy {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--text-body, #6b7280);
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 13px;
+
+    &:hover {
+        background: var(--surface-muted, #f1f5f9);
+        color: var(--st-primary);
+    }
+}
+
+.st-form-section--auto-apply {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.st-form-section__hint {
+    margin: 0;
+    font-size: 12px;
+    color: #6b7280;
+}

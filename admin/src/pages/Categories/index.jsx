@@ -5,6 +5,7 @@ import CategoryFormInner from './CategoryFormInner';
 import { getCategories, deleteCategory } from '@Store/slices/categorySlice';
 import Button from '@Component/Buttons';
 import SubHeading from '@Component/SubHeading';
+import SEO from '@Component/SEO';
 
 const Categories = () => {
     const dispatch = useDispatch();
@@ -92,6 +93,7 @@ const Categories = () => {
 
     return (
         <div className="categories-page st-page">
+            <SEO title="Categories" description="Manage your product categories." noindex />
 
             <SubHeading
                 title={"Categories"}

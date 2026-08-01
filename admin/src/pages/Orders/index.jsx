@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllOrder, updateOrder } from "@Store/slices/orderSlice";
 import Select from "@Component/Select";
 import SubHeading from "@Component/SubHeading";
+import SEO from "@Component/SEO";
+import OrderDetailsModal from "./OrderDetailsModal";
 import './styles.scss';
 
 const statusOption = [
@@ -21,6 +23,7 @@ const Orders = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [hasInitialFetch, setHasInitialFetch] = useState(false);
+  const [viewingOrder, setViewingOrder] = useState(null);
   const dispatch = useDispatch();
 
   const { orders, pagination, loading } = useSelector((state) => state.order);
@@ -52,6 +55,7 @@ const Orders = () => {
       render: (_, row) => (
         <div className="customer-info">
           <div className="customer-name">{row?.shippingAddress?.name}</div>
+          <div className="customer-email">{row?.email || row?.user?.email}</div>
           <div className="customer-phone">{row?.shippingAddress?.phone}</div>
         </div>
       )
@@ -100,8 +104,7 @@ const Orders = () => {
   ];
 
   const handleView = (order) => {
-    // Add view logic here
-    console.log("View order", order);
+    setViewingOrder(order);
   };
 
   const handleAddOrder = () => {
@@ -110,6 +113,7 @@ const Orders = () => {
 
   return (
     <div className="orders-page st-page">
+      <SEO title="Manage Orders" description="Manage customer orders and track deliveries." noindex />
       <SubHeading
         title="Orders"
         subtitle="Manage customer orders and track deliveries"
@@ -140,6 +144,10 @@ const Orders = () => {
         sortable={true}
         emptyMessage="No orders found"
       />
+
+      {viewingOrder && (
+        <OrderDetailsModal order={viewingOrder} onClose={() => setViewingOrder(null)} />
+      )}
     </div>
   );
 };

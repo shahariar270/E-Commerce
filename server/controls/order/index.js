@@ -1,20 +1,94 @@
 const Cart = require("../../model/cart");
 const Order = require("../../model/order");
+const Coupon = require("../../model/coupon");
+const User = require("../../model/auth");
+const Subscriber = require("../../model/subscriber");
+const EmailVerification = require("../../model/emailVerification");
+const Settings = require("../../model/settings");
+const Product = require("../../model/product");
 const ApiResponse = require("../../utils/api_response");
 const sendMail = require("../../config/sender");
-const User = require('../../model/auth');
+const socketManager = require('../../socket');
+const { calculateTotals, refreshCartCoupon } = require("../cart/helper");
+
+const BD_PHONE_REGEX = /^(?:\+?880|0)1[3-9]\d{8}$/;
+
+const escapeHtml = (str) =>
+    String(str ?? '').replace(/[&<>"']/g, (c) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+    }[c]));
+
+// Returns items reserved at checkout back to product stock. Callers must
+// only invoke this once per order (guarded by order.stock_restored) since
+// there's no reverse link from Product back to the reservation to dedupe.
+const restockOrderItems = async (items) => {
+    for (const item of items) {
+        await Product.updateOne({ _id: item.product }, { $inc: { stock: item.quantity } });
+    }
+};
 
 class order_controller {
     async create_order(req, res) {
         try {
-            const user_id = req.user.id;
-            const { shippingAddress } = req.body;
+            const { id: user_id, guest_id } = req.user;
+            const { shippingAddress, email: submittedEmail, save_address, subscribe } = req.body;
 
             if (!shippingAddress) {
                 return ApiResponse.error(res, "Shipping address is required", 400);
             }
+            if (!BD_PHONE_REGEX.test(shippingAddress.phone || '')) {
+                return ApiResponse.error(res, "Enter a valid Bangladeshi phone number (e.g. 01712345678)", 400);
+            }
 
-            const cart = await Cart.findOne({ user_id })
+            // Authenticated orders always use the account's own email — never
+            // trust a client-supplied value here, or any logged-in user could
+            // relay an unverified order-confirmation email (and forced
+            // newsletter subscription) to an arbitrary address via a direct
+            // API call, bypassing the guest email-verification flow below.
+            let email;
+            if (user_id) {
+                const account = await User.findById(user_id).select('email');
+                if (!account) {
+                    return ApiResponse.error(res, "User not found", 404);
+                }
+                email = account.email;
+            } else {
+                email = submittedEmail;
+                if (!email) {
+                    return ApiResponse.error(res, "Email is required", 400);
+                }
+            }
+
+            if (user_id && save_address) {
+                await User.findByIdAndUpdate(user_id, {
+                    saved_address: {
+                        name: shippingAddress.name,
+                        phone: shippingAddress.phone,
+                        address: shippingAddress.address,
+                        city: shippingAddress.city,
+                        postalCode: shippingAddress.postalCode,
+                    },
+                });
+            }
+
+            if (!user_id) {
+                const settings = await Settings.findOne();
+                const requireGuestEmailVerification = settings ? settings.require_guest_email_verification : true;
+
+                if (requireGuestEmailVerification) {
+                    const verification = await EmailVerification.findOne({
+                        guest_id,
+                        email: email.trim().toLowerCase(),
+                        verified: true,
+                    });
+                    if (!verification) {
+                        return ApiResponse.error(res, "Please verify your email before placing an order", 400);
+                    }
+                }
+            }
+
+            const cartFilter = user_id ? { user_id } : { guest_id };
+            const cart = await Cart.findOne(cartFilter)
 
             if (!cart || cart.items.length === 0) {
                 return ApiResponse.error(res, "Your cart is empty", 400);
@@ -26,11 +100,58 @@ class order_controller {
                 price: item.price
             }));
 
-            const totalAmount = orderItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+            // Re-verify and reserve stock now, atomically per item — the cart
+            // may have been sitting for a while, and this is the only place
+            // that guards against overselling when two orders race for the
+            // same last unit. No DB transaction required: the conditional
+            // $gte guard means a decrement either fully succeeds or is a
+            // no-op, and anything already decremented in this order attempt
+            // gets rolled back if a later item fails.
+            const decremented = [];
+            for (const item of orderItems) {
+                // $ifNull normalizes a completely-missing stock field (e.g.
+                // documents saved before stock existed on the schema) to 0
+                // within the query itself, so it's never treated as
+                // satisfying $gte by accident.
+                const result = await Product.updateOne(
+                    { _id: item.product, $expr: { $gte: [{ $ifNull: ["$stock", 0] }, item.quantity] } },
+                    { $inc: { stock: -item.quantity } }
+                );
+                if (result.matchedCount === 0) {
+                    for (const done of decremented) {
+                        await Product.updateOne({ _id: done.product }, { $inc: { stock: done.quantity } });
+                    }
+                    const product = await Product.findById(item.product).select('product_name stock');
+                    return ApiResponse.error(
+                        res,
+                        product
+                            ? `Only ${Number(product.stock) || 0} left in stock for "${product.product_name}"`
+                            : "One of the items in your cart is no longer available",
+                        400
+                    );
+                }
+                decremented.push(item);
+            }
+
+            // Re-sync the coupon against its live record so a discount an
+            // admin edited (or expired/deactivated) after the customer
+            // applied it doesn't get charged at its stale value.
+            calculateTotals(cart);
+            await refreshCartCoupon(cart);
+            calculateTotals(cart);
+
+            const subtotal = orderItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+            const couponCode = cart.coupon?.code || null;
+            const discountAmount = couponCode ? (cart.coupon.discount_amount || 0) : 0;
+            const totalAmount = Math.max(0, subtotal - discountAmount);
 
             const newOrder = new Order({
-                user: user_id,
+                user: user_id || undefined,
+                guest_id: user_id ? undefined : guest_id,
+                email,
                 items: orderItems,
+                subtotal,
+                coupon: { code: couponCode, discount_amount: discountAmount },
                 totalAmount,
                 shippingAddress,
                 status: 'pending',
@@ -38,20 +159,44 @@ class order_controller {
             });
 
             const savedOrder = await newOrder.save();
-            const user_email = await User.findById(user_id).select('email');
+
+            if (couponCode) {
+                await Coupon.findOneAndUpdate({ code: couponCode }, { $inc: { used_count: 1 } });
+            }
+
+            if (subscribe) {
+                const normalized_email = email.trim().toLowerCase();
+                await Subscriber.findOneAndUpdate(
+                    { email: normalized_email },
+                    { email: normalized_email, source: 'checkout' },
+                    { upsert: true, setDefaultsOnInsert: true }
+                );
+            }
+
+            socketManager.emitToAdmins('new_order', {
+                id: savedOrder._id,
+                customerName: shippingAddress.name,
+                itemCount: orderItems.length,
+                totalAmount: savedOrder.totalAmount,
+                createdAt: savedOrder.createdAt,
+            });
 
             await Cart.findByIdAndDelete(cart._id);
 
+            if (!user_id) {
+                await EmailVerification.deleteOne({ guest_id, email: email.trim().toLowerCase() });
+            }
+
             const orderItemsHtml = orderItems.map(item => `
             <tr>
-              <td style="padding:12px;border:1px solid #e5e7eb;">${item.name}</td>
+              <td style="padding:12px;border:1px solid #e5e7eb;">${escapeHtml(item.name)}</td>
               <td align="center" style="padding:12px;border:1px solid #e5e7eb;">${item.quantity}</td>
               <td align="right" style="padding:12px;border:1px solid #e5e7eb;">$${(item.price * item.quantity).toFixed(2)}</td>
             </tr>
             `).join('');
 
             await sendMail({
-                email: user_email.email,
+                email,
                 subject: "Order placed successfully",
                 html: `<!DOCTYPE html>
 <html lang="en">
@@ -86,7 +231,7 @@ class order_controller {
           <tr>
             <td class="content" style="padding:40px;">
               <h2 style="margin-top:0;color:#111827;font-size:24px;">Order Confirmed! 🎉</h2>
-              <p style="color:#4b5563;font-size:16px;line-height:1.6;">Hi ${req.user.name},</p>
+              <p style="color:#4b5563;font-size:16px;line-height:1.6;">Hi ${escapeHtml(shippingAddress.name)},</p>
               <p style="color:#4b5563;font-size:16px;line-height:1.6;">Your order has been placed successfully. We're getting it ready for you!</p>
 
               <!-- Order Details -->
@@ -121,6 +266,18 @@ class order_controller {
 
               <!-- Total -->
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:20px;">
+                ${couponCode ? `
+                <tr>
+                  <td align="right" style="padding:6px 0;">
+                    <p style="font-size:14px;color:#6b7280;margin:0;">Subtotal: $${subtotal.toFixed(2)}</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td align="right" style="padding:6px 0;">
+                    <p style="font-size:14px;color:#16a34a;margin:0;">Discount (${couponCode}): -$${discountAmount.toFixed(2)}</p>
+                  </td>
+                </tr>
+                ` : ''}
                 <tr>
                   <td align="right" style="padding:20px 0;border-top:2px solid #f3f4f6;">
                     <p style="font-size:20px;color:#111827;margin:0;">
@@ -229,6 +386,12 @@ class order_controller {
             if (!order) {
                 return ApiResponse.error(res, "Order not found!", 404);
             }
+
+            if (status === 'cancelled' && order.status !== 'cancelled' && !order.stock_restored) {
+                await restockOrderItems(order.items);
+                order.stock_restored = true;
+            }
+
             order.status = status;
             await order.save();
             return ApiResponse.success(res, "Order status updated successfully", order);
@@ -241,12 +404,17 @@ class order_controller {
     async delete_order(req, res) {
         try {
             const orderId = req.params.id;
-            const order = await Order
-                .findByIdAndDelete(orderId);
+            const order = await Order.findById(orderId);
 
             if (!order) {
                 return ApiResponse.error(res, "Order not found!", 404);
             }
+
+            if (!order.stock_restored) {
+                await restockOrderItems(order.items);
+            }
+
+            await Order.findByIdAndDelete(orderId);
             return ApiResponse.success(res, "Order deleted successfully");
         }
         catch (error) {

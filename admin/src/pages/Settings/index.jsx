@@ -1,9 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "../../components/Buttons";
 import Input from "../../components/Input";
 import SubHeading from "@Component/SubHeading";
+import SEO from "@Component/SEO";
+import { getSettings, updateSettings } from "@Store/slices/settingsSlice";
 
 const Settings = () => {
+  const dispatch = useDispatch();
+  const { require_guest_email_verification, loading: settingsLoading } = useSelector((state) => state.settings);
+
+  useEffect(() => {
+    dispatch(getSettings());
+  }, [dispatch]);
+
+  const handleToggleGuestVerification = () => {
+    dispatch(updateSettings({ require_guest_email_verification: !require_guest_email_verification }));
+  };
+
   const [settings, setSettings] = useState({
     siteName: "E-commerce Admin",
     siteEmail: "admin@example.com",
@@ -39,10 +53,35 @@ const Settings = () => {
 
   return (
     <div className="settings-page st-page">
+      <SEO title="Settings" description="Configure your application preferences." noindex />
       <SubHeading
         title="Settings"
         subtitle="Configure your application preferences"
       />
+
+      <div className="settings-section">
+        <h3 className="settings-section__title">Checkout</h3>
+        <div className="settings-section__content">
+          <div className="settings-toggle">
+            <div className="settings-toggle__info">
+              <span className="settings-toggle__label">Require Guest Email Verification</span>
+              <span className="settings-toggle__description">
+                Guests must verify their email with a one-time code before placing an order.
+                Logged-in users are unaffected — their account email is already trusted.
+              </span>
+            </div>
+            <label className="toggle-switch">
+              <input
+                type="checkbox"
+                checked={require_guest_email_verification}
+                disabled={settingsLoading}
+                onChange={handleToggleGuestVerification}
+              />
+              <span className="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
 
       {/* <form onSubmit={handleSubmit} className="settings-form">
         <div className="settings-section">
@@ -209,12 +248,10 @@ const Settings = () => {
           max-width: 800px;
         }
 
-        .settings-form {
-          &__actions {
-            margin-top: 32px;
-            padding-top: 24px;
-            border-top: 1px solid var(--st-border);
-          }
+        .settings-form__actions {
+          margin-top: 32px;
+          padding-top: 24px;
+          border-top: 1px solid var(--st-border);
         }
 
         .settings-section {
@@ -223,20 +260,20 @@ const Settings = () => {
           padding: 24px;
           margin-bottom: 24px;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
 
-          &__title {
-            margin: 0 0 20px;
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--st-text-primary);
-            padding-bottom: 12px;
-            border-bottom: 1px solid var(--st-border);
-          }
+        .settings-section__title {
+          margin: 0 0 20px;
+          font-size: 18px;
+          font-weight: 600;
+          color: var(--st-text-primary);
+          padding-bottom: 12px;
+          border-bottom: 1px solid var(--st-border);
+        }
 
-          &__content {
-            display: grid;
-            gap: 20px;
-          }
+        .settings-section__content {
+          display: grid;
+          gap: 20px;
         }
 
         .settings-group {
@@ -252,11 +289,11 @@ const Settings = () => {
           background: white;
           cursor: pointer;
           transition: border-color 0.2s;
+        }
 
-          &:focus {
-            outline: none;
-            border-color: var(--st-primary);
-          }
+        .settings-select:focus {
+          outline: none;
+          border-color: var(--st-primary);
         }
 
         .settings-toggle {
@@ -264,23 +301,24 @@ const Settings = () => {
           justify-content: space-between;
           align-items: center;
           padding: 12px 0;
+          gap: 16px;
+        }
 
-          &__info {
-            display: flex;
-            flex-direction: column;
-          }
+        .settings-toggle__info {
+          display: flex;
+          flex-direction: column;
+        }
 
-          &__label {
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--st-text-primary);
-            margin-bottom: 4px;
-          }
+        .settings-toggle__label {
+          font-size: 14px;
+          font-weight: 500;
+          color: var(--st-text-primary);
+          margin-bottom: 4px;
+        }
 
-          &__description {
-            font-size: 12px;
-            color: #666;
-          }
+        .settings-toggle__description {
+          font-size: 12px;
+          color: #666;
         }
 
         .toggle-switch {
@@ -288,20 +326,21 @@ const Settings = () => {
           display: inline-block;
           width: 48px;
           height: 24px;
+          flex-shrink: 0;
+        }
 
-          input {
-            opacity: 0;
-            width: 0;
-            height: 0;
+        .toggle-switch input {
+          opacity: 0;
+          width: 0;
+          height: 0;
+        }
 
-            &:checked + .toggle-slider {
-              background-color: var(--st-primary);
-            }
+        .toggle-switch input:checked + .toggle-slider {
+          background-color: var(--st-primary);
+        }
 
-            &:checked + .toggle-slider::before {
-              transform: translateX(24px);
-            }
-          }
+        .toggle-switch input:checked + .toggle-slider::before {
+          transform: translateX(24px);
         }
 
         .toggle-slider {
@@ -314,18 +353,18 @@ const Settings = () => {
           background-color: #ccc;
           transition: 0.3s;
           border-radius: 24px;
+        }
 
-          &::before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: 0.3s;
-            border-radius: 50%;
-          }
+        .toggle-slider::before {
+          position: absolute;
+          content: "";
+          height: 18px;
+          width: 18px;
+          left: 3px;
+          bottom: 3px;
+          background-color: white;
+          transition: 0.3s;
+          border-radius: 50%;
         }
       `}</style>
     </div>

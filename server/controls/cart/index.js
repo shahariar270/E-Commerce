@@ -1,34 +1,61 @@
 const Cart = require("../../model/cart");
+const Product = require("../../model/product");
 const ApiResponse = require("../../utils/api_response");
-const calculateTotals = require("./helper");
+const { calculateTotals, refreshCartCoupon, applyAutoCoupon } = require("./helper");
 
+// req.user is set by auth_middleware.identify — either a logged-in user
+// (id set) or a guest (guest_id set). Exactly one of the two identifies
+// which cart to operate on.
+const ownerFilter = (req) => req.user.id ? { user_id: req.user.id } : { guest_id: req.user.guest_id };
 
 class cart_system {
     async create_cart(req, res) {
         try {
             const { product_id, name, price, quantity } = req.body;
-            const { id: user_id } = req.user;
-            let cart = await Cart.findOne({ user_id });
+            const filter = ownerFilter(req);
+
+            const product = await Product.findById(product_id);
+            if (!product) return ApiResponse.error(res, "Product not found", 404);
+
+            let cart = await Cart.findOne(filter);
 
             const totalPrice = price * quantity;
+            const existingItem = cart?.items.find(p => p.product_id.toString() === product_id);
+            const resultingQuantity = (existingItem?.quantity || 0) + quantity;
+            // Documents saved before stock existed on the schema have it
+            // completely absent (not 0) — comparing a number against
+            // undefined is always false in JS, which would silently let the
+            // check below pass. Coerce to a real number first.
+            const availableStock = Number(product.stock) || 0;
+
+            if (resultingQuantity > availableStock) {
+                return ApiResponse.error(
+                    res,
+                    availableStock > 0
+                        ? `Only ${availableStock} left in stock`
+                        : "This product is out of stock",
+                    400
+                );
+            }
 
             if (cart) {
-                const itemIndex = cart.items.findIndex(p => p.product_id.toString() === product_id);
-
-                if (itemIndex > -1) {
-                    cart.items[itemIndex].quantity += quantity;
-                    cart.items[itemIndex].subtotal = cart.items[itemIndex].quantity * price;
+                if (existingItem) {
+                    existingItem.quantity = resultingQuantity;
+                    existingItem.subtotal = existingItem.quantity * price;
                 } else {
                     cart.items.push({ product_id, name, price, quantity, subtotal: totalPrice });
                 }
 
             } else {
                 cart = new Cart({
-                    user_id,
+                    ...filter,
                     items: [{ product_id, name, price, quantity, subtotal: totalPrice }]
                 });
             }
 
+            calculateTotals(cart);
+            await refreshCartCoupon(cart);
+            await applyAutoCoupon(cart);
             calculateTotals(cart);
             await cart.save();
             return ApiResponse.success(res, "Item added to cart", cart, 201);
@@ -39,29 +66,53 @@ class cart_system {
     }
     async get_cart(req, res) {
         try {
-            const { id: user_id } = req.user;
-            const cart = await Cart.findOne({ user_id })
+            const cart = await Cart.findOne(ownerFilter(req))
                 .populate("items.product_id");
 
             if (!cart) return ApiResponse.error(res, "Cart is empty", 404);
+
+            const couponBefore = cart.coupon?.code;
+            const discountBefore = cart.coupon?.discount_amount;
+            await refreshCartCoupon(cart);
+            await applyAutoCoupon(cart);
+            calculateTotals(cart);
+            if (cart.coupon?.code !== couponBefore || cart.coupon?.discount_amount !== discountBefore) {
+                await cart.save();
+            }
+
             return ApiResponse.success(res, "Cart fetched successfully", cart);
         } catch (error) {
             return ApiResponse.error(res, "Error fetching cart", 500, error.message);
         }
     }
     async updated_cart(req, res) {
-        const { id: user_id } = req.user;
         const { product_id, quantity } = req.body;
 
         try {
-            const cart = await Cart.findOne({ user_id });
+            const cart = await Cart.findOne(ownerFilter(req));
             if (!cart) return ApiResponse.error(res, "Cart not found", 404);
 
             const item = cart.items.find(p => p.product_id.toString() === product_id);
             if (item) {
+                const product = await Product.findById(product_id);
+                if (!product) return ApiResponse.error(res, "Product not found", 404);
+                const availableStock = Number(product.stock) || 0;
+                if (quantity > availableStock) {
+                    return ApiResponse.error(
+                        res,
+                        availableStock > 0
+                            ? `Only ${availableStock} left in stock`
+                            : "This product is out of stock",
+                        400
+                    );
+                }
+
                 item.quantity = quantity;
                 item.subtotal = item.price * quantity;
 
+                calculateTotals(cart);
+                await refreshCartCoupon(cart);
+                await applyAutoCoupon(cart);
                 calculateTotals(cart);
                 await cart.save();
 
@@ -77,15 +128,17 @@ class cart_system {
     }
 
     async remove_item_from_cart(req, res) {
-        const { id: user_id } = req.user;
         const { id } = req.params;
 
         try {
-            const cart = await Cart.findOne({ user_id });
+            const cart = await Cart.findOne(ownerFilter(req));
             if (!cart) return ApiResponse.error(res, "Cart not found", 404);
 
             cart.items = cart.items.filter(item => item.product_id.toString() !== id);
 
+            calculateTotals(cart);
+            await refreshCartCoupon(cart);
+            await applyAutoCoupon(cart);
             calculateTotals(cart);
             await cart.save();
 

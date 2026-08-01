@@ -39,11 +39,29 @@ const userSchema = new mongoose.Schema(
             default: '',
             trim: true,
         },
+        google_id: {
+            type: String,
+            default: null,
+            index: true,
+            sparse: true,
+            unique: true,
+        },
         user_role: {
             type: String,
             default: 'buyer',
             enum: ['buyer', 'seller', 'admin'],
             trim: true,
+        },
+        is_active: {
+            type: Boolean,
+            default: true,
+        },
+        saved_address: {
+            name: { type: String, default: '' },
+            phone: { type: String, default: '' },
+            address: { type: String, default: '' },
+            city: { type: String, default: '' },
+            postalCode: { type: String, default: '' },
         },
     },
     { timestamps: true }

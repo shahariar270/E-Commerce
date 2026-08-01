@@ -55,6 +55,19 @@ export const removeCookie = (name) => {
   document.cookie = `${name}=; path=/; max-age=0; SameSite=Lax`;
 };
 
+// Stable per-browser identity for anonymous (not logged in) shoppers, so
+// their cart/orders survive page reloads without requiring an account.
+export const getOrCreateGuestId = () => {
+  let guestId = localStorage.getItem('guest_id');
+  if (!guestId) {
+    guestId = typeof crypto !== 'undefined' && crypto.randomUUID
+      ? crypto.randomUUID()
+      : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    localStorage.setItem('guest_id', guestId);
+  }
+  return guestId;
+};
+
 
 export const useAuth = () => {
   const token = getCookie("token");
@@ -67,3 +80,19 @@ export const sliceString = (str, maxLength) => {
   }
   return str.slice(0, maxLength) + "...";
 }
+
+// Single source of truth for deriving a product's availability from its
+// numeric stock count, shared by the admin product table and the storefront
+// product card/detail page so "low stock" always means the same thing.
+export const LOW_STOCK_THRESHOLD = 20;
+
+export const getStockStatus = (stock) => {
+  const quantity = Number(stock) || 0;
+  if (quantity <= 0) {
+    return { key: 'out_of_stock', label: 'Out of Stock' };
+  }
+  if (quantity < LOW_STOCK_THRESHOLD) {
+    return { key: 'low_stock', label: `Low Stock (${quantity})` };
+  }
+  return { key: 'in_stock', label: `In Stock (${quantity})` };
+};

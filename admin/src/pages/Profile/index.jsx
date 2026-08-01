@@ -4,15 +4,19 @@ import Input from "../../components/Input";
 import ImageUpload from "../../components/ImageUpload";
 import { useDispatch, useSelector } from "react-redux";
 import { getProfile, updateProfile } from "@Store/slices/auth/authSlice";
+import { getUserOrders } from "@Store/slices/orderSlice";
 import { Form, Formik } from "formik";
 import "./styles.scss"
 import SubHeading from "@Component/SubHeading";
 import Tooltip from "@Component/Tooltip";
+import SEO from "@Component/SEO";
 
 const Profile = () => {
   const dispatch = useDispatch();
   const profile = useSelector((state) => state.auth?.user);
+  const orderCount = useSelector((state) => state.order?.pagination?.total);
   const [hasProfileFetched, setHasProfileFetched] = useState(false);
+  const [hasOrdersFetched, setHasOrdersFetched] = useState(false);
 
   useEffect(() => {
     // Only fetch profile if we haven't fetched it yet
@@ -20,6 +24,12 @@ const Profile = () => {
       dispatch(getProfile()).then(() => setHasProfileFetched(true));
     }
   }, [dispatch, hasProfileFetched])
+
+  useEffect(() => {
+    if (!hasOrdersFetched) {
+      dispatch(getUserOrders()).then(() => setHasOrdersFetched(true));
+    }
+  }, [dispatch, hasOrdersFetched])
 
   const handleSubmit = (values, action) => {
     dispatch(updateProfile(values)).then(() => {
@@ -55,6 +65,11 @@ const Profile = () => {
         new_pass: "",
         current_pass: "",
         conform_pass: "",
+        address_name: profile?.saved_address?.name || "",
+        address_phone: profile?.saved_address?.phone || "",
+        address_line: profile?.saved_address?.address || "",
+        address_city: profile?.saved_address?.city || "",
+        address_postal_code: profile?.saved_address?.postalCode || "",
       }}
     >
       {({ values, dirty, isSubmitting, setFieldValue }) => {
@@ -66,10 +81,11 @@ const Profile = () => {
           year: 'numeric'
         });
 
-        let result = `Member since ${formatted}`;
+        let result = `Member since ${formatted} · ${orderCount || 0} order${orderCount === 1 ? '' : 's'} placed`;
 
         return (
           <Form className="st-profile">
+            <SEO title="My Profile" description="Manage your personal information and account settings." noindex />
             <SubHeading
               title="Profile"
               subtitle="Manage your personal information and account settings"
@@ -170,10 +186,47 @@ const Profile = () => {
               </div>
               <div className="st-page--main__address">
                 <h3>Address Details</h3>
+                <p className="st-profile__address-hint">
+                  Save a default shipping address to have it pre-filled at checkout.
+                </p>
                 <div className="st-profile--main__field">
-                  coming soon...
+                  <div className="st-form--group">
+                    <Input
+                      label="Full Name"
+                      name="address_name"
+                      type="text"
+                      placeholder="Enter the recipient's name"
+                    />
+                    <Input
+                      label="Phone"
+                      name="address_phone"
+                      type="text"
+                      placeholder="01712345678"
+                    />
+                  </div>
+                  <div className="">
+                    <Input
+                      label="Address"
+                      name="address_line"
+                      type="text"
+                      placeholder="House, road, area, thana/upazila"
+                    />
+                  </div>
+                  <div className="st-form--group">
+                    <Input
+                      label="City"
+                      name="address_city"
+                      type="text"
+                      placeholder="Dhaka"
+                    />
+                    <Input
+                      label="Postal Code"
+                      name="address_postal_code"
+                      type="text"
+                      placeholder="1207"
+                    />
+                  </div>
                 </div>
-
               </div>
 
             </div>

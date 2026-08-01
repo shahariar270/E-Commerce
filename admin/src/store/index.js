@@ -3,12 +3,17 @@ import authReducer from './slices/auth/authSlice';
 import categoryReducer from './slices/categorySlice';
 import productReducer from './slices/productSlice';
 import cartReducer from './slices/cartSlice';
+import couponReducer from './slices/couponSlice';
 import orderReducer from './slices/orderSlice'
 import dashboardReducer from './slices/dashboardSlice'
 import commentReducer from './slices/commentSlice'
 import reviewReducer from './slices/reviewSlice'
+import settingsReducer from './slices/settingsSlice'
+import customerReducer from './slices/customerSlice'
+import subscriberReducer from './slices/subscriberSlice'
 import { logger } from 'redux-logger';
 import notificationReducer from './slices/notificationSlice';
+import adminNotificationReducer from './slices/adminNotificationSlice';
 import { notificationMiddleware } from './notificationMiddleware';
 
 const store = configureStore({
@@ -17,11 +22,16 @@ const store = configureStore({
     category: categoryReducer,
     product: productReducer,
     cart: cartReducer,
+    coupon: couponReducer,
     notification: notificationReducer,
+    adminNotifications: adminNotificationReducer,
     order: orderReducer,
     dashboard: dashboardReducer,
     comment: commentReducer,
-    review: reviewReducer
+    review: reviewReducer,
+    settings: settingsReducer,
+    customer: customerReducer,
+    subscriber: subscriberReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(

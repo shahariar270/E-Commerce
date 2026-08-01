@@ -31,6 +31,35 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+export const googleLogin = createAsyncThunk(
+  'auth/googleLogin',
+  async ({ credential }, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${authRoute}google`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ credential }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return rejectWithValue(data.message || 'Google login failed');
+      }
+
+      const token = data?.data?.token || data?.token;
+      if (token) {
+        setCookie('token', token);
+      }
+      return { ...data, token };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const registerUser = createAsyncThunk(
   'auth/registerUser',
   async (userData, { rejectWithValue }) => {
@@ -47,6 +76,56 @@ export const registerUser = createAsyncThunk(
 
       if (!response.ok) {
         return rejectWithValue(data.message || 'Registration failed');
+      }
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const forgotPassword = createAsyncThunk(
+  'auth/forgotPassword',
+  async ({ email }, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${authRoute}forgot-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return rejectWithValue(data.message || 'Failed to send reset link');
+      }
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const resetPassword = createAsyncThunk(
+  'auth/resetPassword',
+  async ({ email, token, new_password }, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${authRoute}reset-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, token, new_password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return rejectWithValue(data.message || 'Failed to reset password');
       }
 
       return data;
@@ -102,7 +181,10 @@ export const updateProfile = createAsyncThunk(
       }
 
       const formData = new FormData();
-      const { first_name, last_name, current_pass, new_pass, profile_image, remove_image } = profileData;
+      const {
+        first_name, last_name, current_pass, new_pass, profile_image, remove_image,
+        address_name, address_phone, address_line, address_city, address_postal_code,
+      } = profileData;
 
       if (first_name !== undefined) formData.append('first_name', first_name);
       if (last_name !== undefined) formData.append('last_name', last_name);
@@ -110,6 +192,11 @@ export const updateProfile = createAsyncThunk(
       if (new_pass) formData.append('new_pass', new_pass);
       if (profile_image) formData.append('profile_image', profile_image);
       if (remove_image) formData.append('remove_image', 'true');
+      if (address_name !== undefined) formData.append('address_name', address_name);
+      if (address_phone !== undefined) formData.append('address_phone', address_phone);
+      if (address_line !== undefined) formData.append('address_line', address_line);
+      if (address_city !== undefined) formData.append('address_city', address_city);
+      if (address_postal_code !== undefined) formData.append('address_postal_code', address_postal_code);
 
       const response = await fetch(`${authRoute}update_profile`, {
         method: 'POST',
@@ -181,6 +268,21 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+      // Google Login
+      .addCase(googleLogin.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(googleLogin.fulfilled, (state, action) => {
+        state.loading = false;
+        state.isAuthenticated = true;
+        state.token = action.payload.token;
+        state.message = action.payload.message;
+      })
+      .addCase(googleLogin.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
       // Register
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
@@ -191,6 +293,34 @@ const authSlice = createSlice({
         state.message = action.payload.message;
       })
       .addCase(registerUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Forgot Password
+      .addCase(forgotPassword.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.message = null;
+      })
+      .addCase(forgotPassword.fulfilled, (state, action) => {
+        state.loading = false;
+        state.message = action.payload.message;
+      })
+      .addCase(forgotPassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Reset Password
+      .addCase(resetPassword.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.message = null;
+      })
+      .addCase(resetPassword.fulfilled, (state, action) => {
+        state.loading = false;
+        state.message = action.payload.message;
+      })
+      .addCase(resetPassword.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

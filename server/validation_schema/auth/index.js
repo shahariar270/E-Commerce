@@ -35,4 +35,35 @@ const updateProfileSchema = z.object({
     last_name: z.string().min(2).max(100).optional()
 });
 
-module.exports = { registerSchema, loginSchema, updateProfileSchema };
+const googleLoginSchema = z.object({
+    credential: z.string({
+        required_error: "Google credential is required"
+    }).min(1, "Google credential is required")
+});
+
+const forgotPasswordSchema = z.object({
+    email: z.string({
+        required_error: "email is required field"
+    }).email("invalid email")
+});
+
+const resetPasswordSchema = z.object({
+    email: z.string({
+        required_error: "email is required field"
+    }).email("invalid email"),
+    token: z.string({
+        required_error: "reset token is required field"
+    }).min(1, "reset token is required field"),
+    new_password: z.string({
+        required_error: "password is required field"
+    }).min(6, "password must be at least 6 characters")
+});
+
+module.exports = {
+    registerSchema,
+    loginSchema,
+    updateProfileSchema,
+    googleLoginSchema,
+    forgotPasswordSchema,
+    resetPasswordSchema
+};

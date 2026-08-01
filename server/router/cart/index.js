@@ -5,25 +5,25 @@ const router = express.Router();
 
 router.get(
     '/cart',
-    auth_middleware.verify_token,
+    auth_middleware.identify,
     get_cart
 );
 
 router.post(
     '/cart',
-    auth_middleware.verify_token,
+    auth_middleware.identify,
     create_cart,
 );
 
 router.put(
     '/cart',
-    auth_middleware.verify_token,
+    auth_middleware.identify,
     updated_cart
 );
 
 router.delete(
     '/cart/:id',
-    auth_middleware.verify_token,
+    auth_middleware.identify,
     remove_item_from_cart,
 );
 
