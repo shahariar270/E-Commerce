@@ -5,7 +5,7 @@ import Input from "../../components/Input";
 import Button from "../../components/Buttons";
 import { loginUser, googleLogin, clearError } from "../../store/slices/auth/authSlice";
 import { loginSchema } from "../../Utils/validationSchemas";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "./style.scss";
 import {jwtDecode} from 'jwt-decode';
 import { getCookie } from '@utils/helper';
@@ -113,9 +113,9 @@ const Login = () => {
                   <input type="checkbox" name="remember" />
                   <span>Remember me</span>
                 </label>
-                <a href="/forgot-password" className="st-forgot-password">
+                <Link to="/forgot-password" className="st-forgot-password">
                   Forgot password?
-                </a>
+                </Link>
               </div>
 
               <Button
@@ -148,14 +148,14 @@ const Login = () => {
         <div className="st-login-footer">
           <p>
             Don't have an account?{" "}
-            <a href="/register" className="st-signup-link">
+            <Link to="/register" className="st-signup-link">
               Sign up
-            </a>
+            </Link>
           </p>
         </div>
       </div>
       <p className="st-login-back">
-        <a href="/">← Back to store</a>
+        <Link to="/">← Back to store</Link>
       </p>
     </div>
   );

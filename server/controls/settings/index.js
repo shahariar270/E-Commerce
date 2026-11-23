@@ -14,6 +14,17 @@ class settings_controller {
         }
     }
 
+    async get_public_settings(req, res) {
+        try {
+            const settings = await Settings.findOne();
+            return ApiResponse.success(res, "Public settings retrieved successfully", {
+                require_guest_email_verification: settings ? settings.require_guest_email_verification : true,
+            });
+        } catch (error) {
+            return ApiResponse.error(res, "Error retrieving public settings", 500, error.message);
+        }
+    }
+
     async update_settings(req, res) {
         try {
             const { require_guest_email_verification } = req.body;

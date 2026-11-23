@@ -17,9 +17,12 @@ export const createReview = createAsyncThunk(
 
 export const getReviews = createAsyncThunk(
     'review/getReviews',
-    async (_, { rejectWithValue }) => {
+    async (params, { rejectWithValue }) => {
         try {
-            return await apiClient('/review');
+            const query = typeof params === 'string'
+                ? `?product=${encodeURIComponent(params)}`
+                : (params?.product ? `?product=${encodeURIComponent(params.product)}` : '');
+            return await apiClient(`/review${query}`);
         } catch (error) {
             return rejectWithValue(error.message);
         }

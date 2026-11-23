@@ -4,6 +4,7 @@ import Input from "../../components/Input";
 import Button from "../../components/Buttons";
 import { forgotPassword, clearError, clearMessage } from "../../store/slices/auth/authSlice";
 import { forgotPasswordSchema } from "../../Utils/validationSchemas";
+import { Link } from "react-router-dom";
 import "../Login/style.scss";
 import logo from '../../assets/images/logo.svg';
 import SEO from '@Component/SEO';
@@ -100,14 +101,14 @@ const ForgotPassword = () => {
         <div className="st-login-footer">
           <p>
             Remembered your password?{" "}
-            <a href="/login" className="st-signup-link">
+            <Link to="/login" className="st-signup-link">
               Sign in
-            </a>
+            </Link>
           </p>
         </div>
       </div>
       <p className="st-login-back">
-        <a href="/">← Back to store</a>
+        <Link to="/">← Back to store</Link>
       </p>
     </div>
   );

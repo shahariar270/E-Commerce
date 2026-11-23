@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Table from '@Component/Table';
 import CategoryFormInner from './CategoryFormInner';
@@ -17,17 +17,16 @@ const Categories = () => {
     const [pageSize, setPageSize] = useState(10);
     const [searchQuery, setSearchQuery] = useState('');
     const [modalState, setModalState] = useState({ open: false, editId: null });
-    const [hasInitialFetch, setHasInitialFetch] = useState(false);
+    const hasInitialFetch = useRef(false);
 
     useEffect(() => {
-        // Skip API call if we already have categories and user hasn't changed pagination
-        // Only skip on initial page load
-        if (hasInitialFetch && categories.length > 0 && currentPage === 1 && pageSize === 10) {
+        // Skip API call if we already have categories and user hasn't changed pagination/search
+        if (hasInitialFetch.current && categories.length > 0 && currentPage === 1 && pageSize === 10 && !searchQuery) {
             return;
         }
-        dispatch(getCategories({ page: currentPage, limit: pageSize }));
-        setHasInitialFetch(true);
-    }, [dispatch, currentPage, pageSize, hasInitialFetch, categories.length]);
+        dispatch(getCategories({ page: currentPage, limit: pageSize, search: searchQuery }));
+        hasInitialFetch.current = true;
+    }, [dispatch, currentPage, pageSize, searchQuery]);
 
     const handleOpenModal = useCallback((id = null) => setModalState({ open: true, editId: id }), []);
     const handleCloseModal = useCallback(() => setModalState({ open: false, editId: null }), []);
@@ -86,11 +85,6 @@ const Categories = () => {
         },
     ];
 
-    const filteredCategories = categories.filter(({ name, slug }) => {
-        const q = searchQuery.toLowerCase();
-        return name.toLowerCase().includes(q) || slug.toLowerCase().includes(q);
-    });
-
     return (
         <div className="categories-page st-page">
             <SEO title="Categories" description="Manage your product categories." noindex />
@@ -108,11 +102,11 @@ const Categories = () => {
             {message && <div className="alert alert--success">{message}</div>}
             <Table
                 columns={columns}
-                data={filteredCategories}
+                data={categories}
                 loading={loading}
                 searchable={true}
                 searchPlaceholder="Search categories..."
-                onSearch={setSearchQuery}
+                onSearch={(q) => { setSearchQuery(q); setCurrentPage(1); }}
                 searchQuery={searchQuery}
                 pagination={true}
                 currentPage={currentPage}

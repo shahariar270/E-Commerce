@@ -10,6 +10,11 @@ router.get(
     settings_controller.get_settings
 );
 
+router.get(
+    '/settings/public',
+    settings_controller.get_public_settings
+);
+
 router.put(
     '/settings',
     auth_middleware.verify_token,

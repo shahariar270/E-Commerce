@@ -68,10 +68,10 @@ function App() {
         </Route>
 
         <Route element={<Layout />}>
-          <Route path="dashboard" element={<Dashboard />} />
           <Route path="orders" element={<Order />} />
           <Route path="profile" element={<Profile />} />
-          <Route path="settings" element={<Settings />} />
+          <Route path="dashboard" element={<Navigate to="/admin/dashboard" replace />} />
+          <Route path="settings" element={<Navigate to="/admin/settings" replace />} />
           <Route path="*" element={<ErrorPage />} />
         </Route>
 

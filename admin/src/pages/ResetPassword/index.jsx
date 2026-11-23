@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form } from "formik";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import Input from "../../components/Input";
 import Button from "../../components/Buttons";
 import { resetPassword, clearError, clearMessage } from "../../store/slices/auth/authSlice";
@@ -65,7 +65,7 @@ const ResetPassword = () => {
             border: '1px solid #f5c6cb'
           }}>
             This reset link is invalid. Please request a new one from the{" "}
-            <a href="/forgot-password">forgot password</a> page.
+            <Link to="/forgot-password">forgot password</Link> page.
           </div>
         ) : (
           <Formik
@@ -133,14 +133,14 @@ const ResetPassword = () => {
         <div className="st-login-footer">
           <p>
             Remembered your password?{" "}
-            <a href="/login" className="st-signup-link">
+            <Link to="/login" className="st-signup-link">
               Sign in
-            </a>
+            </Link>
           </p>
         </div>
       </div>
       <p className="st-login-back">
-        <a href="/">← Back to store</a>
+        <Link to="/">← Back to store</Link>
       </p>
     </div>
   );

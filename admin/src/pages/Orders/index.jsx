@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import TableContainer from "../../components/Table/TableContainer";
 import Button from "../../components/Buttons";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,7 +22,7 @@ const Orders = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [hasInitialFetch, setHasInitialFetch] = useState(false);
+  const hasInitialFetch = useRef(false);
   const [viewingOrder, setViewingOrder] = useState(null);
   const dispatch = useDispatch();
 
@@ -31,13 +31,13 @@ const Orders = () => {
   useEffect(() => {
     // Skip API call if we already have orders and user hasn't changed search/pagination
     // Only skip on initial page load without search
-    if (hasInitialFetch && orders.length > 0 && !searchQuery && currentPage === 1 && pageSize === 10) {
+    if (hasInitialFetch.current && orders.length > 0 && !searchQuery && currentPage === 1 && pageSize === 10) {
       return;
     }
     
-    dispatch(getAllOrder({ page: currentPage, limit: pageSize, search: searchQuery }))
-    setHasInitialFetch(true);
-  }, [dispatch, currentPage, pageSize, searchQuery, hasInitialFetch, orders.length])
+    dispatch(getAllOrder({ page: currentPage, limit: pageSize, search: searchQuery }));
+    hasInitialFetch.current = true;
+  }, [dispatch, currentPage, pageSize, searchQuery]);
 
 
   const columns = [

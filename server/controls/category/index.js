@@ -26,10 +26,15 @@ class category_controller {
 
     async get_categories(req, res) {
         try {
-            const { page = 1, limit = 10 } = req.query;
+            const { page = 1, limit = 10, search } = req.query;
+            const filter = {};
+            if (search && search.trim()) {
+                const regex = { $regex: search.trim(), $options: 'i' };
+                filter.$or = [{ name: regex }, { slug: regex }];
+            }
             const skip = (parseInt(page) - 1) * parseInt(limit);
-            const categories = await Category.find().skip(skip).limit(parseInt(limit));
-            const total = await Category.countDocuments();
+            const categories = await Category.find(filter).skip(skip).limit(parseInt(limit));
+            const total = await Category.countDocuments(filter);
             return ApiResponse.success(res, 'Categories retrieved successfully', {
                 data: categories,
                 total

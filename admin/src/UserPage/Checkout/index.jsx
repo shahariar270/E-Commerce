@@ -44,9 +44,23 @@ export const Checkout = () => {
   const [verifyMessage, setVerifyMessage] = useState('');
   const [verifyMessageType, setVerifyMessageType] = useState('info');
 
+  const [requireGuestVerification, setRequireGuestVerification] = useState(true);
+
   useEffect(() => {
     dispatch(getCart());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      apiClient('/settings/public')
+        .then((res) => {
+          if (res?.data && typeof res.data.require_guest_email_verification === 'boolean') {
+            setRequireGuestVerification(res.data.require_guest_email_verification);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [isAuthenticated]);
 
   useEffect(() => {
     if (isAuthenticated && !user) {
@@ -120,7 +134,7 @@ export const Checkout = () => {
       validationSchema={checkoutSchema}
     >
       {({ values, isSubmitting }) => {
-        const requiresEmailVerification = !isAuthenticated;
+        const requiresEmailVerification = !isAuthenticated && requireGuestVerification;
         const isEmailVerified = requiresEmailVerification
           ? verifiedEmail && verifiedEmail === values.email
           : true;

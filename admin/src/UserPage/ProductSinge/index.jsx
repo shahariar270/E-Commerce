@@ -75,11 +75,10 @@ export const ProductSinge = () => {
         if (current?._id !== id) {
             dispatch(getProductById(id));
         }
-        // Only fetch reviews if the list is empty
-        if (reviews.length === 0) {
-            dispatch(getReviews());
+        if (id) {
+            dispatch(getReviews({ product: id }));
         }
-    }, [dispatch, id, current?._id, reviews.length]);
+    }, [dispatch, id, current?._id]);
 
     useEffect(() => {
         if (current?.image_gallery?.length > 0) {

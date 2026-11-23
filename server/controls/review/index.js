@@ -36,7 +36,12 @@ class review_controls {
 
     async get_all_reviews(req, res) {
         try {
-            const reviews = await Review.find()
+            const filter = {};
+            const productId = req.query.productId || req.query.product;
+            if (productId) {
+                filter.product = productId;
+            }
+            const reviews = await Review.find(filter)
                 .populate("author", "user_name first_name last_name image")
                 .populate("product", "product_name")
                 .sort({ createdAt: -1 });

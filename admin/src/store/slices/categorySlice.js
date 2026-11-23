@@ -30,10 +30,11 @@ export const createCategory = createAsyncThunk(
 
 export const getCategories = createAsyncThunk(
     'category/getCategories',
-    async ({ page = 1, limit = 10 }, { rejectWithValue }) => {
+    async ({ page = 1, limit = 10, search = '' } = {}, { rejectWithValue }) => {
         try {
             const token = getCookie('token');
-            const response = await fetch(`${apiRoute}categories?page=${page}&limit=${limit}`, {
+            const searchParam = search ? `&search=${encodeURIComponent(search)}` : '';
+            const response = await fetch(`${apiRoute}categories?page=${page}&limit=${limit}${searchParam}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,

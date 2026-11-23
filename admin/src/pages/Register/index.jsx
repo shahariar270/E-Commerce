@@ -4,7 +4,7 @@ import Input from "../../components/Input";
 import Button from "../../components/Buttons";
 import { registerUser, clearError } from "../../store/slices/auth/authSlice";
 import { registerSchema } from "../../Utils/validationSchemas";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "../Login/style.scss";
 import logo from '../../assets/images/logo.svg';
 import SEO from '@Component/SEO';
@@ -139,14 +139,14 @@ const Register = () => {
         <div className="st-login-footer">
           <p>
             Already have an account?{" "}
-            <a href="/login" className="st-signup-link">
+            <Link to="/login" className="st-signup-link">
               Sign in
-            </a>
+            </Link>
           </p>
         </div>
       </div>
       <p className="st-login-back">
-        <a href="/">← Back to store</a>
+        <Link to="/">← Back to store</Link>
       </p>
     </div>
   );
