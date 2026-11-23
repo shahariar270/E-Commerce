@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"G:\\\\MERN\\\\E-commerce\\\\server\" -Filter \".env*\" -Recurse)",
+      "Bash(Select-Object FullName)",
+      "Bash(Get-ChildItem -Path \"G:\\\\MERN\\\\E-commerce\\\\server\" -Recurse -Filter \".env*\")",
+      "Bash(node -e \"require\\('helmet'\\)\")",
+      "Bash(node -e \"require\\('express-rate-limit'\\)\")",
+      "Bash(node -e \"require\\('express-mongo-sanitize'\\)\")",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(findstr \"express-mongo-sanitize\")",
+      "Bash(Select-String \"express-mongo-sanitize\")",
+      "Bash(node -e \"console.log\\(require\\('express/package.json'\\).version\\)\")",
+      "Bash(node -e \"console.log\\(require\\('express-mongo-sanitize/package.json'\\).version\\)\")",
+      "Bash(node -e ' *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(gh pr *)",
+      "Bash(npm install *)"
+    ]
+  }
+}

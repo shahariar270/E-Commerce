@@ -15,6 +15,10 @@ const quickLinkHrefs = {
   'Privacy Policy': '/privacy-policy',
   'Terms Of Use': '/terms-of-use',
   'FAQ': '/faq',
+  'My Account': '/profile',
+  'Login / Register': '/login',
+  'Cart': '/cart',
+  'Contact': '/faq',
 };
 
 const SubscribeForm = () => {
@@ -84,7 +88,7 @@ const Footer = () => (
             {items.map((item) => (
               quickLinkHrefs[item]
                 ? <Link key={item} to={quickLinkHrefs[item]}>{item}</Link>
-                : <a key={item}>{item}</a>
+                : <span key={item}>{item}</span>
             ))}
           </div>
         </div>

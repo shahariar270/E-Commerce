@@ -44,7 +44,6 @@ app.use(cors({
 app.use(express.json({ limit: '100kb' }));
 
 app.use(express.urlencoded({ extended: true, limit: '100kb' }));
-app.use(express.json({ limit: '10kb' }));
 
 
 app.use(mongoSanitize({
@@ -62,11 +61,12 @@ const authLimiter = rateLimit({
     legacyHeaders: false,
 });
 
-app.use('/api/auth', authLimiter);
+app.use(['/auth', '/api/auth'], authLimiter);
 
 app.use(router);
 
 const port = process.env.PORT || 10000;
+const User = require('./model/auth');
 
 mongoose.connect(process.env.DB_URL)
     .then(async () => {
@@ -79,6 +79,9 @@ mongoose.connect(process.env.DB_URL)
         // indexes with the current schema (rebuilding this one as sparse).
         await Cart.syncIndexes().catch((err) => {
             console.error('Cart.syncIndexes failed:', err);
+        });
+        await User.syncIndexes().catch((err) => {
+            console.error('User.syncIndexes failed:', err);
         });
         server.listen(port, '0.0.0.0', () => {
             console.log('Server is running on', port);

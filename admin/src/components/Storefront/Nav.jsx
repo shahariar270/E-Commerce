@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '@Store/slices/auth/authSlice';
 import logo from '../../assets/images/logo.svg';
@@ -29,10 +29,10 @@ const Nav = () => {
   return (
     <div className="eshop-nav">
       <div className="eshop-container eshop-nav__inner">
-        <div className="eshop-nav__logo" onClick={() => navigate('/')}>
+        <Link to="/" className="eshop-nav__logo">
           <img src={logo} alt="" className="eshop-nav__logo-icon" />
           <span className="eshop-nav__logo-text">E-commerce</span>
-        </div>
+        </Link>
 
         <form className="eshop-nav__search" onSubmit={handleSearch}>
           <span className="eshop-nav__search-icon">⌕</span>
@@ -44,15 +44,15 @@ const Nav = () => {
         </form>
 
         <div className="eshop-nav__links">
-          <a className="eshop-nav__link" onClick={() => navigate('/')}>Home</a>
-          <a className="eshop-nav__link" onClick={() => navigate('/products')}>Products</a>
-          <button type="button" className="eshop-nav__icon-link" onClick={() => navigate('/cart')} aria-label="Cart">
+          <Link to="/" className="eshop-nav__link">Home</Link>
+          <Link to="/products" className="eshop-nav__link">Products</Link>
+          <Link to="/cart" className="eshop-nav__icon-link" aria-label="Cart">
             🛒
             {cartCount > 0 && <span className="eshop-nav__badge">{cartCount}</span>}
-          </button>
+          </Link>
           {isAuthenticated ? (
             <>
-              <a className="eshop-nav__link" onClick={handleAccountClick}>My Account</a>
+              <button type="button" className="eshop-nav__link eshop-nav__link--btn" onClick={handleAccountClick}>My Account</button>
               <button type="button" className="eshop-nav__cta" onClick={handleLogout}>Sign Out</button>
             </>
           ) : (
