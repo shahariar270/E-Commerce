@@ -38,12 +38,12 @@ const Register = () => {
 
   return (
     <div className="st-login-page eshop-theme">
-      <SEO title="Create Account" description="Create a free E-Commerce account to start shopping, save your cart, and track orders." noindex />
+      <SEO title="Create Account" description="Create a free vireo-Commerce account to start shopping, save your cart, and track orders." noindex />
       <div className="st-login-card">
         <div className="st-login-header">
           <div className="st-login-logo">
             <img src={logo} alt="" className="st-login-logo__icon" />
-            <span className="st-login-logo__text">E-commerce</span>
+            <span className="st-login-logo__text">vireo-Commerce</span>
           </div>
           <h1 className="st-login-title">Create Account</h1>
           <p className="st-login-subtitle">

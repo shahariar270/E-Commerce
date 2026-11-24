@@ -42,7 +42,7 @@ const SEO = ({
       {canonical && <link rel="canonical" href={canonical} />}
 
       {/* Open Graph */}
-      <meta property="og:site_name" content="E-Commerce" />
+      <meta property="og:site_name" content="vireo-Commerce" />
       <meta property="og:locale" content="en_US" />
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={fullDescription} />

@@ -1,4 +1,4 @@
-# Project Knowledge Base & Brain Memory — E-Commerce MERN
+# Project Knowledge Base & Brain Memory — vireo-Commerce (MERN Platform)
 
 > **Purpose**: This document serves as the persistent system memory for this project. It captures the architecture, data schemas, routing, running state, test credentials, resolved issues, and pending enhancements. It ensures that in all subsequent commands, the assistant acts with immediate, full context without needing to repeatedly re-read lines of code from scratch.
 

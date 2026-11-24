@@ -17,7 +17,7 @@ In the center, display a floating isometric MacBook and iPhone showing a sleek e
 
 Surround the devices with minimal floating icons representing key features: a shopping bag (product listing & cart), a shield with a checkmark (JWT authentication & role-based access), a cloud upload icon (Cloudinary image upload), a gear/cog (admin dashboard), a magnifying glass with "SEO" text (global & per-product SEO), and a code bracket symbol (MERN stack: MongoDB, Express, React, Node). Each icon uses a white fill with a subtle colored shadow matching the brand palette.
 
-At the top, bold white text reads "MERN E-Commerce Platform" in a modern sans-serif font (Roboto or Inter). Below it, a thinner subtitle line: "Full-Stack · React 19 · Node.js · MongoDB · SEO Ready". At the bottom, a row of small rounded pill badges with white text on semi-transparent dark purple backgrounds showing: "JWT Auth", "Redux Toolkit", "Cloudinary", "Role-Based Admin", "JSON-LD SEO".
+At the top, bold white text reads "vireo-Commerce" in a modern sans-serif font (Roboto or Inter). Below it, a thinner subtitle line: "Full-Stack · React 19 · Node.js · MongoDB · SEO Ready". At the bottom, a row of small rounded pill badges with white text on semi-transparent dark purple backgrounds showing: "JWT Auth", "Redux Toolkit", "Cloudinary", "Role-Based Admin", "JSON-LD SEO".
 
 The entire image has a subtle noise texture overlay for depth. Soft purple and blue glow effects emanate from behind the devices. No clutter — generous whitespace, clean lines, and a polished, launch-ready feel. The style should feel like a premium SaaS product landing page hero image.
 ```

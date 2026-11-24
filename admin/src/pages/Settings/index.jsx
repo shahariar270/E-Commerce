@@ -19,7 +19,7 @@ const Settings = () => {
   };
 
   const [settings, setSettings] = useState({
-    siteName: "E-commerce Admin",
+    siteName: "vireo-Commerce Admin",
     siteEmail: "admin@example.com",
     currency: "USD",
     timezone: "UTC",

@@ -2,7 +2,7 @@
 // Target keywords are applied site-wide and blended into per-product metadata.
 
 export const SITE_CONFIG = {
-  siteName: "E-Commerce",
+  siteName: "vireo-Commerce",
   baseUrl: (import.meta.env.VITE_API_BASE || window.location.origin).replace(/\/$/, ""),
   locale: "en_US",
   twitterHandle: "",

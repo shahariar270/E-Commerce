@@ -223,7 +223,7 @@ class order_controller {
           <!-- Header -->
           <tr>
             <td class="header" align="center" style="background-color:#111827;padding:40px;">
-              <h1 style="color:#ffffff;margin:0;font-size:28px;letter-spacing:1px;">E-commerce</h1>
+              <h1 style="color:#ffffff;margin:0;font-size:28px;letter-spacing:1px;">vireo-Commerce</h1>
             </td>
           </tr>
 
@@ -305,7 +305,7 @@ class order_controller {
           <!-- Footer -->
           <tr>
             <td align="center" style="background-color:#f9fafb;padding:30px;color:#6b7280;font-size:12px;">
-              <p style="margin:0;">&copy; ${new Date().getFullYear()} E-commerce. All rights reserved.</p>
+              <p style="margin:0;">&copy; ${new Date().getFullYear()} vireo-Commerce. All rights reserved.</p>
             </td>
           </tr>
         </table>

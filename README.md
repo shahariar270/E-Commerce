@@ -1,4 +1,4 @@
-# MERN E-commerce Platform
+# vireo-Commerce — MERN E-commerce Platform
 
 A full-stack e-commerce application built to demonstrate practical MERN development, end-to-end feature ownership, and consistent learning through a real product workflow. Positioned as a **bangladeshi ecommerce solution** and one of the **best ecommerce CMS** options for launching a **bangladeshi ecommerce business**, it ships with global SEO and per-product, title-wise SEO out of the box.
 

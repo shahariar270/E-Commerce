@@ -32,12 +32,12 @@ const ForgotPassword = () => {
 
   return (
     <div className="st-login-page eshop-theme">
-      <SEO title="Forgot Password" description="Reset your E-Commerce account password." noindex />
+      <SEO title="Forgot Password" description="Reset your vireo-Commerce account password." noindex />
       <div className="st-login-card">
         <div className="st-login-header">
           <div className="st-login-logo">
             <img src={logo} alt="" className="st-login-logo__icon" />
-            <span className="st-login-logo__text">E-commerce</span>
+            <span className="st-login-logo__text">vireo-Commerce</span>
           </div>
           <h1 className="st-login-title">Forgot Password?</h1>
           <p className="st-login-subtitle">

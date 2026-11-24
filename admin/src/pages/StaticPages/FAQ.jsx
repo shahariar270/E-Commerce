@@ -26,7 +26,7 @@ const faqs = [
   },
   {
     question: 'How do I contact support?',
-    answer: 'Email us at help@ecommerce.example and we\'ll get back to you as soon as possible.',
+    answer: 'Email us at help@vireo-commerce.example and we\'ll get back to you as soon as possible.',
   },
 ];
 

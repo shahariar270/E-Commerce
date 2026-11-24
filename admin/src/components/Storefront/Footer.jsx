@@ -6,7 +6,7 @@ import { subscribe } from '@Store/slices/subscriberSlice';
 import './styles.scss';
 
 const columns = [
-  ['Support', ['123 Demo Street, Dhaka', 'help@ecommerce.example', '+880 1000-000000']],
+  ['Support', ['123 Demo Street, Dhaka', 'help@vireo-commerce.example', '+880 1000-000000']],
   ['Account', ['My Account', 'Login / Register', 'Cart']],
   ['Quick Link', ['Privacy Policy', 'Terms Of Use', 'FAQ', 'Contact']],
 ];
@@ -74,7 +74,7 @@ const Footer = () => (
       <div>
         <div className="eshop-footer__brand-logo">
           <img src={logo} alt="" className="eshop-footer__brand-logo-icon" />
-          <span className="eshop-footer__brand-logo-text">E-commerce</span>
+          <span className="eshop-footer__brand-logo-text">vireo-Commerce</span>
         </div>
         <p className="eshop-footer__brand-copy">
           Everything you need, delivered right. Subscribe for 10% off your first order.
@@ -94,7 +94,7 @@ const Footer = () => (
         </div>
       ))}
     </div>
-    <div className="eshop-footer__bottom">© {new Date().getFullYear()} E-commerce. All rights reserved.</div>
+    <div className="eshop-footer__bottom">© {new Date().getFullYear()} vireo-Commerce. All rights reserved.</div>
   </div>
 );
 

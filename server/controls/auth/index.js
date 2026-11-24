@@ -279,7 +279,7 @@ module.exports = {
         <table width="480" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 6px rgba(0,0,0,0.05);">
           <tr>
             <td align="center" style="background-color:#111827;padding:32px;">
-              <h1 style="color:#ffffff;margin:0;font-size:24px;">E-commerce</h1>
+              <h1 style="color:#ffffff;margin:0;font-size:24px;">vireo-Commerce</h1>
             </td>
           </tr>
           <tr>

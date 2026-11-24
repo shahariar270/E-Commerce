@@ -59,12 +59,12 @@ const Login = () => {
 
   return (
     <div className="st-login-page eshop-theme">
-      <SEO title="Sign In" description="Sign in to your E-Commerce account to track orders, manage your cart, and check out faster." noindex />
+      <SEO title="Sign In" description="Sign in to your vireo-Commerce account to track orders, manage your cart, and check out faster." noindex />
       <div className="st-login-card">
         <div className="st-login-header">
           <div className="st-login-logo">
             <img src={logo} alt="" className="st-login-logo__icon" />
-            <span className="st-login-logo__text">E-commerce</span>
+            <span className="st-login-logo__text">vireo-Commerce</span>
           </div>
           <h1 className="st-login-title">Welcome Back</h1>
           <p className="st-login-subtitle">

@@ -31,7 +31,7 @@ const Nav = () => {
       <div className="eshop-container eshop-nav__inner">
         <Link to="/" className="eshop-nav__logo">
           <img src={logo} alt="" className="eshop-nav__logo-icon" />
-          <span className="eshop-nav__logo-text">E-commerce</span>
+          <span className="eshop-nav__logo-text">vireo-Commerce</span>
         </Link>
 
         <form className="eshop-nav__search" onSubmit={handleSearch}>

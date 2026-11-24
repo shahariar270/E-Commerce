@@ -107,8 +107,8 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                 >
                     <div className="st-sidebar__header">
                         <div className="st-sidebar__logo">
-                            <img src={logo} alt="E-commerce" className="st-sidebar__logo-img" />
-                            <span className={`st-sidebar__logo-text ${!isOpen ? 'st-sidebar__logo-text--hidden' : ''}`}>E-commerce</span>
+                            <img src={logo} alt="vireo-Commerce" className="st-sidebar__logo-img" />
+                            <span className={`st-sidebar__logo-text ${!isOpen ? 'st-sidebar__logo-text--hidden' : ''}`}>vireo-Commerce</span>
                         </div>
                         <div className="st-sidebar__tagline">
                             Admin Panel

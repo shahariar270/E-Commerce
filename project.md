@@ -1,4 +1,4 @@
-# Project Notes — MERN E-Commerce Platform
+# Project Notes — vireo-Commerce (MERN Platform)
 
 A full-stack e-commerce platform (customer storefront + admin panel) built on
 MongoDB, Express, React, and Node. Positioned as a Bangladeshi e-commerce CMS,

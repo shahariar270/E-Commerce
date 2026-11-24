@@ -29,7 +29,7 @@ const sections = [
   },
   {
     heading: '7. Contact Us',
-    body: 'If you have questions about this policy, reach out at help@ecommerce.example.',
+    body: 'If you have questions about this policy, reach out at help@vireo-commerce.example.',
   },
 ];
 

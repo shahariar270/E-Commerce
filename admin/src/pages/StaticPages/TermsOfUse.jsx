@@ -33,7 +33,7 @@ const sections = [
   },
   {
     heading: '8. Contact Us',
-    body: 'Questions about these terms? Reach out at help@ecommerce.example.',
+    body: 'Questions about these terms? Reach out at help@vireo-commerce.example.',
   },
 ];
 
